@@ -12,26 +12,54 @@
                 max-width: 1100px;
             }
         }
+        @font-face {
+            font-family: 'Faustina';
+            src: url('fonts/static/Faustina-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Faustina';
+            src: url('fonts/static/Faustina-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1100px;
+            }
+        }
+
+        .navbar-brand {
+            font-family: 'Faustina', serif;
+            font-size: 1.4rem;
+        }
     </style>
-    <title>Leonardo Coppini - Gita al Foro</title>
+    <title>Leonardo Coppini</title>
 </head>
 <body style="margin-left: 20px; margin-right: 20px; margin-bottom: 50px;">
     <header class="navbar navbar-static-top bs-docs-nav" id="top" style="border-bottom: 2px solid black; padding-bottom: 0px;">
-        <div class="d-flex align-items-baseline" style="width: 100%; padding-left: 10px; padding-right: 20px;">
+        <div class="d-flex align-items-baseline" style="width: 100%; padding-left: 5px; padding-right: 20px;">
             <a href="https://leonardocoppini.com" class="navbar-brand" style="font-weight: bold; margin-bottom: 0; padding-bottom: 0;">Leonardo Coppini</a>
-            <span style="/*! margin-left: 15px; */ margin-bottom: 0; padding-bottom: 0;">Since 146<a href="https://leonardocoppini.com/blog" style="text-decoration: none; color: #000;">0</a></span>
+            <span style="margin-left: -5px; margin-bottom: 0; padding-bottom: 0;">Since 146<a href="https://leonardocoppini.com/blog" style="text-decoration: none; color: #000;">0</a></span>
         </div>
     </header>
     
     <div class="container d-flex align-items-center" style="margin-top:20px; min-height: calc(100vh - 150px);">
-        <div class="row justify-content-center w-100">
-            <div class="col-12 col-md-4 text-center">
-                <img src="assets/stemma.jpg" alt="Stemma" class="img-fluid">
-            </div>
-            <div class="col-12 col-md-4 text-center">
-                <img src="assets/storia.jpg" alt="Descrizione" class="img-fluid">
-            </div>
+    <div class="row justify-content-center align-items-center w-100">
+        <div class="col-12 col-md-4 text-center" style="margin-bottom:20px">
+            <a href="assets/stemma.jpg">
+                <img src="assets/stemma.jpg" alt="Stemma" class="img-fluid" style="min-width: 300px; max-width: 400px; width: 100%;">
+            </a>
+        </div>
+        <div class="col-12 col-md-4 text-center">
+            <a href="assets/storia.jpg">
+                <img src="assets/storia.jpg" alt="Descrizione" class="img-fluid" style="min-width: 300px; max-width: 400px; width: 100%;">
+            </a>
         </div>
     </div>
+</div>
 </body>
 </html>
