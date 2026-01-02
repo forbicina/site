@@ -14,3 +14,10 @@
     color: #666;
     text-decoration: underline;
 }
+
+.citaz {
+    font-style: italic;
+    padding-left: 20px;
+    border-left: 2px solid #000;
+    margin-left: 0;
+}
