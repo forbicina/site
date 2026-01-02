@@ -1,6 +1,6 @@
-.blackling a,
-.blackling a:hover,
-.blackling a:visited {
+.blacklink a,
+.blacklink a:hover,
+.blacklink a:visited {
     color: #000;
     text-decoration: none;
 }
