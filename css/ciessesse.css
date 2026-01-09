@@ -65,3 +65,7 @@
     font-family: 'PTSerif', serif;
     font-size: 1.1rem;
 }
+.blogpost h4,h5 {
+    font-family: 'PTSerif', serif;
+    font-weight: 700;
+}
