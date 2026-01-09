@@ -37,20 +37,20 @@
     font-style: normal;
 }
 @font-face {
-    font-family: 'LibreBaskerville';
-    src: url('../fonts/static/LibreBaskerville-Regular.ttf') format('truetype');
+    font-family: 'SourceSerif4';
+    src: url('../fonts/static/SourceSerif4-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 @font-face {
-    font-family: 'LibreBaskerville';
-    src: url('../fonts/static/LibreBaskerville-Bold.ttf') format('truetype');
+    font-family: 'SourceSerif4';
+    src: url('../fonts/static/SourceSerif4-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
 @font-face {
-    font-family: 'LibreBaskerville';
-    src: url('../fonts/static/LibreBaskerville-Italic.ttf') format('truetype');
+    font-family: 'SourceSerif4';
+    src: url('../fonts/static/SourceSerif4-Italic.ttf') format('truetype');
     font-weight: 400;
     font-style: italic;
 }
@@ -62,5 +62,5 @@
     font-family: 'Faustina', serif;
 }
 .blogpost {
-    font-family: 'LibreBaskerville', serif;
+    font-family: 'SourceSerif4', serif;
 }
