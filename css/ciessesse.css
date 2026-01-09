@@ -45,13 +45,13 @@
 @font-face {
     font-family: 'Helvetica Neue';
     src: url('../fonts/static/HelveticaNeue-Bold.otf') format('opentype');
-    font-weight: 500;
+    font-weight: 700;
     font-style: normal;
 }
 @font-face {
     font-family: 'Helvetica Neue';
-    src: url('../fonts/static/HelveticaNeue-Italic.ttf') format('opentype');
-    font-weight: 300;
+    src: url('../fonts/static/HelveticaNeue-Italic.otf') format('opentype');
+    font-weight: 400;
     font-style: italic;
 }
 .navbar-brand {
@@ -67,5 +67,5 @@
 }
 .blogpost h4,h5 {
     font-family: 'Helvetica Neue', serif;
-    font-weight: 400;
+    font-weight: 600;
 }
