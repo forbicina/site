@@ -4,7 +4,6 @@
     color: #000;
     text-decoration: none;
 }
-
 .recentlink a,
 .recentlink a:visited {
     color: #666;
@@ -14,14 +13,12 @@
     color: #666;
     text-decoration: underline;
 }
-
 .citaz {
     font-style: italic;
     padding-left: 20px;
     border-left: 2px solid #000;
     margin-left: 0;
 }
-
 @media (min-width: 1200px) {
     .container {
         max-width: 1100px;
@@ -33,52 +30,37 @@
     font-weight: 400;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'Faustina';
     src: url('../fonts/static/Faustina-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'LibreBaskerville';
     src: url('../fonts/static/LibreBaskerville-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'LibreBaskerville';
     src: url('../fonts/static/LibreBaskerville-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
-
-
-    @font-face {
-        font-family: 'LibreBaskerville';
-        src: url('../fonts/static/LibreBaskerville-Italic.ttf') format('truetype');
-        font-weight: 400;
-        font-style: italic;
-    }
-
-    @media (min-width: 1200px) {
-        .container {
-            max-width: 1100px;
-        }
-    }
-
-    .navbar-brand {
-        font-family: 'Faustina', serif;
-        font-size: 1.4rem;
-    }
-
-    .title {
-        font-family: 'Faustina', serif;
-    }
-
-    .blogpost {
-        font-family: 'LibreBaskerville', serif;
-    }
-
-
+}
+@font-face {
+    font-family: 'LibreBaskerville';
+    src: url('../fonts/static/LibreBaskerville-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+.navbar-brand {
+    font-family: 'Faustina', serif;
+    font-size: 1.4rem;
+}
+.title {
+    font-family: 'Faustina', serif;
+}
+.blogpost {
+    font-family: 'LibreBaskerville', serif;
+}
