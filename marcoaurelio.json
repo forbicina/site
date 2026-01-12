@@ -1,6 +1,6 @@
 {
   "name": "Daily Marchino",
-  "short_name": "App",
+  "short_name": "Marchino",
   "start_url": "/dailyquote",
   "display": "standalone",
   "background_color": "#ffffff",

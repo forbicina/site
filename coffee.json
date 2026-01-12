@@ -1,6 +1,6 @@
 {
   "name": "Daily Coffee",
-  "short_name": "App",
+  "short_name": "Coffee",
   "start_url": "/daily",
   "display": "standalone",
   "background_color": "#ffffff",
