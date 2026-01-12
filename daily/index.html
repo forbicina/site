@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../assets/ico.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/ciessesse.css">
+    <title>Leonardo Coppini</title>
+    <style>
+        .meteo-container {
+            margin: 20px;
+        }
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .toggle-btn {
+            background: linear-gradient(135deg, #1a5fb4 0%, #3584e4 100%);
+            color: white;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(26, 95, 180, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toggle-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .toggle-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .toggle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(26, 95, 180, 0.5);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #3584e4 0%, #62a0ea 100%);
+            box-shadow: 0 0 0 4px rgba(26, 95, 180, 0.2);
+            transform: scale(1.05);
+        }
+
+        .toggle-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .widget-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .widget-wrapper.show {
+            max-height: 600px;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 10px; min-height: 100vh; display: flex; justify-content: center; align-items: center;">
+  <div id="ciao" class="blogpost" style="max-width: 800px; text-align: center;">
+      <div class="meteo-container">
+        <div class="buttons-container">
+            <button class="toggle-btn" onclick="toggleWidget('pisa')">
+                <span>PI</span>
+            </button>
+            <button class="toggle-btn" onclick="toggleWidget('firenze')">
+                <span>FI</span>
+            </button>
+        </div>
+        <div id="widgetPisa" class="widget-wrapper">
+            <iframe src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/5282/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
+        </div>
+        <div id="widgetFirenze" class="widget-wrapper">
+            <iframe src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/2798/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
+        </div>
+    </div>
+    <script>
+        function toggleWidget(city) {
+            const pisaWidget = document.getElementById('widgetPisa');
+            const firenzeWidget = document.getElementById('widgetFirenze');
+            const buttons = document.querySelectorAll('.toggle-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            if (city === 'pisa') {
+                if (pisaWidget.classList.contains('show')) {
+                    pisaWidget.classList.remove('show');
+                } else {
+                    pisaWidget.classList.add('show');
+                    firenzeWidget.classList.remove('show');
+                    buttons[0].classList.add('active');
+                }
+            } else if (city === 'firenze') {
+                if (firenzeWidget.classList.contains('show')) {
+                    firenzeWidget.classList.remove('show');
+                } else {
+                    firenzeWidget.classList.add('show');
+                    pisaWidget.classList.remove('show');
+                    buttons[1].classList.add('active');
+                }
+            }
+        }
+    </script>
+  </div>
+</body>
+</html>
