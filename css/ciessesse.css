@@ -1,8 +1,12 @@
 .blacklink a,
-.blacklink a:hover,
 .blacklink a:visited {
     color: #000;
     text-decoration: none;
+}
+
+.blacklink a:hover {
+    color: 000;
+    text-decoration: underline;
 }
 .recentlink a,
 .recentlink a:visited {
@@ -68,4 +72,13 @@
 .blogpost h4,h5 {
     font-family: 'Helvetica Neue', serif;
     font-weight: 500;
+}
+
+.fancytitle a,
+.fancytitle a:visited {
+    text-decoration: none;
+}
+.recentlink a:hover {
+    color: #666;
+    text-decoration: underline;
 }
