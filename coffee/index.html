@@ -135,10 +135,11 @@
 </head>
 <body>
     <div id="mainContainer">
-        <!-- Pagina 1: Meteo -->
+        <!-- Pagina 1: Meteo e Treni -->
         <div class="page screen-1" id="page1">
             <div class="blogpost">
                 <div class="meteo-container">
+                    <!-- Bottoni meteo -->
                     <div class="buttons-container">
                         <button class="toggle-btn" onclick="toggleWidget('pisa')">
                             <span>PI</span>
@@ -147,11 +148,30 @@
                             <span>FI</span>
                         </button>
                     </div>
+
+                    <!-- Widget meteo -->
                     <div id="widgetPisa" class="widget-wrapper">
                         <iframe loading="lazy" src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/5282/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
                     </div>
                     <div id="widgetFirenze" class="widget-wrapper">
                         <iframe loading="lazy" src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/2798/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
+                    </div>
+
+                    <!-- Sezione Treni -->
+                    <h3 style="color: white; margin-top: 40px;">Orari Treni</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        <button class="toggle-btn" onclick="apriStazione('S06513', 'SIGNA')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
+                            <span>🚂 Signa</span>
+                        </button>
+                        <button class="toggle-btn" onclick="apriStazione('S06420', 'LASTRA A SIGNA')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
+                            <span>🚂 Lastra</span>
+                        </button>
+                        <button class="toggle-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
+                            <span>🚂 Pisa</span>
+                        </button>
+                        <button class="toggle-btn" onclick="apriStazione('S06409', 'FIRENZE S.M.NOVELLA')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
+                            <span>🚂 Firenze</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -174,7 +194,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <script>
         // Registra Service Worker
@@ -313,8 +332,8 @@
             clearTimeout(wheelTimeout);
             wheelTimeout = setTimeout(() => {
                 if (e.deltaY > 50 && currentPage === 1) {
-                    page1.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
-                    page2.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page1.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page2.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
 
                     currentPage = 2;
                     page1.style.transform = 'translateY(-100%)';
@@ -328,8 +347,8 @@
                     }, 400);
                     page2.style.visibility = 'visible';
                 } else if (e.deltaY < -50 && currentPage === 2) {
-                    page1.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
-                    page2.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page1.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page2.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
 
                     currentPage = 1;
                     page1.style.visibility = 'visible';
@@ -345,6 +364,11 @@
                 }
             }, 50);
         }, { passive: false });
+
+function apriStazione(codiceStazione, nomeStazione) {
+    const nomeEncoded = encodeURIComponent(nomeStazione);
+    window.location.href = `http://www.viaggiatreno.it/infomobilitamobile/pages/cercaTreno/cercaTreno.jsp?cod=${codiceStazione}&nome=${nomeEncoded}`;
+}
     </script>
 </body>
 </html>
