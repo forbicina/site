@@ -316,6 +316,9 @@
             clearTimeout(wheelTimeout);
             wheelTimeout = setTimeout(() => {
                 if (e.deltaY > 50 && currentPage === 1) {
+                    page1.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page2.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+
                     currentPage = 2;
                     page1.style.transform = 'translateY(-100%)';
                     page1.style.opacity = '0';
@@ -328,6 +331,9 @@
                     }, 400);
                     page2.style.visibility = 'visible';
                 } else if (e.deltaY < -50 && currentPage === 2) {
+                    page1.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page2.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+
                     currentPage = 1;
                     page1.style.visibility = 'visible';
                     page1.style.transform = 'translateY(0)';
