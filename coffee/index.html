@@ -34,16 +34,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
             overflow: hidden;
         }
 
         .page.screen-1 {
             transform: translateY(0);
+            opacity: 1;
         }
 
         .page.screen-2 {
             transform: translateY(100%);
+            opacity: 0;
         }
 
         .blogpost {
@@ -203,19 +206,26 @@
             }
 
             const resistedDelta = deltaY * RESISTANCE_FACTOR;
+            const progress = Math.min(Math.abs(resistedDelta) / 100, 1); // Normalizza 0-1
 
             if (currentPage === 1 && deltaY < 0) {
                 // Swipe up dalla pagina 1
                 page1.style.transition = 'none';
                 page1.style.transform = `translateY(${resistedDelta}px)`;
+                page1.style.opacity = 1 - progress;
+
                 page2.style.transition = 'none';
                 page2.style.transform = `translateY(${100 + (resistedDelta / window.innerHeight * 100)}%)`;
+                page2.style.opacity = progress;
             } else if (currentPage === 2 && deltaY > 0) {
                 // Swipe down dalla pagina 2
                 page2.style.transition = 'none';
                 page2.style.transform = `translateY(${resistedDelta}px)`;
+                page2.style.opacity = 1 - progress;
+
                 page1.style.transition = 'none';
                 page1.style.transform = `translateY(${-100 + (resistedDelta / window.innerHeight * 100)}%)`;
+                page1.style.opacity = progress;
             }
         });
 
@@ -226,15 +236,16 @@
             const currentY = e.changedTouches[0].clientY;
             const deltaY = currentY - startY;
 
-            page1.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
-            page2.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
+            page1.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+            page2.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
 
             if (currentPage === 1 && deltaY < -SWIPE_THRESHOLD) {
                 // Vai alla pagina 2
                 currentPage = 2;
                 page1.style.transform = 'translateY(-100%)';
+                page1.style.opacity = '0';
                 page2.style.transform = 'translateY(0)';
-                // Nascondi page1 dopo l'animazione
+                page2.style.opacity = '1';
                 setTimeout(() => {
                     if (currentPage === 2) {
                         page1.style.visibility = 'hidden';
@@ -246,8 +257,9 @@
                 currentPage = 1;
                 page1.style.visibility = 'visible';
                 page1.style.transform = 'translateY(0)';
+                page1.style.opacity = '1';
                 page2.style.transform = 'translateY(100%)';
-                // Nascondi page2 dopo l'animazione
+                page2.style.opacity = '0';
                 setTimeout(() => {
                     if (currentPage === 1) {
                         page2.style.visibility = 'hidden';
@@ -257,10 +269,14 @@
                 // Torna alla posizione originale
                 if (currentPage === 1) {
                     page1.style.transform = 'translateY(0)';
+                    page1.style.opacity = '1';
                     page2.style.transform = 'translateY(100%)';
+                    page2.style.opacity = '0';
                 } else {
                     page1.style.transform = 'translateY(-100%)';
+                    page1.style.opacity = '0';
                     page2.style.transform = 'translateY(0)';
+                    page2.style.opacity = '1';
                 }
             }
         });
@@ -297,14 +313,14 @@
         container.addEventListener('wheel', (e) => {
             e.preventDefault();
 
-            // Debounce per evitare cambi troppo rapidi
             clearTimeout(wheelTimeout);
             wheelTimeout = setTimeout(() => {
                 if (e.deltaY > 50 && currentPage === 1) {
-                    // Scroll down -> vai alla pagina 2
                     currentPage = 2;
                     page1.style.transform = 'translateY(-100%)';
+                    page1.style.opacity = '0';
                     page2.style.transform = 'translateY(0)';
+                    page2.style.opacity = '1';
                     setTimeout(() => {
                         if (currentPage === 2) {
                             page1.style.visibility = 'hidden';
@@ -312,11 +328,12 @@
                     }, 400);
                     page2.style.visibility = 'visible';
                 } else if (e.deltaY < -50 && currentPage === 2) {
-                    // Scroll up -> torna alla pagina 1
                     currentPage = 1;
                     page1.style.visibility = 'visible';
                     page1.style.transform = 'translateY(0)';
+                    page1.style.opacity = '1';
                     page2.style.transform = 'translateY(100%)';
+                    page2.style.opacity = '0';
                     setTimeout(() => {
                         if (currentPage === 1) {
                             page2.style.visibility = 'hidden';
