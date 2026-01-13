@@ -33,8 +33,12 @@
             justify-content: center;
             align-items: center;
             transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
-                        opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+                        opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) 0.25s;
             overflow: hidden;
+        }
+        .page.exiting {
+            transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity 0.15s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
         }
 
         .page.screen-1 {
@@ -136,6 +140,25 @@
         .screen-two-content {
             color: white;
         }
+
+        .fumetto {
+            position: absolute;
+            background: white;
+            color: #1a5fb4;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 10s cubic-bezier(.55,.06,.68,.19);
+            bottom: 60px;
+            right: 0;
+            transform: translateX(-50%);
+            margin-right: 35px;
+        }
+        .fumetto.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -145,13 +168,17 @@
             <div class="blogpost">
                 <div class="meteo-container">
                     <!-- Bottoni meteo -->
-                    <div class="buttons-container">
-                        <button class="toggle-btn" onclick="toggleWidget('pisa')">
-                            <span>PI</span>
-                        </button>
+                    <div class="buttons-container" style="position: relative;">
                         <button class="toggle-btn" onclick="toggleWidget('firenze')">
                             <span>FI</span>
                         </button>
+                        <button class="toggle-btn" onclick="toggleWidget('pisa')">
+                            <span>PI</span>
+                        </button>
+                        <button class="toggle-btn" onclick="mostraFumetto()">
+                            <span>LI</span>
+                        </button>
+                        <div id="fumetto" class="fumetto">boia de</div>
                     </div>
 
                     <!-- Widget meteo -->
@@ -266,8 +293,12 @@
             const currentY = e.changedTouches[0].clientY;
             const deltaY = currentY - startY;
 
-            page1.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
-            page2.style.transition = 'transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+            page1.classList.add('exiting');
+            page2.classList.add('exiting');
+            setTimeout(() => {
+                page1.classList.remove('exiting');
+                page2.classList.remove('exiting');
+            }, 400);
 
             if (currentPage === 1 && deltaY < -SWIPE_THRESHOLD) {
                 currentPage = 2;
@@ -341,8 +372,12 @@
             clearTimeout(wheelTimeout);
             wheelTimeout = setTimeout(() => {
                 if (e.deltaY > 50 && currentPage === 1) {
-                    page1.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
-                    page2.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page1.classList.add('exiting');
+                    page2.classList.add('exiting');
+                    setTimeout(() => {
+                        page1.classList.remove('exiting');
+                        page2.classList.remove('exiting');
+                    }, 400);
 
                     currentPage = 2;
                     page1.style.transform = 'translateY(-100%)';
@@ -356,8 +391,12 @@
                     }, 400);
                     page2.style.visibility = 'visible';
                 } else if (e.deltaY < -50 && currentPage === 2) {
-                    page1.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
-                    page2.style.transition = 'transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.1s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    page1.classList.add('exiting');
+                    page2.classList.add('exiting');
+                    setTimeout(() => {
+                        page1.classList.remove('exiting');
+                        page2.classList.remove('exiting');
+                    }, 400);
 
                     currentPage = 1;
                     page1.style.visibility = 'visible';
@@ -374,10 +413,19 @@
             }, 50);
         }, { passive: false });
 
-function apriStazione(codiceStazione, nomeStazione) {
-    const nomeEncoded = encodeURIComponent(nomeStazione);
-    window.location.href = `http://www.viaggiatreno.it/infomobilitamobile/pages/cercaTreno/cercaTreno.jsp?cod=${codiceStazione}&nome=${nomeEncoded}`;
-}
+        function apriStazione(codiceStazione, nomeStazione) {
+            const nomeEncoded = encodeURIComponent(nomeStazione);
+            window.location.href = `http://www.viaggiatreno.it/infomobilitamobile/pages/cercaTreno/cercaTreno.jsp?cod=${codiceStazione}&nome=${nomeEncoded}`;
+        }
+
+        function mostraFumetto() {
+            const fumetto = document.getElementById('fumetto');
+            fumetto.classList.add('show');
+
+            setTimeout(() => {
+                fumetto.classList.remove('show');
+            }, 15000); // esattamente il tempo del fade in
+        }
     </script>
 </body>
 </html>
