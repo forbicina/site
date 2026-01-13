@@ -63,6 +63,11 @@
             justify-content: center;
         }
 
+        .train-btn {
+            font-size: 15px !important;
+            height: 25px !important;
+        }
+
         .toggle-btn {
             background: linear-gradient(135deg, #1a5fb4 0%, #3584e4 100%);
             color: white;
@@ -158,21 +163,25 @@
                     </div>
 
                     <!-- Sezione Treni -->
-                    <h3 style="color: white; margin-top: 40px;">Orari Treni</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
-                        <button class="toggle-btn" onclick="apriStazione('S06513', 'SIGNA')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
-                            <span>🚂 Signa</span>
-                        </button>
-                        <button class="toggle-btn" onclick="apriStazione('S06420', 'LASTRA A SIGNA')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
-                            <span>🚂 Lastra</span>
-                        </button>
-                        <button class="toggle-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
-                            <span>🚂 Pisa</span>
-                        </button>
-                        <button class="toggle-btn" onclick="apriStazione('S06409', 'FIRENZE S.M.NOVELLA')" style="width: 100%; height: auto; padding: 15px; border-radius: 10px;">
-                            <span>🚂 Firenze</span>
-                        </button>
+                   <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                        <div style="display: flex; gap: 15px;">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06513', 'SIGNA')" style="width: auto; height: 50px; padding: 0 20px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                                <span>Signa</span>
+                            </button>
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06420', 'LASTRA A SIGNA')" style="width: auto; height: 50px; padding: 0 20px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                                <span>Lastra a Signa</span>
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 15px;">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')" style="width: auto; height: 50px; padding: 0 20px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                                <span>Pisa Centrale</span>
+                            </button>
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06409', 'FIRENZE S.M.NOVELLA')" style="width: auto; height: 50px; padding: 0 20px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                                <span>Firenze SMN</span>
+                            </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
