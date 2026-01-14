@@ -82,7 +82,6 @@
             height: 50px;
             cursor: pointer;
             font-size: 22px;
-            font-weight: bold;
             letter-spacing: 1px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(26, 95, 180, 0.3);
@@ -109,7 +108,6 @@
         }
 
         .toggle-btn:hover {
-            transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(26, 95, 180, 0.5);
         }
 
@@ -128,7 +126,7 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
-            margin-top: 20px;
+            /* margin-top: 20px; */
             display: flex;
             justify-content: center;
         }
@@ -145,7 +143,7 @@
             position: absolute;
             background: white;
             color: #1a5fb4;
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 20px;
             font-weight: bold;
             opacity: 0;
@@ -154,7 +152,7 @@
             bottom: 60px;
             right: 0;
             transform: translateX(-50%);
-            margin-right: 35px;
+            margin-right: 40px;
         }
         .fumetto.show {
             opacity: 1;
@@ -182,28 +180,28 @@
                     </div>
 
                     <!-- Widget meteo -->
-                    <div id="widgetPisa" style="margin-bottom:-20px;" class="widget-wrapper">
+                    <div id="widgetPisa" style="margin-top:20px;" class="widget-wrapper">
                         <iframe loading="lazy" src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/5282/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
                     </div>
-                    <div id="widgetFirenze" style="margin-bottom:20px;" class="widget-wrapper">
+                    <div id="widgetFirenze" class="widget-wrapper">
                         <iframe loading="lazy" src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/2798/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
                     </div>
 
                     <!-- Sezione Treni -->
-                   <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                   <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
                         <div style="display: flex; gap: 15px;">
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06513', 'SIGNA')" style="width: auto; height: 50px; padding: 0 15px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06513', 'SIGNA')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
                                 <span>Signa</span>
                             </button>
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06420', 'LASTRA A SIGNA')" style="width: auto; height: 50px; padding: 0 15px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06420', 'LASTRA A SIGNA')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
                                 <span>Lastra a Signa</span>
                             </button>
                         </div>
-                        <div style="display: flex; gap: 15px;">
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')" style="width: auto; height: 50px; padding: 0 15px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                        <div style="display: flex; gap: 10px;">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
                                 <span>Pisa Centrale</span>
                             </button>
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06421', 'FIRENZE S.M.NOVELLA')" style="width: auto; height: 50px; padding: 0 15px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06421', 'FIRENZE S.M.NOVELLA')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
                                 <span>Firenze SMN</span>
                             </button>
                         </div>
