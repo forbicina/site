@@ -36,6 +36,7 @@
                         opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) 0.25s;
             overflow: hidden;
         }
+
         .page.exiting {
             transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
                         opacity 0.15s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
@@ -65,11 +66,6 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-        }
-
-        .train-btn {
-            font-size: 15px !important;
-            height: 25px !important;
         }
 
         .toggle-btn {
@@ -122,11 +118,19 @@
             z-index: 1;
         }
 
+        .train-btn {
+            width: auto;
+            height: 25px;
+            padding: 0 10px;
+            font-size: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);
+        }
+
         .widget-wrapper {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
-            /* margin-top: 20px; */
             display: flex;
             justify-content: center;
         }
@@ -150,12 +154,23 @@
             pointer-events: none;
             transition: opacity 9s cubic-bezier(.55,.06,.68,.19);
             bottom: 60px;
-            right: 0;
-            transform: translateX(-50%);
-            margin-right: 40px;
+            right: 40px;
         }
+
         .fumetto.show {
             opacity: 1;
+        }
+
+        .train-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .train-row {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -188,25 +203,24 @@
                     </div>
 
                     <!-- Sezione Treni -->
-                   <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
-                        <div style="display: flex; gap: 10px;">
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06513', 'SIGNA')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                    <div class="train-section">
+                        <div class="train-row">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06513', 'SIGNA')">
                                 <span>Signa</span>
                             </button>
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06420', 'LASTRA A SIGNA')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06420', 'LASTRA A SIGNA')">
                                 <span>Lastra a Signa</span>
                             </button>
                         </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                        <div class="train-row">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')">
                                 <span>Pisa Centrale</span>
                             </button>
-                            <button class="toggle-btn train-btn" onclick="apriStazione('S06421', 'FIRENZE S.M.NOVELLA')" style="width: auto; height: 50px; padding: 0 10px; border-radius: 10px; background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06421', 'FIRENZE S.M.NOVELLA')">
                                 <span>Firenze SMN</span>
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -228,6 +242,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
     <script>
         // Registra Service Worker
@@ -246,6 +261,45 @@
         const page2 = document.getElementById('page2');
         const container = document.getElementById('mainContainer');
 
+        function transitionPages(toPage) {
+            page1.classList.add('exiting');
+            page2.classList.add('exiting');
+            setTimeout(() => {
+                page1.classList.remove('exiting');
+                page2.classList.remove('exiting');
+            }, 400);
+
+            if (toPage === 2) {
+                page1.style.transform = 'translateY(-100%)';
+                page1.style.opacity = '0';
+                page2.style.transform = 'translateY(0)';
+                page2.style.opacity = '1';
+                page2.style.visibility = 'visible';
+                setTimeout(() => currentPage === 2 && (page1.style.visibility = 'hidden'), 400);
+            } else {
+                page1.style.transform = 'translateY(0)';
+                page1.style.opacity = '1';
+                page2.style.transform = 'translateY(100%)';
+                page2.style.opacity = '0';
+                page1.style.visibility = 'visible';
+                setTimeout(() => currentPage === 1 && (page2.style.visibility = 'hidden'), 400);
+            }
+        }
+
+        function resetPagePosition() {
+            if (currentPage === 1) {
+                page1.style.transform = 'translateY(0)';
+                page1.style.opacity = '1';
+                page2.style.transform = 'translateY(100%)';
+                page2.style.opacity = '0';
+            } else {
+                page1.style.transform = 'translateY(-100%)';
+                page1.style.opacity = '0';
+                page2.style.transform = 'translateY(0)';
+                page2.style.opacity = '1';
+            }
+        }
+
         // Touch events
         container.addEventListener('touchstart', (e) => {
             startY = e.touches[0].clientY;
@@ -255,30 +309,24 @@
         container.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
 
-            const currentY = e.touches[0].clientY;
-            const deltaY = currentY - startY;
+            const deltaY = e.touches[0].clientY - startY;
 
-            if (Math.abs(deltaY) > 10) {
-                e.preventDefault();
-            }
+            if (Math.abs(deltaY) > 10) e.preventDefault();
 
             const resistedDelta = deltaY * RESISTANCE_FACTOR;
             const progress = Math.min(Math.abs(resistedDelta) / 100, 1);
 
+            page1.style.transition = 'none';
+            page2.style.transition = 'none';
+
             if (currentPage === 1 && deltaY < 0) {
-                page1.style.transition = 'none';
                 page1.style.transform = `translateY(${resistedDelta}px)`;
                 page1.style.opacity = 1 - progress;
-
-                page2.style.transition = 'none';
                 page2.style.transform = `translateY(${100 + (resistedDelta / window.innerHeight * 100)}%)`;
                 page2.style.opacity = progress;
             } else if (currentPage === 2 && deltaY > 0) {
-                page2.style.transition = 'none';
                 page2.style.transform = `translateY(${resistedDelta}px)`;
                 page2.style.opacity = 1 - progress;
-
-                page1.style.transition = 'none';
                 page1.style.transform = `translateY(${-100 + (resistedDelta / window.innerHeight * 100)}%)`;
                 page1.style.opacity = progress;
             }
@@ -288,54 +336,35 @@
             if (!isDragging) return;
             isDragging = false;
 
-            const currentY = e.changedTouches[0].clientY;
-            const deltaY = currentY - startY;
-
-            page1.classList.add('exiting');
-            page2.classList.add('exiting');
-            setTimeout(() => {
-                page1.classList.remove('exiting');
-                page2.classList.remove('exiting');
-            }, 400);
+            const deltaY = e.changedTouches[0].clientY - startY;
 
             if (currentPage === 1 && deltaY < -SWIPE_THRESHOLD) {
                 currentPage = 2;
-                page1.style.transform = 'translateY(-100%)';
-                page1.style.opacity = '0';
-                page2.style.transform = 'translateY(0)';
-                page2.style.opacity = '1';
-                setTimeout(() => {
-                    if (currentPage === 2) {
-                        page1.style.visibility = 'hidden';
-                    }
-                }, 400);
-                page2.style.visibility = 'visible';
+                transitionPages(2);
             } else if (currentPage === 2 && deltaY > SWIPE_THRESHOLD) {
                 currentPage = 1;
-                page1.style.visibility = 'visible';
-                page1.style.transform = 'translateY(0)';
-                page1.style.opacity = '1';
-                page2.style.transform = 'translateY(100%)';
-                page2.style.opacity = '0';
-                setTimeout(() => {
-                    if (currentPage === 1) {
-                        page2.style.visibility = 'hidden';
-                    }
-                }, 400);
+                transitionPages(1);
             } else {
-                if (currentPage === 1) {
-                    page1.style.transform = 'translateY(0)';
-                    page1.style.opacity = '1';
-                    page2.style.transform = 'translateY(100%)';
-                    page2.style.opacity = '0';
-                } else {
-                    page1.style.transform = 'translateY(-100%)';
-                    page1.style.opacity = '0';
-                    page2.style.transform = 'translateY(0)';
-                    page2.style.opacity = '1';
-                }
+                resetPagePosition();
             }
         });
+
+        // Wheel events
+        let wheelTimeout;
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                if (e.deltaY > 50 && currentPage === 1) {
+                    currentPage = 2;
+                    transitionPages(2);
+                } else if (e.deltaY < -50 && currentPage === 2) {
+                    currentPage = 1;
+                    transitionPages(1);
+                }
+            }, 50);
+        }, { passive: false });
 
         function toggleWidget(city) {
             const pisaWidget = document.getElementById('widgetPisa');
@@ -345,84 +374,24 @@
             buttons.forEach(btn => btn.classList.remove('active'));
 
             if (city === 'pisa') {
-                if (pisaWidget.classList.contains('show')) {
-                    pisaWidget.classList.remove('show');
-                } else {
-                    pisaWidget.classList.add('show');
-                    firenzeWidget.classList.remove('show');
-                    buttons[0].classList.add('active');
-                }
+                pisaWidget.classList.toggle('show');
+                firenzeWidget.classList.remove('show');
+                if (pisaWidget.classList.contains('show')) buttons[1].classList.add('active');
             } else if (city === 'firenze') {
-                if (firenzeWidget.classList.contains('show')) {
-                    firenzeWidget.classList.remove('show');
-                } else {
-                    firenzeWidget.classList.add('show');
-                    pisaWidget.classList.remove('show');
-                    buttons[1].classList.add('active');
-                }
+                firenzeWidget.classList.toggle('show');
+                pisaWidget.classList.remove('show');
+                if (firenzeWidget.classList.contains('show')) buttons[0].classList.add('active');
             }
         }
 
-        let wheelTimeout;
-        container.addEventListener('wheel', (e) => {
-            e.preventDefault();
-
-            clearTimeout(wheelTimeout);
-            wheelTimeout = setTimeout(() => {
-                if (e.deltaY > 50 && currentPage === 1) {
-                    page1.classList.add('exiting');
-                    page2.classList.add('exiting');
-                    setTimeout(() => {
-                        page1.classList.remove('exiting');
-                        page2.classList.remove('exiting');
-                    }, 400);
-
-                    currentPage = 2;
-                    page1.style.transform = 'translateY(-100%)';
-                    page1.style.opacity = '0';
-                    page2.style.transform = 'translateY(0)';
-                    page2.style.opacity = '1';
-                    setTimeout(() => {
-                        if (currentPage === 2) {
-                            page1.style.visibility = 'hidden';
-                        }
-                    }, 400);
-                    page2.style.visibility = 'visible';
-                } else if (e.deltaY < -50 && currentPage === 2) {
-                    page1.classList.add('exiting');
-                    page2.classList.add('exiting');
-                    setTimeout(() => {
-                        page1.classList.remove('exiting');
-                        page2.classList.remove('exiting');
-                    }, 400);
-
-                    currentPage = 1;
-                    page1.style.visibility = 'visible';
-                    page1.style.transform = 'translateY(0)';
-                    page1.style.opacity = '1';
-                    page2.style.transform = 'translateY(100%)';
-                    page2.style.opacity = '0';
-                    setTimeout(() => {
-                        if (currentPage === 1) {
-                            page2.style.visibility = 'hidden';
-                        }
-                    }, 400);
-                }
-            }, 50);
-        }, { passive: false });
-
         function apriStazione(codiceStazione, nomeStazione) {
-            const nomeEncoded = encodeURIComponent(nomeStazione);
-            window.location.href = `http://www.viaggiatreno.it/infomobilitamobile/pages/cercaTreno/cercaTreno.jsp?cod=${codiceStazione}&nome=${nomeEncoded}`;
+            window.location.href = `http://www.viaggiatreno.it/infomobilitamobile/pages/cercaTreno/cercaTreno.jsp?cod=${codiceStazione}&nome=${encodeURIComponent(nomeStazione)}`;
         }
 
         function mostraFumetto() {
             const fumetto = document.getElementById('fumetto');
             fumetto.classList.add('show');
-
-            setTimeout(() => {
-                fumetto.classList.remove('show');
-            }, 15000); // esattamente il tempo del fade in
+            setTimeout(() => fumetto.classList.remove('show'), 15000);
         }
     </script>
 </body>

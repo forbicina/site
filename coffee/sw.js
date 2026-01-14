@@ -1,17 +1,12 @@
-const CACHE_NAME = 'coffee-v';
+const CACHE_NAME = 'coffee-v1.1';
 const urlsToCache = [
-    '/index.html',
-'/css/ciessesse.css',
-'/assets/ico.ico',
-'/coffee.json',
-'/icon-192.png',
-'/icon-512.png',
-'/fonts/static/HelveticaNeue-Light.otf',
-'/fonts/static/HelveticaNeue-Bold.otf',
-'/fonts/static/HelveticaNeue-Italic.otf',
-'/fonts/static/Faustina-Regular.ttf',
-'/fonts/static/Faustina-Bold.ttf'
-];
+    '/coffee/index.html',
+    '/coffee/coffee.json',
+    '/coffee/icon-192.png',
+    '/coffee/icon-512.png',
+    '/css/ciessesse.css',
+    '/assets/ico.ico'
+    ];
 
 self.addEventListener('install', event => {
     event.waitUntil(
@@ -37,13 +32,20 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+    const url = new URL(event.request.url);
+
+    // Per risorse esterne: network-first
+    if (!url.origin.includes(location.origin)) {
+        event.respondWith(
+            fetch(event.request)
+            .catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
+    // Per risorse locali: cache-first
     event.respondWith(
         caches.match(event.request)
-        .then(response => {
-            if (response) {
-                return response;
-            }
-            return fetch(event.request);
-        })
+        .then(response => response || fetch(event.request))
     );
 });
