@@ -68,6 +68,13 @@
             justify-content: center;
         }
 
+        .radar {
+            font-size: 15px !important;
+            height: 30px !important;
+            border-radius: 50% !important;
+            width: 30px !important;
+        }
+
         .toggle-btn {
             background: linear-gradient(135deg, #1a5fb4 0%, #3584e4 100%);
             color: white;
@@ -179,7 +186,12 @@
         <!-- Pagina 1: Meteo e Treni -->
         <div class="page screen-1" id="page1">
             <div class="blogpost">
+                <!-- Radar precipitazioni -->
                 <div class="meteo-container">
+                    <div style="margin-bottom: 10px;">
+                        <button class="toggle-btn radar" onclick="protezionecivile()">🌧️</button>
+                    </div>
+
                     <!-- Bottoni meteo -->
                     <div class="buttons-container" style="position: relative;">
                         <button class="toggle-btn" onclick="toggleWidget('firenze')">
@@ -386,6 +398,10 @@
 
         function apriStazione(codiceStazione, nomeStazione) {
             window.location.href = `http://www.viaggiatreno.it/infomobilitamobile/pages/cercaTreno/cercaTreno.jsp?cod=${codiceStazione}&nome=${encodeURIComponent(nomeStazione)}`;
+        }
+
+        function protezionecivile() {
+            window.location.href = `https://radar.protezionecivile.it/`;
         }
 
         function mostraFumetto() {
