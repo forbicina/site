@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link rel="manifest" href="marcoaurelio.json?v=2">
+    <link rel="manifest" href="marcoaurelio.json?v=3">
     <meta name="theme-color" content="#000000">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../assets/ico.ico">
@@ -16,7 +16,7 @@
     </blockquote>
 </div>
 
-<button id="btn-notifiche" style="margin-top: 2rem; padding: 10px 20px; cursor: pointer; display: none;">
+<button id="btn-notifiche" style="margin-top: 2rem; border-radius: 30%; padding: 10px 20px; cursor: pointer; display: none;">
     🔔
 </button>
 
@@ -45,33 +45,23 @@
     const subscription = await reg.pushManager.getSubscription();
 
     if (subscription) {
-      btn.textContent = '🔕';
+      // Già iscritto, nascondi il bottone
+      btn.style.display = 'none';
+      return;
     }
+
     btn.style.display = 'block';
-
     btn.addEventListener('click', async () => {
-      const currentSub = await reg.pushManager.getSubscription();
-
-      if (currentSub) {
-        await fetch(`${BACKEND}/unsubscribe`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ endpoint: currentSub.endpoint })
-        });
-        await currentSub.unsubscribe();
-        btn.textContent = '🔔';
-      } else {
-        const newSub = await reg.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
-        });
-        await fetch(`${BACKEND}/subscribe`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newSub.toJSON())
-        });
-        btn.textContent = '🔕';
-      }
+      const newSub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC)
+      });
+      await fetch(`${BACKEND}/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSub.toJSON())
+      });
+      btn.style.display = 'none';
     });
   }
 
