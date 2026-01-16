@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marchino-v6';
+const CACHE_NAME = 'marchino-v7';
 const ASSETS = [
     '/marchino/',
     '/marchino/index.html',
@@ -45,9 +45,9 @@ self.addEventListener('push', e => {
     e.waitUntil(
         self.registration.showNotification(data.title, {
             body: data.body,
-            icon: '/dailymarchino/icon-192.png',
-            badge: '/dailymarchino/icon-192.png',
-            data: { url: data.url || '/dailymarchino/' }
+            icon: '/marchino/icon-192.png',
+            badge: '/marchino/icon-192.png',
+            data: { url: data.url || '/marchino/' }
         })
     );
 });
