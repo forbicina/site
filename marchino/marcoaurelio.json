@@ -1,7 +1,7 @@
 {
   "name": "Daily Marchino",
   "short_name": "Marchino",
-  "start_url": "/dailymarchino",
+  "start_url": "/marchino",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
