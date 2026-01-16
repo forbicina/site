@@ -1,7 +1,7 @@
-const CACHE_NAME = 'marchino-v7';
+const CACHE_NAME = 'marchino-v9';
 const ASSETS = [
     '/marchino/',
-    '/marchino/index.html',
+    '/marchino/index.html?v=2',
     '/marchino/marcoaurelio.json',
     '/css/ciessesse.css',
     '/newtab/js/citazioni.js?v=6',
@@ -38,7 +38,7 @@ self.addEventListener('fetch', e => {
 
 self.addEventListener('push', e => {
     const data = e.data?.json() ?? {
-        title: 'Daily Marchino',
+        title: 'Marchino',
         body: 'Nuova citazione disponibile'
     };
 
