@@ -1,13 +1,13 @@
-const CACHE_NAME = 'marchino-v5';
+const CACHE_NAME = 'marchino-v6';
 const ASSETS = [
     '/marchino/',
     '/marchino/index.html',
     '/marchino/marcoaurelio.json',
     '/css/ciessesse.css',
-    '/newtab/js/citazioni.js',
+    '/newtab/js/citazioni.js?v=6',
     '/assets/ico.ico',
-    '/marchino/icon-192.png?v=5',
-    '/marchino/icon-512.png?v=5',
+    '/marchino/icon-192.png',
+    '/marchino/icon-512.png',
     ];
 
 self.addEventListener('install', e => {
