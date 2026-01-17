@@ -34,20 +34,30 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: none;
+      border-radius: 6px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     #lista-libri li:active { cursor: grabbing; }
-    #lista-libri li.dragging {
-      opacity: 0.5;
-      background: #e0e0e0;
+
+    /* SortableJS classes */
+    #lista-libri li.sortable-chosen {
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transform: scale(1.02);
     }
+    #lista-libri li.sortable-ghost {
+      opacity: 0.3;
+      background: #e8e8e8;
+    }
+    #lista-libri li.sortable-drag {
+      opacity: 1;
+    }
+
     .posizione {
       background: #333;
       color: white;
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -56,6 +66,13 @@
       font-weight: bold;
       flex-shrink: 0;
     }
+    .handle {
+      color: #999;
+      margin-right: 5px;
+      font-size: 18px;
+      cursor: grab;
+    }
+    .handle:active { cursor: grabbing; }
     .titolo { flex: 1; }
     .punti {
       color: #888;
@@ -69,6 +86,8 @@
       color: white;
       border: none;
       cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.2s ease;
     }
     #btn-vota:hover { background: #555; }
     #btn-vota:disabled {
@@ -80,6 +99,7 @@
       padding: 15px;
       text-align: center;
       display: none;
+      border-radius: 6px;
     }
     #messaggio.successo {
       background: #d4edda;
@@ -108,6 +128,7 @@
       margin-bottom: 5px;
       display: flex;
       justify-content: space-between;
+      border-radius: 6px;
     }
     .classifica-punti { font-weight: bold; }
   </style>
@@ -129,6 +150,7 @@
     <ul id="classifica-lista"></ul>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
   <script>
     const WORKER_URL = 'https://libros-club.stompet.workers.dev';
     const STORAGE_KEY = 'libros_club_votato';
@@ -156,7 +178,6 @@
     const libriMap = {};
     libri.forEach(l => libriMap[l.id] = l.titolo);
 
-    // Controlla se ha già votato
     function haGiaVotato() {
       return localStorage.getItem(STORAGE_KEY) === 'true';
     }
@@ -165,14 +186,13 @@
       localStorage.setItem(STORAGE_KEY, 'true');
     }
 
-    // Rendering lista
     function renderLista() {
       listaEl.innerHTML = '';
       libri.forEach((libro, index) => {
         const li = document.createElement('li');
-        li.draggable = true;
         li.dataset.id = libro.id;
         li.innerHTML = `
+          <span class="handle">&#9776;</span>
           <span class="posizione">${index + 1}</span>
           <span class="titolo">${libro.titolo}</span>
           <span class="punti">${numLibri - index} pt</span>
@@ -181,84 +201,13 @@
       });
     }
 
-    // Drag and drop desktop
-    let draggedItem = null;
-
-    listaEl.addEventListener('dragstart', (e) => {
-      draggedItem = e.target.closest('li');
-      if (draggedItem) {
-        draggedItem.classList.add('dragging');
-      }
-    });
-
-    listaEl.addEventListener('dragend', (e) => {
-      if (draggedItem) {
-        draggedItem.classList.remove('dragging');
-        draggedItem = null;
-        aggiornaOrdineArray();
-        renderLista();
-      }
-    });
-
-    listaEl.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      const target = e.target.closest('li');
-      if (target && target !== draggedItem) {
-        const rect = target.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
-        if (e.clientY < midY) {
-          target.parentNode.insertBefore(draggedItem, target);
-        } else {
-          target.parentNode.insertBefore(draggedItem, target.nextSibling);
-        }
-      }
-    });
-
-    // Touch support per mobile
-    let touchItem = null;
-    let touchStartY = 0;
-    let touchCurrentY = 0;
-    let placeholder = null;
-
-    listaEl.addEventListener('touchstart', (e) => {
-      const li = e.target.closest('li');
-      if (!li) return;
-
-      touchItem = li;
-      touchStartY = e.touches[0].clientY;
-      touchItem.classList.add('dragging');
-    }, { passive: true });
-
-    listaEl.addEventListener('touchmove', (e) => {
-      if (!touchItem) return;
-      e.preventDefault();
-
-      touchCurrentY = e.touches[0].clientY;
-
-      const items = [...listaEl.querySelectorAll('li')];
-      for (const item of items) {
-        if (item === touchItem) continue;
-        const rect = item.getBoundingClientRect();
-        const midY = rect.top + rect.height / 2;
-
-        if (touchCurrentY < midY && touchCurrentY > rect.top) {
-          listaEl.insertBefore(touchItem, item);
-          break;
-        } else if (touchCurrentY > midY && touchCurrentY < rect.bottom) {
-          listaEl.insertBefore(touchItem, item.nextSibling);
-          break;
-        }
-      }
-    }, { passive: false });
-
-    listaEl.addEventListener('touchend', (e) => {
-      if (touchItem) {
-        touchItem.classList.remove('dragging');
-        touchItem = null;
-        aggiornaOrdineArray();
-        renderLista();
-      }
-    });
+    function aggiornaNumeri() {
+      const items = listaEl.querySelectorAll('li');
+      items.forEach((li, index) => {
+        li.querySelector('.posizione').textContent = index + 1;
+        li.querySelector('.punti').textContent = `${numLibri - index} pt`;
+      });
+    }
 
     function aggiornaOrdineArray() {
       const nuovoOrdine = [];
@@ -271,7 +220,21 @@
       libri.push(...nuovoOrdine);
     }
 
-    // Invio voto
+    function initSortable() {
+      new Sortable(listaEl, {
+        animation: 200,
+        easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+        handle: '.handle',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        onEnd: function() {
+          aggiornaOrdineArray();
+          aggiornaNumeri();
+        }
+      });
+    }
+
     btnVota.addEventListener('click', async () => {
       btnVota.disabled = true;
       btnVota.textContent = 'Invio in corso...';
@@ -331,7 +294,6 @@
       classificaEl.classList.add('visibile');
     }
 
-    // Carica classifica (solo per chi ha già votato)
     async function caricaClassifica() {
       try {
         const response = await fetch(`${WORKER_URL}/classifica`);
@@ -352,6 +314,7 @@
       caricaClassifica();
     } else {
       renderLista();
+      initSortable();
     }
   </script>
 </body>
