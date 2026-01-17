@@ -19,6 +19,7 @@
       color: #666;
       margin-bottom: 20px;
     }
+    #sezione-voto.nascosto { display: none; }
     #lista-libri {
       list-style: none;
       padding: 0;
@@ -33,6 +34,9 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
     }
     #lista-libri li:active { cursor: grabbing; }
     #lista-libri li.dragging {
@@ -110,11 +114,12 @@
 </head>
 <body>
   <h1>Libros Club</h1>
-  <p class="istruzioni">Trascina i libri per ordinarli dal preferito (in alto) al meno preferito (in basso)</p>
 
-  <ul id="lista-libri"></ul>
-
-  <button id="btn-vota">Invia il mio voto</button>
+  <div id="sezione-voto">
+    <p class="istruzioni">Trascina i libri per ordinarli dal preferito (in alto) al meno preferito (in basso)</p>
+    <ul id="lista-libri"></ul>
+    <button id="btn-vota">Invia il mio voto</button>
+  </div>
 
   <div id="messaggio"></div>
 
@@ -125,10 +130,9 @@
   </div>
 
   <script>
-    // URL del worker Cloudflare - MODIFICA QUESTO CON IL TUO URL
     const WORKER_URL = 'https://libros-club.stompet.workers.dev';
+    const STORAGE_KEY = 'libros_club_votato';
 
-    // Lista libri con ID
     const libri = [
       { id: 1, titolo: "Norwegian Woods, Murakami" },
       { id: 2, titolo: "I dannati della terra di Fanon" },
@@ -144,13 +148,22 @@
     ];
 
     const numLibri = libri.length;
+    const sezioneVoto = document.getElementById('sezione-voto');
     const listaEl = document.getElementById('lista-libri');
     const btnVota = document.getElementById('btn-vota');
     const messaggioEl = document.getElementById('messaggio');
 
-    // Mappa ID -> titolo per la classifica
     const libriMap = {};
     libri.forEach(l => libriMap[l.id] = l.titolo);
+
+    // Controlla se ha già votato
+    function haGiaVotato() {
+      return localStorage.getItem(STORAGE_KEY) === 'true';
+    }
+
+    function segnaVotato() {
+      localStorage.setItem(STORAGE_KEY, 'true');
+    }
 
     // Rendering lista
     function renderLista() {
@@ -168,7 +181,7 @@
       });
     }
 
-    // Drag and drop
+    // Drag and drop desktop
     let draggedItem = null;
 
     listaEl.addEventListener('dragstart', (e) => {
@@ -198,6 +211,52 @@
         } else {
           target.parentNode.insertBefore(draggedItem, target.nextSibling);
         }
+      }
+    });
+
+    // Touch support per mobile
+    let touchItem = null;
+    let touchStartY = 0;
+    let touchCurrentY = 0;
+    let placeholder = null;
+
+    listaEl.addEventListener('touchstart', (e) => {
+      const li = e.target.closest('li');
+      if (!li) return;
+
+      touchItem = li;
+      touchStartY = e.touches[0].clientY;
+      touchItem.classList.add('dragging');
+    }, { passive: true });
+
+    listaEl.addEventListener('touchmove', (e) => {
+      if (!touchItem) return;
+      e.preventDefault();
+
+      touchCurrentY = e.touches[0].clientY;
+
+      const items = [...listaEl.querySelectorAll('li')];
+      for (const item of items) {
+        if (item === touchItem) continue;
+        const rect = item.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+
+        if (touchCurrentY < midY && touchCurrentY > rect.top) {
+          listaEl.insertBefore(touchItem, item);
+          break;
+        } else if (touchCurrentY > midY && touchCurrentY < rect.bottom) {
+          listaEl.insertBefore(touchItem, item.nextSibling);
+          break;
+        }
+      }
+    }, { passive: false });
+
+    listaEl.addEventListener('touchend', (e) => {
+      if (touchItem) {
+        touchItem.classList.remove('dragging');
+        touchItem = null;
+        aggiornaOrdineArray();
+        renderLista();
       }
     });
 
@@ -235,6 +294,8 @@
         const data = await response.json();
 
         if (data.ok) {
+          segnaVotato();
+          sezioneVoto.classList.add('nascosto');
           messaggioEl.textContent = 'Voto registrato! Grazie per aver partecipato.';
           messaggioEl.className = 'successo';
           mostraClassifica(data.classifica, data.totaleVoti);
@@ -244,10 +305,9 @@
       } catch (error) {
         messaggioEl.textContent = 'Errore: ' + error.message;
         messaggioEl.className = 'errore';
+        btnVota.disabled = false;
+        btnVota.textContent = 'Invia il mio voto';
       }
-
-      btnVota.disabled = false;
-      btnVota.textContent = 'Invia il mio voto';
     });
 
     function mostraClassifica(classifica, totaleVoti) {
@@ -271,7 +331,7 @@
       classificaEl.classList.add('visibile');
     }
 
-    // Carica classifica iniziale
+    // Carica classifica (solo per chi ha già votato)
     async function caricaClassifica() {
       try {
         const response = await fetch(`${WORKER_URL}/classifica`);
@@ -280,13 +340,19 @@
           mostraClassifica(data.classifica, data.totaleVoti);
         }
       } catch (e) {
-        // Ignora errore al caricamento iniziale
+        // Ignora errore
       }
     }
 
     // Inizializzazione
-    renderLista();
-    caricaClassifica();
+    if (haGiaVotato()) {
+      sezioneVoto.classList.add('nascosto');
+      messaggioEl.textContent = 'Hai già votato. Ecco la classifica attuale:';
+      messaggioEl.className = 'successo';
+      caricaClassifica();
+    } else {
+      renderLista();
+    }
   </script>
 </body>
 </html>
