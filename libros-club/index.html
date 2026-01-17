@@ -52,6 +52,12 @@
     #lista-libri li.sortable-drag {
       opacity: 1;
     }
+    #lista-libri li.sortable-fallback {
+      opacity: 1;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      transform: scale(1.03);
+      background: white;
+    }
 
     .posizione {
       background: #333;
@@ -228,6 +234,10 @@
         ghostClass: 'sortable-ghost',
         chosenClass: 'sortable-chosen',
         dragClass: 'sortable-drag',
+        forceFallback: true,
+        fallbackClass: 'sortable-fallback',
+        fallbackOnBody: true,
+        fallbackTolerance: 3,
         onEnd: function() {
           aggiornaOrdineArray();
           aggiornaNumeri();
