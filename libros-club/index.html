@@ -3,157 +3,638 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Libros Club - Vota i tuoi libri preferiti</title>
+  <title>Libros Club</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #fafafa;
+    @font-face {
+      font-family: 'Faustina';
+      src: url('../fonts/static/Faustina-Regular.ttf') format('truetype');
+      font-weight: 400;
     }
-    h1 { text-align: center; margin-bottom: 10px; }
+    @font-face {
+      font-family: 'Faustina';
+      src: url('../fonts/static/Faustina-Bold.ttf') format('truetype');
+      font-weight: 700;
+    }
+    @font-face {
+      font-family: 'Faustina';
+      src: url('../fonts/static/Faustina-Italic.ttf') format('truetype');
+      font-style: italic;
+    }
+    @font-face {
+      font-family: 'PTSerif';
+      src: url('../fonts/static/PTSerif-Regular.ttf') format('truetype');
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'PTSerif';
+      src: url('../fonts/static/PTSerif-Bold.ttf') format('truetype');
+      font-weight: 700;
+    }
+    @font-face {
+      font-family: 'PTSerif';
+      src: url('../fonts/static/PTSerif-Italic.ttf') format('truetype');
+      font-style: italic;
+    }
+
+    * { box-sizing: border-box; }
+
+    @keyframes goldShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes floatCrown {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-8px) rotate(5deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700; }
+      50% { opacity: 0.8; text-shadow: 0 0 20px #fff, 0 0 40px #ffd700, 0 0 60px #ffd700; }
+    }
+
+    @keyframes sealStamp {
+      0% { transform: scale(1.5) rotate(-20deg); opacity: 0; }
+      50% { transform: scale(0.9) rotate(5deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    body {
+      font-family: 'PTSerif', Georgia, serif;
+      margin: 0;
+      padding: 30px 15px;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(139, 69, 19, 0.03) 10px,
+          rgba(139, 69, 19, 0.03) 20px
+        ),
+        radial-gradient(ellipse at top left, #fdf8f0 0%, #f5e6d3 50%, #e8d4b8 100%);
+      min-height: 100vh;
+      color: #2c1810;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background:
+        linear-gradient(135deg,
+          rgba(255,253,245,0.95) 0%,
+          rgba(253,243,225,0.95) 50%,
+          rgba(245,230,200,0.95) 100%);
+      border: 8px solid;
+      border-image: linear-gradient(135deg, #8b4513, #d4af37, #8b4513, #d4af37, #8b4513) 1;
+      padding: 50px 35px;
+      position: relative;
+      box-shadow:
+        0 0 0 3px #2c1810,
+        0 0 0 6px #d4af37,
+        0 0 0 9px #2c1810,
+        0 20px 60px rgba(44, 24, 16, 0.4),
+        inset 0 0 100px rgba(139, 69, 19, 0.08);
+    }
+
+    /* Corner ornaments */
+    .corner {
+      position: absolute;
+      font-size: 45px;
+      color: #8b4513;
+      text-shadow: 2px 2px 0 #d4af37;
+      z-index: 10;
+    }
+    .corner-tl { top: 8px; left: 12px; }
+    .corner-tr { top: 8px; right: 12px; transform: scaleX(-1); }
+    .corner-bl { bottom: 8px; left: 12px; transform: scaleY(-1); }
+    .corner-br { bottom: 8px; right: 12px; transform: scale(-1); }
+
+    .header-decoration {
+      text-align: center;
+      font-size: 2em;
+      color: #d4af37;
+      margin-bottom: 10px;
+      letter-spacing: 0.5em;
+      text-shadow: 1px 1px 2px #8b4513;
+    }
+
+    h1 {
+      font-family: 'Faustina', Georgia, serif;
+      text-align: center;
+      font-size: 3.2em;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, #8b4513, #d4af37, #ffd700, #d4af37, #8b4513);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: goldShimmer 3s ease infinite;
+      text-shadow: none;
+      filter: drop-shadow(2px 2px 1px rgba(139, 69, 19, 0.3));
+    }
+
+    .sottotitolo {
+      text-align: center;
+      font-style: italic;
+      color: #5a3a2a;
+      margin: 15px 0 5px;
+      font-size: 1.15em;
+    }
+
+    .motto {
+      text-align: center;
+      font-size: 0.95em;
+      color: #8b4513;
+      font-style: italic;
+      margin-bottom: 10px;
+      letter-spacing: 0.05em;
+    }
+
+    .mega-ornamento {
+      text-align: center;
+      font-size: 1.8em;
+      color: #d4af37;
+      margin: 20px 0 30px;
+      letter-spacing: 0.2em;
+      text-shadow: 1px 1px 0 #8b4513;
+    }
+
+    .cherubini {
+      text-align: center;
+      font-size: 2.5em;
+      margin: 15px 0;
+    }
+
     .istruzioni {
       text-align: center;
-      color: #666;
-      margin-bottom: 20px;
+      color: #4a3020;
+      margin-bottom: 25px;
+      font-size: 1.1em;
+      font-style: italic;
+      padding: 15px;
+      background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.15), transparent);
+      border-top: 1px solid #d4af37;
+      border-bottom: 1px solid #d4af37;
     }
+
     #sezione-voto.nascosto { display: none; }
+
     #lista-libri {
       list-style: none;
       padding: 0;
-      margin: 0 0 20px 0;
+      margin: 0 0 35px 0;
     }
+
     #lista-libri li {
-      background: white;
-      border: 1px solid #ddd;
-      padding: 12px 15px;
-      margin-bottom: 8px;
+      background:
+        linear-gradient(to bottom,
+          rgba(255,252,245,1) 0%,
+          rgba(253,248,240,1) 50%,
+          rgba(248,240,225,1) 100%);
+      border: 2px solid #c9a227;
+      border-left: 6px solid #8b4513;
+      padding: 16px 20px;
+      margin-bottom: 12px;
       cursor: grab;
       display: flex;
       align-items: center;
-      gap: 10px;
-      border-radius: 6px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      gap: 14px;
+      transition: all 0.3s ease;
+      position: relative;
+      box-shadow:
+        0 3px 10px rgba(44, 24, 16, 0.1),
+        inset 0 1px 0 rgba(255,255,255,0.9),
+        inset 0 -1px 0 rgba(139, 69, 19, 0.1);
     }
+
+    #lista-libri li::before {
+      content: "※";
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      font-size: 12px;
+      color: #d4af37;
+      opacity: 0.5;
+    }
+
+    #lista-libri li:hover {
+      background: linear-gradient(to bottom, #fffdf5 0%, #fff8e8 100%);
+      border-left-color: #d4af37;
+      transform: translateX(5px);
+      box-shadow:
+        0 8px 25px rgba(44, 24, 16, 0.15),
+        inset 0 1px 0 rgba(255,255,255,1);
+    }
+
     #lista-libri li:active { cursor: grabbing; }
 
-    /* SortableJS classes */
     #lista-libri li.sortable-chosen {
-      background: #fff;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      transform: scale(1.02);
+      background: #fffefa;
+      box-shadow: 0 15px 50px rgba(139, 69, 19, 0.3);
+      transform: scale(1.03);
+      border-color: #ffd700;
+      z-index: 100;
     }
     #lista-libri li.sortable-ghost {
       opacity: 0.3;
-      background: #e8e8e8;
-    }
-    #lista-libri li.sortable-drag {
-      opacity: 1;
+      background: #ebe0cc;
+      border-style: dashed;
+      border-color: #8b4513;
     }
     #lista-libri li.sortable-fallback {
       opacity: 1;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-      transform: scale(1.03);
-      background: white;
+      box-shadow:
+        0 20px 60px rgba(44, 24, 16, 0.4),
+        0 0 30px rgba(212, 175, 55, 0.3);
+      transform: scale(1.05) rotate(2deg);
+      background: #fffefa;
+      border-color: #ffd700;
     }
 
     .posizione {
-      background: #333;
-      color: white;
-      width: 26px;
-      height: 26px;
+      background: linear-gradient(135deg, #8b4513 0%, #5a3020 50%, #8b4513 100%);
+      color: #ffd700;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 16px;
+      font-weight: 700;
       flex-shrink: 0;
+      box-shadow:
+        0 3px 8px rgba(44, 24, 16, 0.3),
+        inset 0 2px 0 rgba(255,215,0,0.3),
+        inset 0 -2px 0 rgba(0,0,0,0.2);
+      font-family: 'Faustina', serif;
+      border: 2px solid #d4af37;
     }
+
     .handle {
-      color: #999;
+      color: #8b4513;
       margin-right: 5px;
-      font-size: 18px;
+      font-size: 24px;
       cursor: grab;
+      transition: all 0.2s;
+      text-shadow: 1px 1px 0 #d4af37;
+    }
+    .handle:hover {
+      color: #d4af37;
+      transform: scale(1.2);
     }
     .handle:active { cursor: grabbing; }
-    .titolo { flex: 1; }
-    .punti {
-      color: #888;
-      font-size: 14px;
+
+    .titolo {
+      flex: 1;
+      font-size: 1.1em;
     }
+
+    .punti {
+      color: #8b4513;
+      font-size: 0.95em;
+      font-style: italic;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
     #btn-vota {
       width: 100%;
-      padding: 15px;
-      font-size: 18px;
-      background: #333;
-      color: white;
-      border: none;
+      padding: 22px 35px;
+      font-size: 1.4em;
+      font-family: 'Faustina', Georgia, serif;
+      font-weight: 700;
+      background:
+        linear-gradient(to bottom,
+          #8b0000 0%,
+          #5c0000 50%,
+          #8b0000 100%);
+      color: #ffd700;
+      border: 4px solid #d4af37;
       cursor: pointer;
-      border-radius: 6px;
-      transition: background 0.2s ease;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      box-shadow:
+        0 6px 20px rgba(139, 0, 0, 0.4),
+        inset 0 2px 0 rgba(255,255,255,0.1),
+        inset 0 -2px 0 rgba(0,0,0,0.2),
+        0 0 0 2px #2c1810;
+      position: relative;
+      overflow: hidden;
     }
-    #btn-vota:hover { background: #555; }
+
+    #btn-vota::before {
+      content: "🔏";
+      margin-right: 15px;
+    }
+
+    #btn-vota::after {
+      content: "🔏";
+      margin-left: 15px;
+    }
+
+    #btn-vota:hover {
+      background: linear-gradient(to bottom, #a00000 0%, #6c0000 50%, #a00000 100%);
+      transform: translateY(-3px);
+      box-shadow:
+        0 10px 30px rgba(139, 0, 0, 0.5),
+        inset 0 2px 0 rgba(255,255,255,0.15),
+        0 0 20px rgba(212, 175, 55, 0.3),
+        0 0 0 2px #2c1810;
+    }
+
     #btn-vota:disabled {
-      background: #ccc;
+      background: linear-gradient(to bottom, #666 0%, #444 100%);
+      border-color: #888;
       cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
     }
+
     #messaggio {
-      margin-top: 15px;
-      padding: 15px;
+      margin-top: 25px;
+      padding: 25px;
       text-align: center;
       display: none;
-      border-radius: 6px;
+      border: 3px solid;
+      font-style: italic;
+      font-size: 1.1em;
+      position: relative;
     }
+
     #messaggio.successo {
-      background: #d4edda;
-      color: #155724;
+      background:
+        linear-gradient(135deg,
+          rgba(240,250,230,1) 0%,
+          rgba(220,240,200,1) 50%,
+          rgba(240,250,230,1) 100%);
+      color: #2d5016;
+      border-color: #6b8e23;
       display: block;
+      box-shadow: 0 5px 20px rgba(107, 142, 35, 0.2);
     }
+
+    #messaggio.successo::before {
+      content: "🏆";
+      display: block;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      animation: floatCrown 2s ease-in-out infinite;
+    }
+
     #messaggio.errore {
-      background: #f8d7da;
-      color: #721c24;
+      background: linear-gradient(to bottom, #ffe8e8 0%, #ffd0d0 100%);
+      color: #8b0000;
+      border-color: #cd5c5c;
       display: block;
     }
+
     #classifica {
-      margin-top: 30px;
+      margin-top: 40px;
       display: none;
     }
+
     #classifica.visibile { display: block; }
-    #classifica h2 { text-align: center; }
+
+    .classifica-header {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.2), transparent);
+      margin-bottom: 25px;
+      border: 2px solid #d4af37;
+      border-left: none;
+      border-right: none;
+    }
+
+    #classifica h2 {
+      font-family: 'Faustina', Georgia, serif;
+      text-align: center;
+      font-size: 2.2em;
+      color: #8b4513;
+      margin: 0 0 5px 0;
+      text-shadow: 2px 2px 0 rgba(212, 175, 55, 0.3);
+    }
+
+    .classifica-sub {
+      font-style: italic;
+      color: #6b5344;
+      font-size: 1em;
+    }
+
+    #totale-voti {
+      text-align: center;
+      font-style: italic;
+      color: #5a3a2a;
+      margin-bottom: 25px;
+      font-size: 1.15em;
+      padding: 10px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 5px;
+    }
+
     #classifica-lista {
       list-style: none;
       padding: 0;
     }
+
     #classifica-lista li {
-      background: white;
-      border: 1px solid #ddd;
-      padding: 10px 15px;
-      margin-bottom: 5px;
+      background: linear-gradient(to right, #fdf8f0 0%, #fffefa 100%);
+      border: 2px solid #c9b896;
+      padding: 14px 20px;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
-      border-radius: 6px;
+      align-items: center;
+      position: relative;
+      transition: all 0.3s ease;
     }
-    .classifica-punti { font-weight: bold; }
+
+    #classifica-lista li:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(44, 24, 16, 0.1);
+    }
+
+    /* PRIMO POSTO - MASSIMA PACCHIANERIA */
+    #classifica-lista li:nth-child(1) {
+      background:
+        linear-gradient(135deg,
+          #fff8dc 0%,
+          #ffd700 20%,
+          #fff8dc 40%,
+          #ffd700 60%,
+          #fff8dc 80%,
+          #ffd700 100%);
+      background-size: 200% 200%;
+      animation: goldShimmer 2s ease infinite, pulse 2s ease-in-out infinite;
+      border: 4px solid #8b4513;
+      box-shadow:
+        0 0 30px rgba(255, 215, 0, 0.5),
+        0 10px 30px rgba(139, 69, 19, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.5);
+      padding: 20px 25px;
+      font-size: 1.2em;
+    }
+
+    #classifica-lista li:nth-child(1)::before {
+      content: "👑";
+      position: absolute;
+      left: -20px;
+      top: -15px;
+      font-size: 35px;
+      animation: floatCrown 1.5s ease-in-out infinite;
+      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+    }
+
+    #classifica-lista li:nth-child(1)::after {
+      content: "⭐ VINCITORE ASSOLUTO ⭐";
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      font-size: 0.6em;
+      background: #8b0000;
+      color: #ffd700;
+      padding: 3px 12px;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      border: 2px solid #ffd700;
+    }
+
+    #classifica-lista li:nth-child(2) {
+      background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 50%, #d0d0d0 100%);
+      border-color: #a0a0a0;
+      border-width: 3px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    #classifica-lista li:nth-child(2)::before {
+      content: "🥈";
+      position: absolute;
+      left: -15px;
+      font-size: 25px;
+    }
+
+    #classifica-lista li:nth-child(3) {
+      background: linear-gradient(135deg, #fdf5e6 0%, #deb887 50%, #cd853f 100%);
+      border-color: #8b4513;
+      border-width: 3px;
+    }
+
+    #classifica-lista li:nth-child(3)::before {
+      content: "🥉";
+      position: absolute;
+      left: -15px;
+      font-size: 25px;
+    }
+
+    .classifica-punti {
+      font-weight: 700;
+      color: #8b4513;
+      font-family: 'Faustina', serif;
+      font-size: 1.1em;
+    }
+
+    #classifica-lista li:nth-child(1) .classifica-punti {
+      color: #5c0000;
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+
+    .footer-ornamento {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 3px double #d4af37;
+    }
+
+    .footer-ornamento .decorazione {
+      font-size: 2em;
+      color: #d4af37;
+      text-shadow: 1px 1px 0 #8b4513;
+      letter-spacing: 0.3em;
+    }
+
+    .footer-ornamento .firma {
+      margin-top: 15px;
+      font-style: italic;
+      color: #8b4513;
+      font-size: 0.95em;
+    }
+
+    .footer-ornamento .anno {
+      margin-top: 8px;
+      font-size: 1.1em;
+      color: #5a3a2a;
+      letter-spacing: 0.3em;
+    }
+
+    .seal {
+      width: 80px;
+      height: 80px;
+      margin: 20px auto 0;
+      background: radial-gradient(circle, #8b0000 0%, #5c0000 70%, #3c0000 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 35px;
+      box-shadow:
+        0 5px 20px rgba(139, 0, 0, 0.5),
+        inset 0 3px 10px rgba(255, 255, 255, 0.2),
+        inset 0 -3px 10px rgba(0, 0, 0, 0.3);
+      border: 3px solid #d4af37;
+    }
   </style>
 </head>
 <body>
-  <h1>Libros Club</h1>
+  <div class="container">
+    <span class="corner corner-tl">❧</span>
+    <span class="corner corner-tr">❧</span>
+    <span class="corner corner-bl">❧</span>
+    <span class="corner corner-br">❧</span>
 
-  <div id="sezione-voto">
-    <p class="istruzioni">Trascina i libri per ordinarli dal preferito (in alto) al meno preferito (in basso)</p>
-    <ul id="lista-libri"></ul>
-    <button id="btn-vota">Invia il mio voto</button>
-  </div>
+    <div class="header-decoration">✦ ❖ ✦</div>
 
-  <div id="messaggio"></div>
+    <h1>LIBROS CLUB</h1>
 
-  <div id="classifica">
-    <h2>Classifica attuale</h2>
-    <p id="totale-voti"></p>
-    <ul id="classifica-lista"></ul>
+    <p class="sottotitolo">~ La Sacra Congregazione dei Lettori Illuminati ~</p>
+    <p class="motto">「 Leggere è vivere mille vite 」</p>
+
+    <div class="mega-ornamento">༺ ❦ ༻</div>
+
+    <div id="sezione-voto">
+      <p class="istruzioni">
+        ✧ Trascinate i volumi secondo il Vostro giudizio ✧<br>
+        <small>Dal prediletto (in alto) al meno gradito (in basso)</small>
+      </p>
+      <ul id="lista-libri"></ul>
+      <button id="btn-vota">Sigilla il Tuo Verdetto</button>
+    </div>
+
+    <div id="messaggio"></div>
+
+    <div id="classifica">
+      <div class="classifica-header">
+        <h2>📜 L'ALBO D'ORO 📜</h2>
+        <p class="classifica-sub">La Graduatoria Definitiva ed Inappellabile</p>
+      </div>
+      <p id="totale-voti"></p>
+      <ul id="classifica-lista"></ul>
+    </div>
+
+    <div class="footer-ornamento">
+      <div class="decorazione">❧ ☙ ❦ ❧ ☙</div>
+      <p class="firma">Sotto l'Alto Patronato della<br>Nobilissima Congrega dei Bibliofili</p>
+      <p class="anno">~ A.D. MMXXVI ~</p>
+      <div class="seal">📚</div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
@@ -198,10 +679,10 @@
         const li = document.createElement('li');
         li.dataset.id = libro.id;
         li.innerHTML = `
-          <span class="handle">&#9776;</span>
+          <span class="handle">☰</span>
           <span class="posizione">${index + 1}</span>
           <span class="titolo">${libro.titolo}</span>
-          <span class="punti">${numLibri - index} pt</span>
+          <span class="punti">${numLibri - index} punti</span>
         `;
         listaEl.appendChild(li);
       });
@@ -211,7 +692,7 @@
       const items = listaEl.querySelectorAll('li');
       items.forEach((li, index) => {
         li.querySelector('.posizione').textContent = index + 1;
-        li.querySelector('.punti').textContent = `${numLibri - index} pt`;
+        li.querySelector('.punti').textContent = `${numLibri - index} punti`;
       });
     }
 
@@ -228,7 +709,7 @@
 
     function initSortable() {
       new Sortable(listaEl, {
-        animation: 200,
+        animation: 250,
         easing: "cubic-bezier(0.25, 1, 0.5, 1)",
         handle: '.handle',
         ghostClass: 'sortable-ghost',
@@ -247,7 +728,7 @@
 
     btnVota.addEventListener('click', async () => {
       btnVota.disabled = true;
-      btnVota.textContent = 'Invio in corso...';
+      btnVota.innerHTML = '🔏 Sigillando... 🔏';
       messaggioEl.className = '';
       messaggioEl.style.display = 'none';
 
@@ -269,17 +750,17 @@
         if (data.ok) {
           segnaVotato();
           sezioneVoto.classList.add('nascosto');
-          messaggioEl.textContent = 'Voto registrato! Grazie per aver partecipato.';
+          messaggioEl.innerHTML = 'Il Vostro Sacro Verdetto è stato inciso per l\'eternità negli annali della Congrega!<br><small>Grazie per aver partecipato a questo momento storico.</small>';
           messaggioEl.className = 'successo';
           mostraClassifica(data.classifica, data.totaleVoti);
         } else {
           throw new Error(data.error || 'Errore sconosciuto');
         }
       } catch (error) {
-        messaggioEl.textContent = 'Errore: ' + error.message;
+        messaggioEl.textContent = '⚠️ Errore: ' + error.message;
         messaggioEl.className = 'errore';
         btnVota.disabled = false;
-        btnVota.textContent = 'Invia il mio voto';
+        btnVota.innerHTML = '🔏 Sigilla il Tuo Sacro Verdetto 🔏';
       }
     });
 
@@ -288,7 +769,7 @@
       const listaClassifica = document.getElementById('classifica-lista');
       const totaleEl = document.getElementById('totale-voti');
 
-      totaleEl.textContent = `Voti totali: ${totaleVoti}`;
+      totaleEl.innerHTML = `📊 <strong>Suffragi raccolti dalla Sacra Congregazione:</strong> ${totaleVoti}`;
       listaClassifica.innerHTML = '';
 
       classifica.forEach((item, index) => {
@@ -316,10 +797,9 @@
       }
     }
 
-    // Inizializzazione
     if (haGiaVotato()) {
       sezioneVoto.classList.add('nascosto');
-      messaggioEl.textContent = 'Hai già votato. Ecco la classifica attuale:';
+      messaggioEl.innerHTML = '📜 Avete già espresso il Vostro insindacabile giudizio.<br>Contemplate ora l\'Albo d\'Oro! 📜';
       messaggioEl.className = 'successo';
       caricaClassifica();
     } else {
