@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Libros Club - Vota i tuoi libri preferiti</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fafafa;
+    }
+    h1 { text-align: center; margin-bottom: 10px; }
+    .istruzioni {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    #lista-libri {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
+    #lista-libri li {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #lista-libri li:active { cursor: grabbing; }
+    #lista-libri li.dragging {
+      opacity: 0.5;
+      background: #e0e0e0;
+    }
+    .posizione {
+      background: #333;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .titolo { flex: 1; }
+    .punti {
+      color: #888;
+      font-size: 14px;
+    }
+    #btn-vota {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      background: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #btn-vota:hover { background: #555; }
+    #btn-vota:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #messaggio {
+      margin-top: 15px;
+      padding: 15px;
+      text-align: center;
+      display: none;
+    }
+    #messaggio.successo {
+      background: #d4edda;
+      color: #155724;
+      display: block;
+    }
+    #messaggio.errore {
+      background: #f8d7da;
+      color: #721c24;
+      display: block;
+    }
+    #classifica {
+      margin-top: 30px;
+      display: none;
+    }
+    #classifica.visibile { display: block; }
+    #classifica h2 { text-align: center; }
+    #classifica-lista {
+      list-style: none;
+      padding: 0;
+    }
+    #classifica-lista li {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 10px 15px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .classifica-punti { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Libros Club</h1>
+  <p class="istruzioni">Trascina i libri per ordinarli dal preferito (in alto) al meno preferito (in basso)</p>
+
+  <ul id="lista-libri"></ul>
+
+  <button id="btn-vota">Invia il mio voto</button>
+
+  <div id="messaggio"></div>
+
+  <div id="classifica">
+    <h2>Classifica attuale</h2>
+    <p id="totale-voti"></p>
+    <ul id="classifica-lista"></ul>
+  </div>
+
+  <script>
+    // URL del worker Cloudflare - MODIFICA QUESTO CON IL TUO URL
+    const WORKER_URL = 'https://libros-club.stompet.workers.dev';
+
+    // Lista libri con ID
+    const libri = [
+      { id: 1, titolo: "Norwegian Woods, Murakami" },
+      { id: 2, titolo: "I dannati della terra di Fanon" },
+      { id: 3, titolo: "Flowers for Algernon, Daniel Keyes" },
+      { id: 4, titolo: "Gatto e topo, Gunther Grass" },
+      { id: 5, titolo: "Guida intergalattica per autostoppisti" },
+      { id: 6, titolo: "Le otto montagne, Paolo Cognetti" },
+      { id: 7, titolo: "La città dei vivi, La Gioia" },
+      { id: 8, titolo: "La lingua salvata, Elias Canetti" },
+      { id: 9, titolo: "I Buddenbrock, Thomas Mann" },
+      { id: 10, titolo: "Un divorzio tardivo, Yehoshua" },
+      { id: 11, titolo: "Persone normali, Sally Rooney" }
+    ];
+
+    const numLibri = libri.length;
+    const listaEl = document.getElementById('lista-libri');
+    const btnVota = document.getElementById('btn-vota');
+    const messaggioEl = document.getElementById('messaggio');
+
+    // Mappa ID -> titolo per la classifica
+    const libriMap = {};
+    libri.forEach(l => libriMap[l.id] = l.titolo);
+
+    // Rendering lista
+    function renderLista() {
+      listaEl.innerHTML = '';
+      libri.forEach((libro, index) => {
+        const li = document.createElement('li');
+        li.draggable = true;
+        li.dataset.id = libro.id;
+        li.innerHTML = `
+          <span class="posizione">${index + 1}</span>
+          <span class="titolo">${libro.titolo}</span>
+          <span class="punti">${numLibri - index} pt</span>
+        `;
+        listaEl.appendChild(li);
+      });
+    }
+
+    // Drag and drop
+    let draggedItem = null;
+
+    listaEl.addEventListener('dragstart', (e) => {
+      draggedItem = e.target.closest('li');
+      if (draggedItem) {
+        draggedItem.classList.add('dragging');
+      }
+    });
+
+    listaEl.addEventListener('dragend', (e) => {
+      if (draggedItem) {
+        draggedItem.classList.remove('dragging');
+        draggedItem = null;
+        aggiornaOrdineArray();
+        renderLista();
+      }
+    });
+
+    listaEl.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const target = e.target.closest('li');
+      if (target && target !== draggedItem) {
+        const rect = target.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (e.clientY < midY) {
+          target.parentNode.insertBefore(draggedItem, target);
+        } else {
+          target.parentNode.insertBefore(draggedItem, target.nextSibling);
+        }
+      }
+    });
+
+    function aggiornaOrdineArray() {
+      const nuovoOrdine = [];
+      listaEl.querySelectorAll('li').forEach(li => {
+        const id = parseInt(li.dataset.id);
+        const libro = libri.find(l => l.id === id);
+        if (libro) nuovoOrdine.push(libro);
+      });
+      libri.length = 0;
+      libri.push(...nuovoOrdine);
+    }
+
+    // Invio voto
+    btnVota.addEventListener('click', async () => {
+      btnVota.disabled = true;
+      btnVota.textContent = 'Invio in corso...';
+      messaggioEl.className = '';
+      messaggioEl.style.display = 'none';
+
+      const ordine = libri.map(l => l.id);
+      const voto = {
+        ordine: ordine,
+        timestamp: Date.now()
+      };
+
+      try {
+        const response = await fetch(`${WORKER_URL}/vota`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(voto)
+        });
+
+        const data = await response.json();
+
+        if (data.ok) {
+          messaggioEl.textContent = 'Voto registrato! Grazie per aver partecipato.';
+          messaggioEl.className = 'successo';
+          mostraClassifica(data.classifica, data.totaleVoti);
+        } else {
+          throw new Error(data.error || 'Errore sconosciuto');
+        }
+      } catch (error) {
+        messaggioEl.textContent = 'Errore: ' + error.message;
+        messaggioEl.className = 'errore';
+      }
+
+      btnVota.disabled = false;
+      btnVota.textContent = 'Invia il mio voto';
+    });
+
+    function mostraClassifica(classifica, totaleVoti) {
+      const classificaEl = document.getElementById('classifica');
+      const listaClassifica = document.getElementById('classifica-lista');
+      const totaleEl = document.getElementById('totale-voti');
+
+      totaleEl.textContent = `Voti totali: ${totaleVoti}`;
+      listaClassifica.innerHTML = '';
+
+      classifica.forEach((item, index) => {
+        const li = document.createElement('li');
+        const titolo = libriMap[item.libroId] || `Libro ${item.libroId}`;
+        li.innerHTML = `
+          <span>${index + 1}. ${titolo}</span>
+          <span class="classifica-punti">${item.punti} punti</span>
+        `;
+        listaClassifica.appendChild(li);
+      });
+
+      classificaEl.classList.add('visibile');
+    }
+
+    // Carica classifica iniziale
+    async function caricaClassifica() {
+      try {
+        const response = await fetch(`${WORKER_URL}/classifica`);
+        const data = await response.json();
+        if (data.classifica && data.classifica.length > 0) {
+          mostraClassifica(data.classifica, data.totaleVoti);
+        }
+      } catch (e) {
+        // Ignora errore al caricamento iniziale
+      }
+    }
+
+    // Inizializzazione
+    renderLista();
+    caricaClassifica();
+  </script>
+</body>
+</html>
