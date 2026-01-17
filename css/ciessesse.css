@@ -45,7 +45,7 @@ body {
     }
 }
 @media (min-width: 768px) {
-    .container, .container-md, .container-sm {
+    .container-md, .container-sm {
         max-width: 720px;
     }
     .mt-md-0 {
