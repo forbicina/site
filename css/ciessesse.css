@@ -201,6 +201,9 @@ body {
 .h4, h4 {
     font-size: calc(1.275rem + .3vw);
 }
+.h5, h5 {
+    font-size: 1.25rem;
+}
 
 /* List */
 .list-unstyled {
