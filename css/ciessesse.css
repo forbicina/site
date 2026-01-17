@@ -198,6 +198,9 @@ body {
     margin-right: auto !important;
     margin-left: auto !important;
 }
+.h4, h4 {
+    font-size: calc(1.275rem + .3vw);
+}
 
 /* List */
 .list-unstyled {
