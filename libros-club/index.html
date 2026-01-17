@@ -153,7 +153,6 @@
       text-align: center;
       font-size: 0.95em;
       color: #8b4513;
-      font-style: italic;
       margin-bottom: 10px;
       letter-spacing: 0.05em;
     }
@@ -831,8 +830,8 @@
 
     <h1>LIBROS CLUB</h1>
 
-    <p class="sottotitolo">~ La Sacra Congregazione dei Lettori Illuminati ~</p>
-    <p class="motto">「 Leggere è vivere mille vite 」</p>
+    <p class="sottotitolo">~ Un club degli Amici di Midori ~</p>
+    <p class="motto">「 ケツを食ベる 」</p>
 
     <div class="mega-ornamento">༺ ❦ ༻</div>
 
@@ -858,9 +857,9 @@
 
     <div class="footer-ornamento">
       <div class="decorazione">❧ ☙ ❦ ❧ ☙</div>
-      <p class="firma">Sotto la gaudente supervisione di Dr. Ser Leonardo Coppini</p>
-      <p class="anno">~ A.D. MMXXVI ~</p>
-      <div class="seal">📚</div>
+      <p class="firma">Sotto la gaudente supervisione di <br> Dr. Ser Leonardo Coppini</p>
+      <p class="anno">~ Gennaio 2026 D.C. ~</p>
+      <div class="seal"><img src="../assets/icon-192.png" style="max-width: 75%;"></div>
     </div>
   </div>
 
@@ -977,7 +976,7 @@
         if (data.ok) {
           segnaVotato();
           sezioneVoto.classList.add('nascosto');
-          messaggioEl.innerHTML = 'Il Vostro Sacro Verdetto è stato inciso per l\'eternità negli annali della Congrega!<br><small>Grazie per aver partecipato a questo momento storico.</small>';
+          messaggioEl.innerHTML = 'Il Vostro voto è stato inciso in un server a Firenze!<br><small>Grazie per aver partecipato ed essere mio amic*.</small>';
           messaggioEl.className = 'successo';
           mostraClassifica(data.classifica, data.totaleVoti);
         } else {
@@ -987,7 +986,7 @@
         messaggioEl.textContent = '⚠️ Errore: ' + error.message;
         messaggioEl.className = 'errore';
         btnVota.disabled = false;
-        btnVota.innerHTML = '🔏 Sigilla il Tuo Sacro Verdetto 🔏';
+        btnVota.innerHTML = 'Sigilla il Tuo Verdetto';
       }
     });
 
@@ -996,7 +995,7 @@
       const listaClassifica = document.getElementById('classifica-lista');
       const totaleEl = document.getElementById('totale-voti');
 
-      totaleEl.innerHTML = `📊 <strong>Suffragi raccolti dalla Sacra Congregazione:</strong> ${totaleVoti}`;
+      totaleEl.innerHTML = `📊 <strong>Suffragi raccolti:</strong> ${totaleVoti}`;
       listaClassifica.innerHTML = '';
 
       classifica.forEach((item, index) => {
@@ -1026,7 +1025,7 @@
 
     if (haGiaVotato()) {
       sezioneVoto.classList.add('nascosto');
-      messaggioEl.innerHTML = '📜 Avete già espresso il Vostro insindacabile giudizio.<br>Contemplate ora l\'Albo d\'Oro! 📜';
+      messaggioEl.innerHTML = '📜 Avete già espresso il Vostro voto insindacabile.<br>Contemplate ora l\'Albo d\'Oro! 📜';
       messaggioEl.className = 'successo';
       caricaClassifica();
     } else {
