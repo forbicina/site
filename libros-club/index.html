@@ -591,6 +591,233 @@
         inset 0 -3px 10px rgba(0, 0, 0, 0.3);
       border: 3px solid #d4af37;
     }
+
+    /* MOBILE RESPONSIVE */
+    @media (max-width: 600px) {
+      body {
+        font-size: 16px;
+        padding: 15px 10px;
+      }
+
+      .container {
+        padding: 30px 20px;
+        border-width: 5px;
+        box-shadow:
+          0 0 0 2px #2c1810,
+          0 0 0 4px #d4af37,
+          0 10px 30px rgba(44, 24, 16, 0.3);
+      }
+
+      .corner {
+        font-size: 28px;
+      }
+      .corner-tl { top: 5px; left: 8px; }
+      .corner-tr { top: 5px; right: 8px; }
+      .corner-bl { bottom: 5px; left: 8px; }
+      .corner-br { bottom: 5px; right: 8px; }
+
+      .header-decoration {
+        font-size: 1.4em;
+        letter-spacing: 0.3em;
+        margin-bottom: 8px;
+      }
+
+      h1 {
+        font-size: 2.2em;
+      }
+
+      .sottotitolo {
+        font-size: 1em;
+        margin: 10px 0 5px;
+      }
+
+      .motto {
+        font-size: 0.85em;
+      }
+
+      .mega-ornamento {
+        font-size: 1.4em;
+        margin: 15px 0 20px;
+      }
+
+      .istruzioni {
+        font-size: 1em;
+        padding: 12px 10px;
+        margin-bottom: 20px;
+      }
+
+      #lista-libri li {
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        gap: 10px;
+        border-left-width: 4px;
+      }
+
+      .posizione {
+        width: 28px;
+        height: 28px;
+        font-size: 13px;
+      }
+
+      .handle {
+        font-size: 20px;
+        margin-right: 3px;
+      }
+
+      .titolo {
+        font-size: 0.95em;
+      }
+
+      .punti {
+        font-size: 0.8em;
+      }
+
+      #btn-vota {
+        padding: 16px 20px;
+        font-size: 1.1em;
+        letter-spacing: 0.1em;
+        border-width: 3px;
+      }
+
+      #btn-vota::before,
+      #btn-vota::after {
+        display: none;
+      }
+
+      #messaggio {
+        padding: 18px 15px;
+        font-size: 1em;
+        margin-top: 20px;
+      }
+
+      #messaggio.successo::before {
+        font-size: 2em;
+      }
+
+      .classifica-header {
+        padding: 15px 10px;
+        margin-bottom: 20px;
+      }
+
+      #classifica h2 {
+        font-size: 1.7em;
+      }
+
+      .classifica-sub {
+        font-size: 0.9em;
+      }
+
+      #totale-voti {
+        font-size: 1em;
+        padding: 8px;
+        margin-bottom: 20px;
+      }
+
+      #classifica-lista li {
+        padding: 12px 15px;
+        margin-bottom: 8px;
+      }
+
+      #classifica-lista li:nth-child(1) {
+        padding: 15px 18px;
+        font-size: 1.05em;
+      }
+
+      #classifica-lista li:nth-child(1)::before {
+        font-size: 25px;
+        left: -12px;
+        top: -10px;
+      }
+
+      #classifica-lista li:nth-child(1)::after {
+        font-size: 0.5em;
+        padding: 2px 8px;
+        right: 10px;
+        top: -10px;
+      }
+
+      #classifica-lista li:nth-child(2)::before,
+      #classifica-lista li:nth-child(3)::before {
+        font-size: 20px;
+        left: -12px;
+      }
+
+      .classifica-punti {
+        font-size: 0.95em;
+      }
+
+      .footer-ornamento {
+        margin-top: 35px;
+        padding-top: 20px;
+      }
+
+      .footer-ornamento .decorazione {
+        font-size: 1.5em;
+        letter-spacing: 0.2em;
+      }
+
+      .footer-ornamento .firma {
+        font-size: 0.85em;
+      }
+
+      .footer-ornamento .anno {
+        font-size: 0.95em;
+      }
+
+      .seal {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+        margin-top: 15px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      body {
+        font-size: 15px;
+        padding: 10px 8px;
+      }
+
+      .container {
+        padding: 25px 15px;
+      }
+
+      h1 {
+        font-size: 1.9em;
+      }
+
+      .sottotitolo {
+        font-size: 0.9em;
+      }
+
+      #lista-libri li {
+        padding: 10px 12px;
+        gap: 8px;
+      }
+
+      .posizione {
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+      }
+
+      .handle {
+        font-size: 18px;
+      }
+
+      .titolo {
+        font-size: 0.9em;
+      }
+
+      #btn-vota {
+        padding: 14px 15px;
+        font-size: 1em;
+      }
+
+      #classifica-lista li:nth-child(1)::after {
+        content: "⭐ VINCITORE ⭐";
+      }
+    }
   </style>
 </head>
 <body>
@@ -631,7 +858,7 @@
 
     <div class="footer-ornamento">
       <div class="decorazione">❧ ☙ ❦ ❧ ☙</div>
-      <p class="firma">Sotto l'Alto Patronato della<br>Nobilissima Congrega dei Bibliofili</p>
+      <p class="firma">Sotto la gaudente supervisione di Dr. Ser Leonardo Coppini</p>
       <p class="anno">~ A.D. MMXXVI ~</p>
       <div class="seal">📚</div>
     </div>
