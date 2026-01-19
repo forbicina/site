@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <link rel="manifest" href="coffee.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../assets/ico.ico">
+    <link rel="stylesheet" href="../css/ciessesse.css">
+    <title>Coffee</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        #mainContainer {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .page {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1) 0.25s;
+            overflow: hidden;
+        }
+
+        .page.exiting {
+            transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity 0.15s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+        }
+
+        .page.screen-1 {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* .page.screen-2 {
+            transform: translateY(100%);
+            opacity: 0;
+        } */
+
+        .blogpost {
+            max-width: 800px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .meteo-container {
+            margin: 20px;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .radar {
+            font-size: 15px !important;
+            height: 30px !important;
+            border-radius: 50% !important;
+            width: 30px !important;
+        }
+
+        .toggle-btn {
+            background: linear-gradient(135deg, #1a5fb4 0%, #3584e4 100%);
+            color: white;
+            padding: 0;
+            border: none;
+            border-radius: 30%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            font-size: 22px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(26, 95, 180, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toggle-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 30%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .toggle-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .toggle-btn:hover {
+            box-shadow: 0 6px 20px rgba(26, 95, 180, 0.5);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #3584e4 0%, #62a0ea 100%);
+            box-shadow: 0 0 0 4px rgba(26, 95, 180, 0.2);
+            transform: scale(1.05);
+        }
+
+        .toggle-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .train-btn {
+            width: auto;
+            height: 25px;
+            padding: 0 10px;
+            font-size: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);
+        }
+
+        .widget-wrapper {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            display: flex;
+            justify-content: center;
+        }
+
+        .widget-wrapper.show {
+            max-height: 600px;
+        }
+
+        /* .screen-two-content {
+            color: white;
+        } */
+
+        .train-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .train-row {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContainer">
+        <!-- Pagina 1: Meteo e Treni -->
+        <div class="page screen-1" id="page1">
+            <div class="blogpost">
+                <div class="meteo-container">
+                    <!-- Radar precipitazioni -->
+                    <div style="margin-bottom: 10px;">
+                        <button class="toggle-btn radar" onclick="protezionecivile()">🌧️</button>
+                    </div>
+
+                    <!-- Bottoni meteo -->
+                    <div class="buttons-container" id="meteoButtons">
+                        <button class="toggle-btn" id="btnFirenze" onclick="toggleWidget('firenze')">
+                            <span>FI</span>
+                        </button>
+                        <button class="toggle-btn" id="btnMontelupo" onclick="toggleWidget('montelupo')">
+                            <span>M</span>
+                        </button>
+                        <button class="toggle-btn" id="btnPisa" onclick="toggleWidget('pisa')">
+                            <span>PI</span>
+                        </button>
+                    </div>
+
+                    <!-- Widget meteo -->
+                    <div id="widgetFirenze" class="widget-wrapper">
+                        <iframe loading="lazy" src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/2798/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
+                    </div>
+                    <div id="widgetMontelupo" class="widget-wrapper">
+                        <iframe loading="lazy" src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/4376/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
+                    </div>
+                    <div id="widgetPisa" class="widget-wrapper">
+                        <iframe loading="lazy" src="https://www.3bmeteo.com/moduli_esterni/localita_7_giorni_orario/5282/ffffff/1a5fb4/241f31/ffffff/it" width="382" height="497" frameborder="0"></iframe>
+                    </div>
+
+                    <!-- Sezione Treni -->
+                    <div class="train-section">
+                        <div class="train-row">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06511', 'MONTELUPO CAPRAIA')">
+                                <span>Montelupo</span>
+                            </button>
+                        </div>
+                        <div class="train-row">
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06500', 'PISA CENTRALE')">
+                                <span>Pisa Centrale</span>
+                            </button>
+                            <button class="toggle-btn train-btn" onclick="apriStazione('S06421', 'FIRENZE S.M.NOVELLA')">
+                                <span>Firenze SMN</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagina 2: Placeholder (DISABILITATA) -->
+        <!-- <div class="page screen-2" id="page2">
+            <div class="blogpost">
+                <div class="screen-two-content">
+                    <h2>Schermata 2</h2>
+                    <p>Qui ci metti quello che vuoi</p>
+                    <div class="buttons-container" style="margin-top: 30px;">
+                        <button class="toggle-btn">
+                            <span>A</span>
+                        </button>
+                        <button class="toggle-btn">
+                            <span>B</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        // Registra Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .catch(err => console.log('SW registration failed:', err));
+        }
+
+        // let currentPage = 1;
+        // let startY = 0;
+        // let isDragging = false;
+        // const SWIPE_THRESHOLD = 80;
+        // const RESISTANCE_FACTOR = 0.4;
+
+        const page1 = document.getElementById('page1');
+        // const page2 = document.getElementById('page2');
+        const container = document.getElementById('mainContainer');
+
+        /*
+        // FUNZIONI DI NAVIGAZIONE TRA PAGINE (DISABILITATE)
+        function transitionPages(toPage) {
+            page1.classList.add('exiting');
+            page2.classList.add('exiting');
+            setTimeout(() => {
+                page1.classList.remove('exiting');
+                page2.classList.remove('exiting');
+            }, 400);
+
+            if (toPage === 2) {
+                page1.style.transform = 'translateY(-100%)';
+                page1.style.opacity = '0';
+                page2.style.transform = 'translateY(0)';
+                page2.style.opacity = '1';
+                page2.style.visibility = 'visible';
+                setTimeout(() => currentPage === 2 && (page1.style.visibility = 'hidden'), 400);
+            } else {
+                page1.style.transform = 'translateY(0)';
+                page1.style.opacity = '1';
+                page2.style.transform = 'translateY(100%)';
+                page2.style.opacity = '0';
+                page1.style.visibility = 'visible';
+                setTimeout(() => currentPage === 1 && (page2.style.visibility = 'hidden'), 400);
+            }
+        }
+
+        function resetPagePosition() {
+            if (currentPage === 1) {
+                page1.style.transform = 'translateY(0)';
+                page1.style.opacity = '1';
+                page2.style.transform = 'translateY(100%)';
+                page2.style.opacity = '0';
+            } else {
+                page1.style.transform = 'translateY(-100%)';
+                page1.style.opacity = '0';
+                page2.style.transform = 'translateY(0)';
+                page2.style.opacity = '1';
+            }
+        }
+
+        // Touch events
+        container.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+            isDragging = true;
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+
+            const deltaY = e.touches[0].clientY - startY;
+
+            if (Math.abs(deltaY) > 10) e.preventDefault();
+
+            const resistedDelta = deltaY * RESISTANCE_FACTOR;
+            const progress = Math.min(Math.abs(resistedDelta) / 100, 1);
+
+            page1.style.transition = 'none';
+            page2.style.transition = 'none';
+
+            if (currentPage === 1 && deltaY < 0) {
+                page1.style.transform = `translateY(${resistedDelta}px)`;
+                page1.style.opacity = 1 - progress;
+                page2.style.transform = `translateY(${100 + (resistedDelta / window.innerHeight * 100)}%)`;
+                page2.style.opacity = progress;
+            } else if (currentPage === 2 && deltaY > 0) {
+                page2.style.transform = `translateY(${resistedDelta}px)`;
+                page2.style.opacity = 1 - progress;
+                page1.style.transform = `translateY(${-100 + (resistedDelta / window.innerHeight * 100)}%)`;
+                page1.style.opacity = progress;
+            }
+        });
+
+        container.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+
+            const deltaY = e.changedTouches[0].clientY - startY;
+
+            if (currentPage === 1 && deltaY < -SWIPE_THRESHOLD) {
+                currentPage = 2;
+                transitionPages(2);
+            } else if (currentPage === 2 && deltaY > SWIPE_THRESHOLD) {
+                currentPage = 1;
+                transitionPages(1);
+            } else {
+                resetPagePosition();
+            }
+        });
+
+        // Wheel events
+        let wheelTimeout;
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                if (e.deltaY > 50 && currentPage === 1) {
+                    currentPage = 2;
+                    transitionPages(2);
+                } else if (e.deltaY < -50 && currentPage === 2) {
+                    currentPage = 1;
+                    transitionPages(1);
+                }
+            }, 50);
+        }, { passive: false });
+        */
+
+        function toggleWidget(city) {
+            const widgets = {
+                firenze: document.getElementById('widgetFirenze'),
+                montelupo: document.getElementById('widgetMontelupo'),
+                pisa: document.getElementById('widgetPisa')
+            };
+
+            const buttons = {
+                firenze: document.getElementById('btnFirenze'),
+                montelupo: document.getElementById('btnMontelupo'),
+                pisa: document.getElementById('btnPisa')
+            };
+
+            const isCurrentlyShowing = widgets[city].classList.contains('show');
+
+            // Chiudi tutti i widget e rimuovi active da tutti i bottoni
+            Object.values(widgets).forEach(w => w.classList.remove('show'));
+            Object.values(buttons).forEach(b => b.classList.remove('active'));
+
+            // Se non era già aperto, aprilo
+            if (!isCurrentlyShowing) {
+                widgets[city].classList.add('show');
+                buttons[city].classList.add('active');
+            }
+        }
+
+        function apriStazione(codiceStazione, nomeStazione) {
+            window.location.href = `http://www.viaggiatreno.it/infomobilitamobile/pages/cercaTreno/cercaTreno.jsp?cod=${codiceStazione}&nome=${encodeURIComponent(nomeStazione)}`;
+        }
+
+        function protezionecivile() {
+            window.location.href = `https://radar.protezionecivile.it/`;
+        }
+    </script>
+</body>
+</html>
