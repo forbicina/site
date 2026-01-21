@@ -1,0 +1,11 @@
+ Comandi utili per i test
+
+  Reset completo di un lettore:
+  curl -X POST https://libros-club.stompet.workers.dev/reset-lettore \
+    -H "Content-Type: application/json" \
+    -d '{"nome":"NOME","campo":"tutto"}'
+
+  Reset solo progressione (mantiene pagine totali):
+  curl -X POST https://libros-club.stompet.workers.dev/reset-lettore \
+    -H "Content-Type: application/json" \
+    -d '{"nome":"NOME","campo":"progressione"}'

@@ -3,1035 +3,792 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffbc93">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Libros Club">
+  <link rel="manifest" href="libros.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <title>Libros Club</title>
   <style>
-    @font-face {
-      font-family: 'Faustina';
-      src: url('../fonts/static/Faustina-Regular.ttf') format('truetype');
-      font-weight: 400;
-    }
-    @font-face {
-      font-family: 'Faustina';
-      src: url('../fonts/static/Faustina-Bold.ttf') format('truetype');
-      font-weight: 700;
-    }
-    @font-face {
-      font-family: 'Faustina';
-      src: url('../fonts/static/Faustina-Italic.ttf') format('truetype');
-      font-style: italic;
-    }
     @font-face {
       font-family: 'PTSerif';
       src: url('../fonts/static/PTSerif-Regular.ttf') format('truetype');
       font-weight: 400;
+      font-display: swap;
     }
     @font-face {
       font-family: 'PTSerif';
       src: url('../fonts/static/PTSerif-Bold.ttf') format('truetype');
       font-weight: 700;
+      font-display: swap;
     }
     @font-face {
-      font-family: 'PTSerif';
-      src: url('../fonts/static/PTSerif-Italic.ttf') format('truetype');
-      font-style: italic;
+      font-family: 'Faustina';
+      src: url('../fonts/static/Faustina-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Faustina';
+      src: url('../fonts/static/Faustina-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-display: swap;
     }
 
-    * { box-sizing: border-box; }
-
-    @keyframes goldShimmer {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    @keyframes floatCrown {
-      0%, 100% { transform: translateY(0) rotate(-5deg); }
-      50% { transform: translateY(-8px) rotate(5deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-    }
-
-    @keyframes sparkle {
-      0%, 100% { opacity: 1; text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700, 0 0 30px #ffd700; }
-      50% { opacity: 0.8; text-shadow: 0 0 20px #fff, 0 0 40px #ffd700, 0 0 60px #ffd700; }
-    }
-
-    @keyframes sealStamp {
-      0% { transform: scale(1.5) rotate(-20deg); opacity: 0; }
-      50% { transform: scale(0.9) rotate(5deg); opacity: 1; }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
       font-family: 'PTSerif', Georgia, serif;
-      margin: 0;
-      padding: 30px 15px;
-      background:
-        repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 10px,
-          rgba(139, 69, 19, 0.03) 10px,
-          rgba(139, 69, 19, 0.03) 20px
-        ),
-        radial-gradient(ellipse at top left, #fdf8f0 0%, #f5e6d3 50%, #e8d4b8 100%);
+      background: linear-gradient(135deg, #ffbc93, #e89f6b);
       min-height: 100vh;
-      color: #2c1810;
-      font-size: 18px;
-      line-height: 1.7;
+      padding: 20px;
+      color: #3d2817;
+      line-height: 1.6;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 800px;
       margin: 0 auto;
-      background:
-        linear-gradient(135deg,
-          rgba(255,253,245,0.95) 0%,
-          rgba(253,243,225,0.95) 50%,
-          rgba(245,230,200,0.95) 100%);
-      border: 8px solid;
-      border-image: linear-gradient(135deg, #8b4513, #d4af37, #8b4513, #d4af37, #8b4513) 1;
-      padding: 50px 35px;
-      position: relative;
-      box-shadow:
-        0 0 0 3px #2c1810,
-        0 0 0 6px #d4af37,
-        0 0 0 9px #2c1810,
-        0 20px 60px rgba(44, 24, 16, 0.4),
-        inset 0 0 100px rgba(139, 69, 19, 0.08);
-    }
-
-    /* Corner ornaments */
-    .corner {
-      position: absolute;
-      font-size: 45px;
-      color: #8b4513;
-      text-shadow: 2px 2px 0 #d4af37;
-      z-index: 10;
-    }
-    .corner-tl { top: 8px; left: 12px; }
-    .corner-tr { top: 8px; right: 12px; transform: scaleX(-1); }
-    .corner-bl { bottom: 8px; left: 12px; transform: scaleY(-1); }
-    .corner-br { bottom: 8px; right: 12px; transform: scale(-1); }
-
-    .header-decoration {
-      text-align: center;
-      font-size: 2em;
-      color: #d4af37;
-      margin-bottom: 10px;
-      letter-spacing: 0.5em;
-      text-shadow: 1px 1px 2px #8b4513;
+      background: #fdf1d5;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     }
 
     h1 {
       font-family: 'Faustina', Georgia, serif;
-      text-align: center;
-      font-size: 3.2em;
+      font-size: 2em;
       font-weight: 700;
-      margin: 0;
-      background: linear-gradient(135deg, #8b4513, #d4af37, #ffd700, #d4af37, #8b4513);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: goldShimmer 3s ease infinite;
-      text-shadow: none;
-      filter: drop-shadow(2px 2px 1px rgba(139, 69, 19, 0.3));
+      text-align: center;
+      margin-bottom: 5px;
+      color: #6b4423;
     }
 
     .sottotitolo {
       text-align: center;
-      font-style: italic;
-      color: #5a3a2a;
-      margin: 15px 0 5px;
-      font-size: 1.15em;
-    }
-
-    .motto {
-      text-align: center;
-      font-size: 0.95em;
-      color: #8b4513;
-      margin-bottom: 10px;
-      letter-spacing: 0.05em;
-    }
-
-    .mega-ornamento {
-      text-align: center;
-      font-size: 1.8em;
-      color: #d4af37;
-      margin: 20px 0 30px;
-      letter-spacing: 0.2em;
-      text-shadow: 1px 1px 0 #8b4513;
-    }
-
-    .cherubini {
-      text-align: center;
-      font-size: 2.5em;
-      margin: 15px 0;
-    }
-
-    .istruzioni {
-      text-align: center;
-      color: #4a3020;
-      margin-bottom: 25px;
-      font-size: 1.1em;
-      font-style: italic;
-      padding: 15px;
-      background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.15), transparent);
-      border-top: 1px solid #d4af37;
-      border-bottom: 1px solid #d4af37;
-    }
-
-    #sezione-voto.nascosto { display: none; }
-
-    #lista-libri {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 35px 0;
-    }
-
-    #lista-libri li {
-      background:
-        linear-gradient(to bottom,
-          rgba(255,252,245,1) 0%,
-          rgba(253,248,240,1) 50%,
-          rgba(248,240,225,1) 100%);
-      border: 2px solid #c9a227;
-      border-left: 6px solid #8b4513;
-      padding: 16px 20px;
-      margin-bottom: 12px;
-      cursor: grab;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      transition: all 0.3s ease;
-      position: relative;
-      box-shadow:
-        0 3px 10px rgba(44, 24, 16, 0.1),
-        inset 0 1px 0 rgba(255,255,255,0.9),
-        inset 0 -1px 0 rgba(139, 69, 19, 0.1);
-    }
-
-    #lista-libri li::before {
-      content: "※";
-      position: absolute;
-      right: 10px;
-      top: 5px;
-      font-size: 12px;
-      color: #d4af37;
-      opacity: 0.5;
-    }
-
-    #lista-libri li:hover {
-      background: linear-gradient(to bottom, #fffdf5 0%, #fff8e8 100%);
-      border-left-color: #d4af37;
-      transform: translateX(5px);
-      box-shadow:
-        0 8px 25px rgba(44, 24, 16, 0.15),
-        inset 0 1px 0 rgba(255,255,255,1);
-    }
-
-    #lista-libri li:active { cursor: grabbing; }
-
-    #lista-libri li.sortable-chosen {
-      background: #fffefa;
-      box-shadow: 0 15px 50px rgba(139, 69, 19, 0.3);
-      transform: scale(1.03);
-      border-color: #ffd700;
-      z-index: 100;
-    }
-    #lista-libri li.sortable-ghost {
-      opacity: 0.3;
-      background: #ebe0cc;
-      border-style: dashed;
-      border-color: #8b4513;
-    }
-    #lista-libri li.sortable-fallback {
-      opacity: 1;
-      box-shadow:
-        0 20px 60px rgba(44, 24, 16, 0.4),
-        0 0 30px rgba(212, 175, 55, 0.3);
-      transform: scale(1.05) rotate(2deg);
-      background: #fffefa;
-      border-color: #ffd700;
-    }
-
-    .posizione {
-      background: linear-gradient(135deg, #8b4513 0%, #5a3020 50%, #8b4513 100%);
-      color: #ffd700;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 700;
-      flex-shrink: 0;
-      box-shadow:
-        0 3px 8px rgba(44, 24, 16, 0.3),
-        inset 0 2px 0 rgba(255,215,0,0.3),
-        inset 0 -2px 0 rgba(0,0,0,0.2);
-      font-family: 'Faustina', serif;
-      border: 2px solid #d4af37;
-    }
-
-    .handle {
-      color: #8b4513;
-      margin-right: 5px;
-      font-size: 24px;
-      cursor: grab;
-      transition: all 0.2s;
-      text-shadow: 1px 1px 0 #d4af37;
-    }
-    .handle:hover {
-      color: #d4af37;
-      transform: scale(1.2);
-    }
-    .handle:active { cursor: grabbing; }
-
-    .titolo {
-      flex: 1;
-      font-size: 1.1em;
-    }
-
-    .punti {
-      color: #8b4513;
-      font-size: 0.95em;
-      font-style: italic;
-      white-space: nowrap;
-      font-weight: 600;
-    }
-
-    #btn-vota {
-      width: 100%;
-      padding: 22px 35px;
-      font-size: 1.4em;
-      font-family: 'Faustina', Georgia, serif;
-      font-weight: 700;
-      background:
-        linear-gradient(to bottom,
-          #8b0000 0%,
-          #5c0000 50%,
-          #8b0000 100%);
-      color: #ffd700;
-      border: 4px solid #d4af37;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      box-shadow:
-        0 6px 20px rgba(139, 0, 0, 0.4),
-        inset 0 2px 0 rgba(255,255,255,0.1),
-        inset 0 -2px 0 rgba(0,0,0,0.2),
-        0 0 0 2px #2c1810;
-      position: relative;
-      overflow: hidden;
-    }
-
-    #btn-vota::before {
-      content: "🔏";
-      margin-right: 15px;
-    }
-
-    #btn-vota::after {
-      content: "🔏";
-      margin-left: 15px;
-    }
-
-    #btn-vota:hover {
-      background: linear-gradient(to bottom, #a00000 0%, #6c0000 50%, #a00000 100%);
-      transform: translateY(-3px);
-      box-shadow:
-        0 10px 30px rgba(139, 0, 0, 0.5),
-        inset 0 2px 0 rgba(255,255,255,0.15),
-        0 0 20px rgba(212, 175, 55, 0.3),
-        0 0 0 2px #2c1810;
-    }
-
-    #btn-vota:disabled {
-      background: linear-gradient(to bottom, #666 0%, #444 100%);
-      border-color: #888;
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-
-    #messaggio {
-      margin-top: 25px;
-      padding: 25px;
-      text-align: center;
-      display: none;
-      border: 3px solid;
-      font-style: italic;
-      font-size: 1.1em;
-      position: relative;
-    }
-
-    #messaggio.successo {
-      background:
-        linear-gradient(135deg,
-          rgba(240,250,230,1) 0%,
-          rgba(220,240,200,1) 50%,
-          rgba(240,250,230,1) 100%);
-      color: #2d5016;
-      border-color: #6b8e23;
-      display: block;
-      box-shadow: 0 5px 20px rgba(107, 142, 35, 0.2);
-    }
-
-    #messaggio.successo::before {
-      content: "🏆";
-      display: block;
-      font-size: 2.5em;
-      margin-bottom: 10px;
-      animation: floatCrown 2s ease-in-out infinite;
-    }
-
-    #messaggio.errore {
-      background: linear-gradient(to bottom, #ffe8e8 0%, #ffd0d0 100%);
-      color: #8b0000;
-      border-color: #cd5c5c;
-      display: block;
-    }
-
-    #classifica {
-      margin-top: 40px;
-      display: none;
-    }
-
-    #classifica.visibile { display: block; }
-
-    .classifica-header {
-      text-align: center;
-      padding: 20px;
-      background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.2), transparent);
-      margin-bottom: 25px;
-      border: 2px solid #d4af37;
-      border-left: none;
-      border-right: none;
-    }
-
-    #classifica h2 {
-      font-family: 'Faustina', Georgia, serif;
-      text-align: center;
-      font-size: 2.2em;
-      color: #8b4513;
-      margin: 0 0 5px 0;
-      text-shadow: 2px 2px 0 rgba(212, 175, 55, 0.3);
-    }
-
-    .classifica-sub {
-      font-style: italic;
-      color: #6b5344;
+      color: #a0522d;
+      margin-bottom: 20px;
       font-size: 1em;
     }
 
-    #totale-voti {
+    .stato {
+      display: none;
+    }
+
+    .stato.attivo {
+      display: block;
+    }
+
+    /* STATO 1: Selezione Nome */
+    .form-selezione {
+      max-width: 400px;
+      margin: 30px auto;
       text-align: center;
-      font-style: italic;
-      color: #5a3a2a;
-      margin-bottom: 25px;
-      font-size: 1.15em;
-      padding: 10px;
-      background: rgba(212, 175, 55, 0.1);
-      border-radius: 5px;
     }
 
-    #classifica-lista {
-      list-style: none;
-      padding: 0;
+    .form-selezione label {
+      display: block;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: #6b4423;
     }
 
-    #classifica-lista li {
-      background: linear-gradient(to right, #fdf8f0 0%, #fffefa 100%);
-      border: 2px solid #c9b896;
-      padding: 14px 20px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: relative;
+    .form-selezione select {
+      font-family: 'PTSerif', Georgia, serif;
+      font-size: 1.3em;
+      padding: 15px;
+      width: 100%;
+      border: 2px solid #d2691e;
+      border-radius: 8px;
+      background: #fff;
+      color: #6b4423;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    #classifica-lista li:hover {
-      transform: translateX(5px);
-      box-shadow: 0 5px 15px rgba(44, 24, 16, 0.1);
+    .form-selezione select:hover {
+      border-color: #ff8c42;
+      box-shadow: 0 4px 10px rgba(210, 105, 30, 0.3);
     }
 
-    /* PRIMO POSTO */
-    #classifica-lista li:nth-child(1) {
-      background:
-        linear-gradient(135deg,
-          #fff8dc 0%,
-          #ffd700 20%,
-          #fff8dc 40%,
-          #ffd700 60%,
-          #fff8dc 80%,
-          #ffd700 100%);
-      background-size: 200% 200%;
-      animation: goldShimmer 2s ease infinite, pulse 2s ease-in-out infinite;
-      border: 4px solid #8b4513;
-      box-shadow:
-        0 0 30px rgba(255, 215, 0, 0.5),
-        0 10px 30px rgba(139, 69, 19, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.5);
-      padding: 20px 25px;
-      font-size: 1.2em;
+    .form-selezione select:focus {
+      outline: none;
+      border-color: #ff6b35;
+      box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
     }
 
-    #classifica-lista li:nth-child(1)::before {
-      content: "👑";
-      position: absolute;
-      left: -20px;
-      top: -15px;
-      font-size: 35px;
-      animation: floatCrown 1.5s ease-in-out infinite;
-      filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
-    }
-
-    #classifica-lista li:nth-child(1)::after {
-      content: "⭐ CIÒ CHE LEGGEREMO ⭐";
-      position: absolute;
-      top: -12px;
-      right: 20px;
-      font-size: 0.6em;
-      background: #8b0000;
-      color: #ffd700;
-      padding: 3px 12px;
-      font-weight: bold;
-      letter-spacing: 0.1em;
-      border: 2px solid #ffd700;
-    }
-
-    #classifica-lista li:nth-child(2) {
-      background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 50%, #d0d0d0 100%);
-      border-color: #a0a0a0;
-      border-width: 3px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    #classifica-lista li:nth-child(2)::before {
-      content: "🥈";
-      position: absolute;
-      left: -15px;
-      font-size: 25px;
-    }
-
-    #classifica-lista li:nth-child(3) {
-      background: linear-gradient(135deg, #fdf5e6 0%, #deb887 50%, #cd853f 100%);
-      border-color: #8b4513;
-      border-width: 3px;
-    }
-
-    #classifica-lista li:nth-child(3)::before {
-      content: "🥉";
-      position: absolute;
-      left: -15px;
-      font-size: 25px;
-    }
-
-    .classifica-punti {
-      font-weight: 700;
-      color: #8b4513;
-      font-family: 'Faustina', serif;
-      font-size: 1.1em;
-    }
-
-    #classifica-lista li:nth-child(1) .classifica-punti {
-      color: #5c0000;
-      animation: sparkle 1.5s ease-in-out infinite;
-    }
-
-    .footer-ornamento {
+    /* STATO 2: Inserimento Pagine */
+    .form-pagine {
+      max-width: 400px;
+      margin: 30px auto;
       text-align: center;
-      margin-top: 50px;
-      padding-top: 30px;
-      border-top: 3px double #d4af37;
     }
 
-    .footer-ornamento .decorazione {
-      font-size: 2em;
-      color: #d4af37;
-      text-shadow: 1px 1px 0 #8b4513;
-      letter-spacing: 0.3em;
+    .form-pagine label {
+      display: block;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: #6b4423;
     }
 
-    .footer-ornamento .firma {
-      margin-top: 15px;
-      font-style: italic;
-      color: #8b4513;
+    .form-pagine input,
+    .form-pagine select {
+      font-family: 'PTSerif', Georgia, serif;
+      font-size: 1.5em;
+      padding: 12px;
+      width: 100%;
+      border: 2px solid #d2691e;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-pagine select {
+      cursor: pointer;
+    }
+
+    .form-pagine select option:disabled {
+      color: #999;
+    }
+
+    .btn-primario {
+      font-family: 'Faustina', Georgia, serif;
+      font-size: 1.3em;
+      font-weight: 700;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #ff6b35, #d9534f);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primario:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-primario:disabled {
+      background: #999;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* STATO 3: Dashboard */
+    .sezione-aggiornamento {
+      background: #ffe8cc;
+      border: 2px solid #eca677;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .sezione-aggiornamento h2 {
+      font-family: 'Faustina', Georgia, serif;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: #6b4423;
+    }
+
+    .form-inline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .form-inline input {
+      font-family: 'PTSerif', Georgia, serif;
+      font-size: 1.1em;
+      padding: 8px;
+      border: 2px solid #eca677;
+      border-radius: 5px;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    /* Rimuovi freccette dagli input numerici */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    .form-inline button {
+      font-family: 'Faustina', Georgia, serif;
+      font-size: 1em;
+      font-weight: 700;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, #ff8c42, #ffa94d);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-inline button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .lista-progressioni {
+      margin-top: 20px;
+    }
+
+    .lista-progressioni h2 {
+      font-family: 'Faustina', Georgia, serif;
+      font-size: 1.4em;
+      margin-bottom: 15px;
+      color: #6b4423;
+      text-align: center;
+    }
+
+    #cards-container {
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .lettore-item {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+    }
+
+    .lettore-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    /* Animazione per le barre di progressione */
+    @keyframes flussoColore {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+      }
+      50% {
+        box-shadow: 0 2px 12px rgba(255, 107, 53, 0.5);
+      }
+    }
+
+    .lettore-item.proprio .barra-progresso {
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
+
+    .barra-container {
+      background: #e0e0e0;
+      height: 20px;
+      border-radius: 10px;
+      overflow: visible;
+      margin-bottom: 5px;
+      margin-top: 25px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .emoji-marker {
+      position: absolute;
+      top: -24px;
+      font-size: 20px;
+      transform: translateX(-50%);
+      transition: left 0.5s ease;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    .barra-progresso {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.75em;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      background-size: 200% 200%;
+      animation: flussoColore 4s ease infinite;
+    }
+
+
+    .info-riga {
+      font-size: 0.9em;
+      color: #6b5d52;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nome-lettore {
+      font-family: 'Faustina', Georgia, serif;
+      font-weight: 700;
+      color: #6b4423;
+    }
+
+    .info-pagine {
+      color: #8b7355;
       font-size: 0.95em;
     }
 
-    .footer-ornamento .anno {
-      margin-top: 8px;
-      font-size: 1.1em;
-      color: #5a3a2a;
-      letter-spacing: 0.3em;
+    .messaggio-errore {
+      background: #ffe4d6;
+      border: 2px solid #d9534f;
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 15px;
+      color: #8b2500;
+      text-align: center;
     }
 
-    .seal {
-      width: 80px;
-      height: 80px;
-      margin: 20px auto 0;
-      background: radial-gradient(circle, #8b0000 0%, #5c0000 70%, #3c0000 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 35px;
-      box-shadow:
-        0 5px 20px rgba(139, 0, 0, 0.5),
-        inset 0 3px 10px rgba(255, 255, 255, 0.2),
-        inset 0 -3px 10px rgba(0, 0, 0, 0.3);
-      border: 3px solid #d4af37;
+    .messaggio-successo {
+      background: #fff3e0;
+      border: 2px solid #ffa94d;
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 15px;
+      color: #8b5a00;
+      text-align: center;
     }
 
-    /* MOBILE RESPONSIVE */
+    .loading {
+      text-align: center;
+      padding: 20px;
+      font-size: 1em;
+      color: #8b7355;
+    }
+
+    /* Responsive */
     @media (max-width: 600px) {
-      body {
-        font-size: 16px;
-        padding: 15px 10px;
-      }
-
       .container {
-        padding: 30px 20px;
-        border-width: 5px;
-        box-shadow:
-          0 0 0 2px #2c1810,
-          0 0 0 4px #d4af37,
-          0 10px 30px rgba(44, 24, 16, 0.3);
-      }
-
-      .corner {
-        font-size: 28px;
-      }
-      .corner-tl { top: 5px; left: 8px; }
-      .corner-tr { top: 5px; right: 8px; }
-      .corner-bl { bottom: 5px; left: 8px; }
-      .corner-br { bottom: 5px; right: 8px; }
-
-      .header-decoration {
-        font-size: 1.4em;
-        letter-spacing: 0.3em;
-        margin-bottom: 8px;
+        padding: 20px;
       }
 
       h1 {
-        font-size: 2.2em;
+        font-size: 1.8em;
+        margin-bottom:0px;
       }
 
       .sottotitolo {
         font-size: 1em;
-        margin: 10px 0 5px;
       }
 
-      .motto {
+      .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .form-inline input,
+      .form-inline button {
+        width: 100%;
+      }
+
+      .lista-progressioni h2 {
+        font-size: 1.2em;
+      }
+
+      .info-riga {
         font-size: 0.85em;
       }
 
-      .mega-ornamento {
-        font-size: 1.4em;
-        margin: 15px 0 20px;
-      }
-
-      .istruzioni {
-        font-size: 1em;
-        padding: 12px 10px;
-        margin-bottom: 20px;
-      }
-
-      #lista-libri li {
-        padding: 12px 14px;
-        margin-bottom: 10px;
-        gap: 10px;
-        border-left-width: 4px;
-      }
-
-      .posizione {
-        width: 28px;
-        height: 28px;
-        font-size: 13px;
-      }
-
-      .handle {
-        font-size: 20px;
-        margin-right: 3px;
-      }
-
-      .titolo {
-        font-size: 0.95em;
-      }
-
-      .punti {
-        font-size: 0.8em;
-      }
-
-      #btn-vota {
-        padding: 16px 20px;
-        font-size: 1.1em;
-        letter-spacing: 0.1em;
-        border-width: 3px;
-      }
-
-      #btn-vota::before,
-      #btn-vota::after {
-        display: none;
-      }
-
-      #messaggio {
-        padding: 18px 15px;
-        font-size: 1em;
-        margin-top: 20px;
-      }
-
-      #messaggio.successo::before {
-        font-size: 2em;
-      }
-
-      .classifica-header {
-        padding: 15px 10px;
-        margin-bottom: 20px;
-      }
-
-      #classifica h2 {
-        font-size: 1.7em;
-      }
-
-      .classifica-sub {
-        font-size: 0.9em;
-      }
-
-      #totale-voti {
-        font-size: 1em;
-        padding: 8px;
-        margin-bottom: 20px;
-      }
-
-      #classifica-lista li {
-        padding: 12px 15px;
-        margin-bottom: 8px;
-      }
-
-      #classifica-lista li:nth-child(1) {
-        padding: 15px 18px;
-        font-size: 1.05em;
-      }
-
-      #classifica-lista li:nth-child(1)::before {
-        font-size: 25px;
-        left: -12px;
-        top: -10px;
-      }
-
-      #classifica-lista li:nth-child(1)::after {
-        font-size: 0.5em;
-        padding: 2px 8px;
-        right: 10px;
-        top: -10px;
-      }
-
-      #classifica-lista li:nth-child(2)::before,
-      #classifica-lista li:nth-child(3)::before {
-        font-size: 20px;
-        left: -12px;
-      }
-
-      .classifica-punti {
-        font-size: 0.95em;
-      }
-
-      .footer-ornamento {
-        margin-top: 35px;
-        padding-top: 20px;
-      }
-
-      .footer-ornamento .decorazione {
-        font-size: 1.5em;
-        letter-spacing: 0.2em;
-      }
-
-      .footer-ornamento .firma {
-        font-size: 0.85em;
-      }
-
-      .footer-ornamento .anno {
-        font-size: 0.95em;
-      }
-
-      .seal {
-        width: 60px;
-        height: 60px;
-        font-size: 28px;
-        margin-top: 15px;
-      }
-    }
-
-    @media (max-width: 380px) {
-      body {
-        font-size: 15px;
-        padding: 10px 8px;
-      }
-
-      .container {
-        padding: 25px 15px;
-      }
-
-      h1 {
-        font-size: 1.9em;
-      }
-
-      .sottotitolo {
-        font-size: 0.9em;
-      }
-
-      #lista-libri li {
-        padding: 10px 12px;
-        gap: 8px;
-      }
-
-      .posizione {
-        width: 24px;
-        height: 24px;
-        font-size: 12px;
-      }
-
-      .handle {
-        font-size: 18px;
-      }
-
-      .titolo {
-        font-size: 0.9em;
-      }
-
-      #btn-vota {
-        padding: 14px 15px;
-        font-size: 1em;
-      }
-
-      #classifica-lista li:nth-child(1)::after {
-        content: "⭐ VINCITORE ⭐";
+      #cards-container {
+        padding: 12px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <span class="corner corner-tl">❧</span>
-    <span class="corner corner-tr">❧</span>
-    <span class="corner corner-bl">❧</span>
-    <span class="corner corner-br">❧</span>
+    <h1>Libros Club</h1>
+    <p class="sottotitolo">Gatto e Topo by Günther Grass</p>
 
-    <div class="header-decoration">✦ ❖ ✦</div>
-
-    <h1>LIBROS CLUB</h1>
-
-    <p class="sottotitolo">~ Un club degli Amici di Midori ~</p>
-    <p class="motto">「 ケツを食ベる 」</p>
-
-    <div class="mega-ornamento">༺ ❦ ༻</div>
-
-    <div id="sezione-voto">
-      <p class="istruzioni">
-        ✧ Trascinate i volumi secondo il Vostro giudizio ✧<br>
-        <small>Dal prediletto (in alto) al meno gradito (in basso)</small>
-      </p>
-      <ul id="lista-libri"></ul>
-      <button id="btn-vota">Sigilla il Tuo Verdetto</button>
-    </div>
-
-    <div id="messaggio"></div>
-
-    <div id="classifica">
-      <div class="classifica-header">
-        <h2>📜 L'ALBO D'ORO 📜</h2>
-        <p class="classifica-sub">La Graduatoria Definitiva ed Inappellabile</p>
+    <!-- STATO 1: Selezione Nome -->
+    <div id="stato-selezione" class="stato">
+      <div class="form-selezione">
+        <label for="select-nome">Seleziona il tuo nome per iniziare</label>
+        <select id="select-nome">
+          <option value="">-- Scegli il tuo nome --</option>
+          <option value="Andrea">Andrea</option>
+          <option value="Antonio">Antonio</option>
+          <option value="Carlo">Carlo</option>
+          <option value="Fabrizio">Fabrizio</option>
+          <option value="Gaia">Gaia</option>
+          <option value="Leonardo">Leonardo</option>
+          <option value="Saverio">Saverio</option>
+        </select>
       </div>
-      <p id="totale-voti"></p>
-      <ul id="classifica-lista"></ul>
     </div>
 
-    <div class="footer-ornamento">
-      <div class="decorazione">❧ ☙ ❦ ❧ ☙</div>
-      <p class="firma">Sotto la gaudente supervisione di <br> Dr. Ser Leonardo Coppini</p>
-      <p class="anno">~ Gennaio 2026 D.C. ~</p>
-      <div class="seal"><img src="../assets/icon-192.png" style="max-width: 75%;"></div>
+    <!-- STATO 2: Inserimento Pagine Totali -->
+    <div id="stato-pagine" class="stato">
+      <div class="form-pagine">
+        <h2 id="benvenuto-nome"></h2>
+        <label for="input-pagine-totali">Inserisci il numero di pagina in cui finisce il romanzo</label>
+        <input type="number" id="input-pagine-totali" min="1" max="9999" placeholder="es. 350">
+        <label for="select-emoji">Scegli la tua emoji</label>
+        <select id="select-emoji">
+          <option value="">Caricamento...</option>
+        </select>
+        <button id="btn-inizia" class="btn-primario">Lesgo</button>
+        <div id="messaggio-pagine"></div>
+      </div>
+    </div>
+
+    <!-- STATO 3: Dashboard Progressioni -->
+    <div id="stato-dashboard" class="stato">
+      <div class="sezione-aggiornamento">
+        <div class="form-inline">
+          <label for="input-pagina-corrente" style="flex: 0 0 auto;">Pagina attuale:</label>
+          <input type="number" id="input-pagina-corrente" min="0">
+          <button id="btn-aggiorna">Aggiorna</button>
+        </div>
+        <div id="messaggio-aggiornamento"></div>
+      </div>
+
+      <div class="lista-progressioni">
+        <div id="loading" class="loading">Caricamento...</div>
+        <div id="cards-container"></div>
+      </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
   <script>
-    const WORKER_URL = 'https://libros-club.stompet.workers.dev';
-    const STORAGE_KEY = 'libros_club_votato';
-
-    const libri = [
-      { id: 1, titolo: "Norwegian Wood, Murakami" },
-      { id: 2, titolo: "I dannati della terra, Frantz Fanon" },
-      { id: 3, titolo: "Fiori per Algernon, Daniel Keyes" },
-      { id: 4, titolo: "Gatto e topo, Günther Grass" },
-      { id: 5, titolo: "Guida Intergalattica, Douglas Adam" },
-      { id: 6, titolo: "Le otto montagne, Paolo Cognetti" },
-      { id: 7, titolo: "La città dei vivi, La Gioia" },
-      { id: 8, titolo: "La lingua salvata, Elias Canetti" },
-      { id: 9, titolo: "I Buddenbrock, Thomas Mann" },
-      { id: 10, titolo: "Un divorzio tardivo, Yehoshua" },
-      { id: 11, titolo: "Persone normali, Sally Rooney" }
-    ];
-
-    const numLibri = libri.length;
-    const sezioneVoto = document.getElementById('sezione-voto');
-    const listaEl = document.getElementById('lista-libri');
-    const btnVota = document.getElementById('btn-vota');
-    const messaggioEl = document.getElementById('messaggio');
-
-    const libriMap = {};
-    libri.forEach(l => libriMap[l.id] = l.titolo);
-
-    function haGiaVotato() {
-      return localStorage.getItem(STORAGE_KEY) === 'true';
+    // Registrazione Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
     }
 
-    function segnaVotato() {
-      localStorage.setItem(STORAGE_KEY, 'true');
+    const API_BASE = 'https://libros-club.stompet.workers.dev';
+    const STORAGE_KEY = 'gattotopo_lettore_nome';
+
+    let nomeCorrente = null;
+    let refreshInterval = null;
+
+    // Elementi DOM
+    const statoSelezione = document.getElementById('stato-selezione');
+    const statoPagine = document.getElementById('stato-pagine');
+    const statoDashboard = document.getElementById('stato-dashboard');
+
+    const selectNome = document.getElementById('select-nome');
+    const benvenutoNome = document.getElementById('benvenuto-nome');
+    const inputPagineTotali = document.getElementById('input-pagine-totali');
+    const selectEmoji = document.getElementById('select-emoji');
+    const btnIniziaEl = document.getElementById('btn-inizia');
+    const messaggioPagine = document.getElementById('messaggio-pagine');
+
+    const inputPaginaCorrente = document.getElementById('input-pagina-corrente');
+    const btnAggiorna = document.getElementById('btn-aggiorna');
+    const messaggioAggiornamento = document.getElementById('messaggio-aggiornamento');
+    const cardsContainer = document.getElementById('cards-container');
+    const loadingEl = document.getElementById('loading');
+
+    // Funzioni di utility
+    function mostraStato(stato) {
+      document.querySelectorAll('.stato').forEach(s => s.classList.remove('attivo'));
+      stato.classList.add('attivo');
     }
 
-    function renderLista() {
-      listaEl.innerHTML = '';
-      libri.forEach((libro, index) => {
-        const li = document.createElement('li');
-        li.dataset.id = libro.id;
-        li.innerHTML = `
-          <span class="handle">☰</span>
-          <span class="posizione">${index + 1}</span>
-          <span class="titolo">${libro.titolo}</span>
-          <span class="punti">${numLibri - index} punti</span>
-        `;
-        listaEl.appendChild(li);
+    function mostraMessaggio(elemento, testo, tipo) {
+      elemento.className = tipo === 'errore' ? 'messaggio-errore' : 'messaggio-successo';
+      elemento.textContent = testo;
+    }
+
+    // API calls
+    async function inizializzaLettore(nome, pagineTotali, emoji) {
+      const response = await fetch(`${API_BASE}/inizializza-lettore`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, pagineTotali, emoji })
       });
+      return await response.json();
     }
 
-    function aggiornaNumeri() {
-      const items = listaEl.querySelectorAll('li');
-      items.forEach((li, index) => {
-        li.querySelector('.posizione').textContent = index + 1;
-        li.querySelector('.punti').textContent = `${numLibri - index} punti`;
+    async function aggiornaProgresso(nome, paginaCorrente) {
+      const response = await fetch(`${API_BASE}/aggiorna-progresso`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, paginaCorrente })
       });
+      return await response.json();
     }
 
-    function aggiornaOrdineArray() {
-      const nuovoOrdine = [];
-      listaEl.querySelectorAll('li').forEach(li => {
-        const id = parseInt(li.dataset.id);
-        const libro = libri.find(l => l.id === id);
-        if (libro) nuovoOrdine.push(libro);
-      });
-      libri.length = 0;
-      libri.push(...nuovoOrdine);
+    async function caricaProgressioni() {
+      const response = await fetch(`${API_BASE}/progressioni`);
+      return await response.json();
     }
 
-    function initSortable() {
-      new Sortable(listaEl, {
-        animation: 250,
-        easing: "cubic-bezier(0.25, 1, 0.5, 1)",
-        handle: '.handle',
-        ghostClass: 'sortable-ghost',
-        chosenClass: 'sortable-chosen',
-        dragClass: 'sortable-drag',
-        forceFallback: true,
-        fallbackClass: 'sortable-fallback',
-        fallbackOnBody: true,
-        fallbackTolerance: 3,
-        onEnd: function() {
-          aggiornaOrdineArray();
-          aggiornaNumeri();
-        }
-      });
+    async function caricaEmojiDisponibili() {
+      const response = await fetch(`${API_BASE}/emoji-disponibili`);
+      return await response.json();
     }
 
-    btnVota.addEventListener('click', async () => {
-      btnVota.disabled = true;
-      btnVota.innerHTML = '🔏 Sigillando... 🔏';
-      messaggioEl.className = '';
-      messaggioEl.style.display = 'none';
+    // Genera un colore basato sull'emoji
+    function getColorFromEmoji(emoji) {
+      if (!emoji) return 'linear-gradient(90deg, #95a5a6, #7f8c8d)';
 
-      const ordine = libri.map(l => l.id);
-      const voto = {
-        ordine: ordine,
-        timestamp: Date.now()
+      // Mappatura colori per le emoji del sito
+      const emojiColors = {
+        '🐸': ['#90ee90', '#3cb371'], // Verde rana
+        '🐝': ['#ffd700', '#ff8c00'], // Giallo/Arancione ape
+        '🐙': ['#ff6b9d', '#ff1493'], // Rosa/Viola polpo
+        '🐮': ['#d4a574', '#a0826d'], // Marrone chiaro mucca
+        '🐴': ['#8b6f47', '#654321'], // Marrone cavallo
+        '🐷': ['#ffb6c1', '#ff69b4'], // Rosa maialino
+        '🐤': ['#fff44f', '#ffd700'], // Giallo pulcino
       };
 
+      // Se troviamo una corrispondenza diretta, usiamo quei colori
+      if (emojiColors[emoji]) {
+        const [c1, c2] = emojiColors[emoji];
+        return `linear-gradient(135deg, ${c1}, ${c2})`;
+      }
+
+      // Altrimenti generiamo un colore basato sull'hash dell'emoji
+      let hash = 0;
+      for (let i = 0; i < emoji.length; i++) {
+        hash = emoji.charCodeAt(i) + ((hash << 5) - hash);
+      }
+
+      // Genera HSL con hue basato sull'hash, saturazione e luminosità fisse per colori vivaci
+      const hue = Math.abs(hash % 360);
+      const saturation = 70 + (Math.abs(hash) % 15); // 70-85%
+      const lightness = 50 + (Math.abs(hash >> 8) % 10); // 50-60%
+
+      const color1 = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      const color2 = `hsl(${(hue + 30) % 360}, ${saturation}%, ${lightness - 10}%)`;
+
+      return `linear-gradient(135deg, ${color1}, ${color2})`;
+    }
+
+    // Render dashboard
+    function renderProgressioni(data) {
+      loadingEl.style.display = 'none';
+      cardsContainer.innerHTML = '';
+
+      if (!data.lettori || data.lettori.length === 0) {
+        cardsContainer.innerHTML = '<p style="text-align: center; color: #999;">Nessuna progressione disponibile</p>';
+        return;
+      }
+
+      data.lettori.forEach(lettore => {
+        const item = document.createElement('div');
+        item.className = 'lettore-item';
+        if (lettore.nome === nomeCorrente) {
+          item.classList.add('proprio');
+        }
+
+        const percentuale = lettore.percentuale || 0;
+        const completata = percentuale >= 100;
+        const emojiPosizione = Math.min(percentuale, 100);
+
+        // Genera colore dalla emoji (se non completata)
+        const coloreBarra = completata
+          ? 'linear-gradient(90deg, #27ae60, #229954)'
+          : getColorFromEmoji(lettore.emoji);
+
+        item.innerHTML = `
+          <div class="barra-container">
+            ${lettore.emoji ? `<span class="emoji-marker" style="left: ${emojiPosizione}%">${lettore.emoji}</span>` : ''}
+            <div class="barra-progresso ${completata ? 'completata' : ''}" style="width: ${emojiPosizione}%; background: ${coloreBarra}">
+              ${percentuale > 20 ? percentuale.toFixed(1) + '%' : ''}
+            </div>
+          </div>
+          <div class="info-riga">
+            <span class="nome-lettore">${lettore.nome}</span>
+            <span class="info-pagine">Pagina ${lettore.paginaCorrente} di ${lettore.pagineTotali}</span>
+          </div>
+        `;
+
+        cardsContainer.appendChild(item);
+      });
+    }
+
+    async function refreshDashboard() {
       try {
-        const response = await fetch(`${WORKER_URL}/vota`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(voto)
-        });
+        const data = await caricaProgressioni();
+        renderProgressioni(data);
+      } catch (error) {
+        console.error('Errore refresh:', error);
+      }
+    }
 
-        const data = await response.json();
+    // Event handlers
+    selectNome.addEventListener('change', async () => {
+      const nome = selectNome.value;
 
-        if (data.ok) {
-          segnaVotato();
-          sezioneVoto.classList.add('nascosto');
-          messaggioEl.innerHTML = 'Il Vostro voto è stato inciso in un server a Firenze!<br><small>Grazie per aver partecipato ed essere mio amic*.</small>';
-          messaggioEl.className = 'successo';
-          mostraClassifica(data.classifica, data.totaleVoti);
+      if (!nome) return; // Se seleziona l'opzione vuota, non fa nulla
+
+      nomeCorrente = nome;
+      localStorage.setItem(STORAGE_KEY, nome);
+
+      // Verifica se già inizializzato
+      try {
+        const data = await caricaProgressioni();
+        const lettoreEsistente = data.lettori.find(l => l.nome === nome);
+
+        if (lettoreEsistente && lettoreEsistente.pagineTotali) {
+          // Vai direttamente alla dashboard
+          mostraStato(statoDashboard);
+          refreshDashboard();
+          startAutoRefresh();
         } else {
-          throw new Error(data.error || 'Errore sconosciuto');
+          // Vai a inserimento pagine totali
+          benvenutoNome.textContent = `Benvenuto, ${nome}!`;
+          mostraStato(statoPagine);
+          // Carica emoji disponibili
+          await caricaEPopolarEmoji();
         }
       } catch (error) {
-        messaggioEl.textContent = '⚠️ Errore: ' + error.message;
-        messaggioEl.className = 'errore';
-        btnVota.disabled = false;
-        btnVota.innerHTML = 'Sigilla il Tuo Verdetto';
+        benvenutoNome.textContent = `Benvenuto, ${nome}!`;
+        mostraStato(statoPagine);
+        await caricaEPopolarEmoji();
       }
     });
 
-    function mostraClassifica(classifica, totaleVoti) {
-      const classificaEl = document.getElementById('classifica');
-      const listaClassifica = document.getElementById('classifica-lista');
-      const totaleEl = document.getElementById('totale-voti');
-
-      totaleEl.innerHTML = `📊 <strong>Suffragi raccolti:</strong> ${totaleVoti}`;
-      listaClassifica.innerHTML = '';
-
-      classifica.forEach((item, index) => {
-        const li = document.createElement('li');
-        const titolo = libriMap[item.libroId] || `Libro ${item.libroId}`;
-        li.innerHTML = `
-          <span>${index + 1}. ${titolo}</span>
-          <span class="classifica-punti">${item.punti} punti</span>
-        `;
-        listaClassifica.appendChild(li);
-      });
-
-      classificaEl.classList.add('visibile');
-    }
-
-    async function caricaClassifica() {
+    // Funzione helper per caricare e popolare select emoji
+    async function caricaEPopolarEmoji() {
       try {
-        const response = await fetch(`${WORKER_URL}/classifica`);
-        const data = await response.json();
-        if (data.classifica && data.classifica.length > 0) {
-          mostraClassifica(data.classifica, data.totaleVoti);
-        }
-      } catch (e) {
-        // Ignora errore
+        const data = await caricaEmojiDisponibili();
+        selectEmoji.innerHTML = '<option value="">-- Scegli la tua emoji --</option>';
+        data.emoji.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.emoji;
+          option.textContent = item.emoji;
+          if (!item.disponibile) {
+            option.disabled = true;
+            option.textContent = `${item.emoji} (${item.usataDa})`;
+          }
+          selectEmoji.appendChild(option);
+        });
+      } catch (error) {
+        selectEmoji.innerHTML = '<option value="">Errore caricamento emoji</option>';
+        console.error('Errore caricamento emoji:', error);
       }
     }
 
-    if (haGiaVotato()) {
-      sezioneVoto.classList.add('nascosto');
-      messaggioEl.innerHTML = '📜 Avete già espresso il Vostro voto insindacabile.<br>Contemplate ora l\'Albo d\'Oro! 📜';
-      messaggioEl.className = 'successo';
-      caricaClassifica();
-    } else {
-      renderLista();
-      initSortable();
+    btnIniziaEl.addEventListener('click', async () => {
+      const pagineTotali = parseInt(inputPagineTotali.value);
+      const emoji = selectEmoji.value;
+
+      if (!pagineTotali || pagineTotali < 1 || pagineTotali > 9999) {
+        mostraMessaggio(messaggioPagine, 'Inserisci un numero valido tra 1 e 9999', 'errore');
+        return;
+      }
+
+      if (!emoji) {
+        mostraMessaggio(messaggioPagine, 'Seleziona una emoji', 'errore');
+        return;
+      }
+
+      btnIniziaEl.disabled = true;
+      btnIniziaEl.textContent = 'Inizializzazione...';
+
+      try {
+        const data = await inizializzaLettore(nomeCorrente, pagineTotali, emoji);
+
+        if (data.ok) {
+          mostraStato(statoDashboard);
+          refreshDashboard();
+          startAutoRefresh();
+        } else {
+          mostraMessaggio(messaggioPagine, data.error || 'Errore sconosciuto', 'errore');
+          btnIniziaEl.disabled = false;
+          btnIniziaEl.textContent = 'Inizia a leggere';
+        }
+      } catch (error) {
+        mostraMessaggio(messaggioPagine, 'Errore di connessione: ' + error.message, 'errore');
+        btnIniziaEl.disabled = false;
+        btnIniziaEl.textContent = 'Inizia a leggere';
+      }
+    });
+
+    btnAggiorna.addEventListener('click', async () => {
+      const paginaCorrente = parseInt(inputPaginaCorrente.value);
+
+      if (paginaCorrente === undefined || paginaCorrente === null || paginaCorrente < 0) {
+        mostraMessaggio(messaggioAggiornamento, 'Inserisci un numero valido >= 0', 'errore');
+        return;
+      }
+
+      btnAggiorna.disabled = true;
+      btnAggiorna.textContent = 'Aggiornamento...';
+
+      try {
+        const data = await aggiornaProgresso(nomeCorrente, paginaCorrente);
+
+        if (data.ok) {
+          // Successo: pulisci l'input e aggiorna senza mostrare notifiche
+          inputPaginaCorrente.value = '';
+          messaggioAggiornamento.textContent = '';
+          refreshDashboard();
+        } else {
+          mostraMessaggio(messaggioAggiornamento, data.error || 'Errore sconosciuto', 'errore');
+        }
+      } catch (error) {
+        mostraMessaggio(messaggioAggiornamento, 'Errore di connessione: ' + error.message, 'errore');
+      } finally {
+        btnAggiorna.disabled = false;
+        btnAggiorna.textContent = 'Aggiorna';
+      }
+    });
+
+    // Auto-refresh
+    function startAutoRefresh() {
+      if (refreshInterval) clearInterval(refreshInterval);
+      refreshInterval = setInterval(refreshDashboard, 30000); // 30 secondi
     }
+
+    // Inizializzazione
+    (function init() {
+      const nomeSalvato = localStorage.getItem(STORAGE_KEY);
+
+      if (nomeSalvato) {
+        nomeCorrente = nomeSalvato;
+        // Verifica se già inizializzato
+        caricaProgressioni().then(data => {
+          const lettoreEsistente = data.lettori.find(l => l.nome === nomeSalvato);
+
+          if (lettoreEsistente && lettoreEsistente.pagineTotali) {
+            mostraStato(statoDashboard);
+            refreshDashboard();
+            startAutoRefresh();
+          } else {
+            benvenutoNome.textContent = `Benvenuto, ${nomeSalvato}!`;
+            mostraStato(statoPagine);
+          }
+        }).catch(() => {
+          benvenutoNome.textContent = `Benvenuto, ${nomeSalvato}!`;
+          mostraStato(statoPagine);
+        });
+      } else {
+        mostraStato(statoSelezione);
+      }
+    })();
   </script>
 </body>
 </html>
