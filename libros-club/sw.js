@@ -1,4 +1,4 @@
-const CACHE_NAME = 'libros-club-v2';
+const CACHE_NAME = 'libros-club-v3';
 const STATIC_ASSETS = [
   '/libros-club/',
   '/libros-club/index.html',

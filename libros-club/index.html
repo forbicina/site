@@ -454,7 +454,7 @@
         <select id="select-emoji">
           <option value="">Caricamento...</option>
         </select>
-        <button id="btn-inizia" class="btn-primario">Lesgo</button>
+        <button id="btn-inizia" class="btn-primario">Les go</button>
         <div id="messaggio-pagine"></div>
       </div>
     </div>
@@ -658,13 +658,13 @@
           startAutoRefresh();
         } else {
           // Vai a inserimento pagine totali
-          benvenutoNome.textContent = `Benvenuto, ${nome}!`;
+          benvenutoNome.textContent = `Iniziamo, ${nome}!`;
           mostraStato(statoPagine);
           // Carica emoji disponibili
           await caricaEPopolarEmoji();
         }
       } catch (error) {
-        benvenutoNome.textContent = `Benvenuto, ${nome}!`;
+        benvenutoNome.textContent = `Iniziamo, ${nome}!`;
         mostraStato(statoPagine);
         await caricaEPopolarEmoji();
       }
@@ -778,12 +778,12 @@
             refreshDashboard();
             startAutoRefresh();
           } else {
-            benvenutoNome.textContent = `Benvenuto, ${nomeSalvato}!`;
+            benvenutoNome.textContent = `Iniziamo, ${nomeSalvato}!`;
             mostraStato(statoPagine);
             caricaEPopolarEmoji();
           }
         }).catch(() => {
-          benvenutoNome.textContent = `Benvenuto, ${nomeSalvato}!`;
+          benvenutoNome.textContent = `Iniziamo, ${nomeSalvato}!`;
           mostraStato(statoPagine);
           caricaEPopolarEmoji();
         });
