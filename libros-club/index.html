@@ -780,10 +780,12 @@
           } else {
             benvenutoNome.textContent = `Benvenuto, ${nomeSalvato}!`;
             mostraStato(statoPagine);
+            caricaEPopolarEmoji();
           }
         }).catch(() => {
           benvenutoNome.textContent = `Benvenuto, ${nomeSalvato}!`;
           mostraStato(statoPagine);
+          caricaEPopolarEmoji();
         });
       } else {
         mostraStato(statoSelezione);
