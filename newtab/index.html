@@ -6,60 +6,230 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/x-icon" href="../assets/ico.ico">
   <link rel="stylesheet" href="../css/ciessesse.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
   <style>
-    body{margin:0 20px 50px;font-family:sans-serif;background:#fff;color:#121212}
+    body {
+      margin: 0 20px 50px;
+      font-family: sans-serif;
+      background: #fff;
+      color: #121212;
+    }
 
     /* Barra preferiti */
-    #barra-preferiti{display:flex;flex-direction:column;gap:10px;padding:20px;position:relative}
-    #riga-superiore{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    #riga-inferiore{position:absolute;top:52px;left:20px;right:20px;background:#fff;padding:10px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.15);display:flex;flex-wrap:wrap;gap:10px}
+    #barra-preferiti {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 20px;
+      position: relative;
+    }
 
-    #bottone-impostazioni,#bottone-aggiungi{width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;background:#fff;color:#000;font-size:20px;line-height:1;transition:.2s;flex-shrink:0}
-    #bottone-impostazioni:hover,#bottone-aggiungi:hover{background:#f0f0f0}
+    #riga-superiore {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-    #url-input,#label-input{height:20px;padding:6px 10px;font-size:14px;border:1px solid #f0f0f0;border-radius:6px;line-height:1;flex:1;min-width:120px}
+    #riga-inferiore {
+      position: absolute;
+      top: 52px;
+      left: 20px;
+      right: 20px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.15);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-    #lista-preferiti{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
-    #lista-preferiti li{background:#fff;color:#000;padding:6px 10px;border-radius:20px;display:flex;align-items:center;font-size:14px}
-    #lista-preferiti a{text-decoration:none;color:#333}
-    #lista-preferiti .rimuovi-link{background:none;border:none;color:#999;cursor:pointer;margin-left:8px}
-    #lista-preferiti .rimuovi-link:hover{color:#f00}
+    #bottone-impostazioni,
+    #bottone-aggiungi {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: #fff;
+      color: #000;
+      font-size: 20px;
+      line-height: 1;
+      transition: .2s;
+      flex-shrink: 0;
+    }
+
+    #bottone-impostazioni:hover,
+    #bottone-aggiungi:hover {
+      background: #f0f0f0;
+    }
+
+    #url-input,
+    #label-input {
+      height: 20px;
+      padding: 6px 10px;
+      font-size: 14px;
+      border: 1px solid #f0f0f0;
+      border-radius: 6px;
+      line-height: 1;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    #lista-preferiti {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    #lista-preferiti li {
+      background: #fff;
+      color: #000;
+      padding: 6px 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    #lista-preferiti a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    #lista-preferiti .rimuovi-link {
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    #lista-preferiti .rimuovi-link:hover {
+      color: #f00;
+    }
 
     /* DuckDuckGo */
-    .google-bar-container{margin:16vh auto 0;max-width:600px;text-align:center;padding:0 20px}
-    .google-bar-container img{max-width:390px;height:auto;margin-bottom:30px}
-    #wp-searchbox{width:100%;height:44px;padding:0 16px;font-size:16px;border:1px solid #dfe1e5;border-radius:24px;box-sizing:border-box}
+    .google-bar-container {
+      margin: 16vh auto 0;
+      max-width: 600px;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .google-bar-container img {
+      max-width: 390px;
+      height: auto;
+      margin-bottom: 30px;
+    }
+
+    #wp-searchbox {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      font-size: 16px;
+      border: 1px solid #dfe1e5;
+      border-radius: 24px;
+      box-sizing: border-box;
+    }
 
     /* Citazione */
-    #ciao{margin:60px auto 0;max-width:645px;font-style:italic;text-align:left;padding:0 20px}
-    .blogpost{font-family:'Helvetica Neue',serif;font-size:1.1rem}
+    #ciao {
+      margin: 60px auto 0;
+      max-width: 645px;
+      text-align: left;
+      padding: 0 20px;
+    }
+
+    .blogpost {
+      font-family: 'Helvetica Neue', serif;
+      font-size: 1.1rem;
+    }
 
     /* Responsive */
-    @media(max-width:600px){
-      body{margin-left:12px!important;margin-right:12px!important}
-      #barra-preferiti{padding:12px}
-      #riga-inferiore{left:12px;right:12px;top:48px;padding:8px}
-      .google-bar-container{margin-top:10vh;padding:0 12px}
-      .google-bar-container img{max-width:95%;margin-bottom:20px}
-      #wp-searchbox{height:40px;font-size:15px}
-      #ciao{margin:40px auto 0;padding:0 12px}
-      .blogpost{font-size:1rem}
+    @media (max-width: 600px) {
+      body {
+        margin-left: 12px !important;
+        margin-right: 12px !important;
+      }
+      #barra-preferiti {
+        padding: 12px;
+      }
+      #riga-inferiore {
+        left: 12px;
+        right: 12px;
+        top: 48px;
+        padding: 8px;
+      }
+      .google-bar-container {
+        margin-top: 10vh;
+        padding: 0 12px;
+      }
+      .google-bar-container img {
+        max-width: 95%;
+        margin-bottom: 20px;
+      }
+      #wp-searchbox {
+        height: 40px;
+        font-size: 15px;
+      }
+      #ciao {
+        margin: 40px auto 0;
+        padding: 0 12px;
+      }
+      .blogpost {
+        font-size: 1rem;
+      }
     }
-    @media(max-width:400px){
-      body{margin-left:8px!important;margin-right:8px!important}
-      #barra-preferiti{padding:8px;gap:8px}
-      #riga-superiore{gap:8px}
-      #riga-inferiore{left:8px;right:8px;top:44px;padding:6px;gap:8px}
-      #bottone-impostazioni,#bottone-aggiungi{width:32px;height:32px;font-size:18px}
-      .google-bar-container{padding:0 8px}
-      #ciao{padding:0 8px}
-      .blogpost{font-size:.95rem}
-      #lista-preferiti li{font-size:13px;padding:5px 8px}
+
+    @media (max-width: 400px) {
+      body {
+        margin-left: 8px !important;
+        margin-right: 8px !important;
+      }
+      #barra-preferiti {
+        padding: 8px;
+        gap: 8px;
+      }
+      #riga-superiore {
+        gap: 8px;
+      }
+      #riga-inferiore {
+        left: 8px;
+        right: 8px;
+        top: 44px;
+        padding: 6px;
+        gap: 8px;
+      }
+      #bottone-impostazioni,
+      #bottone-aggiungi {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+      }
+      .google-bar-container {
+        padding: 0 8px;
+      }
+      #ciao {
+        padding: 0 8px;
+      }
+      .blogpost {
+        font-size: .95rem;
+      }
+      #lista-preferiti li {
+        font-size: 13px;
+        padding: 5px 8px;
+      }
     }
-    @media(min-width:1200px){.container{max-width:900px}}
+
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 900px;
+      }
+    }
   </style>
 </head>
 
@@ -86,57 +256,81 @@
   </div>
 
   <!-- Citazione del giorno -->
-  <div id="ciao" class="blogpost" style="max-width:800px;text-align:center">
-    <blockquote id="citazione-marco" style="font-style:italic;padding-left:20px;border-left:2px solid #000;display:inline-block;text-align:left"></blockquote>
+  <div id="ciao" class="blogpost" style="max-width:800px; text-align:center">
+    <blockquote id="citazione-marco" style="margin:0; padding-left:20px; border-left:2px solid #000; display:inline-block; text-align:left"></blockquote>
   </div>
 
   <script src="js/citazioni.js"></script>
   <script>
-    const oggi=new Date(),giornoAnno=Math.floor((oggi-new Date(oggi.getFullYear(),0,0))/86400000);
-    document.getElementById("citazione-marco").innerText=citazioni[giornoAnno%citazioni.length];
+    // Citazione del giorno
+    const oggi = new Date();
+    const giornoAnno = Math.floor((oggi - new Date(oggi.getFullYear(), 0, 0)) / 86400000);
+    document.getElementById("citazione-marco").innerText = citazioni[giornoAnno % citazioni.length];
 
-    /* Preferiti con LocalStorage */
-    let edit=false;
-    const btnImp=document.getElementById("bottone-impostazioni"),
-          btnAdd=document.getElementById("bottone-aggiungi"),
-          urlIn=document.getElementById("url-input"),
-          labelIn=document.getElementById("label-input"),
-          listFav=document.getElementById("lista-preferiti"),
-          rowDown=document.getElementById("riga-inferiore");
+    // Preferiti con LocalStorage
+    let edit = false;
+    const btnImp = document.getElementById("bottone-impostazioni");
+    const btnAdd = document.getElementById("bottone-aggiungi");
+    const urlIn = document.getElementById("url-input");
+    const labelIn = document.getElementById("label-input");
+    const listFav = document.getElementById("lista-preferiti");
+    const rowDown = document.getElementById("riga-inferiore");
 
-    btnImp.onclick=()=>{edit=!edit;rowDown.style.display=edit?"flex":"none";loadFav()};
-    btnAdd.onclick=()=>{urlIn.style.display=labelIn.style.display="inline-block";urlIn.focus()};
+    btnImp.onclick = () => {
+      edit = !edit;
+      rowDown.style.display = edit ? "flex" : "none";
+      loadFav();
+    };
 
-    function addFav(){
-      let url=urlIn.value.trim(),lab=labelIn.value.trim()||url;
-      if(!/^https?:\/\//i.test(url))url="https://"+url;
-      if(url){
-        const fav=JSON.parse(localStorage.getItem("sitiPreferiti")||"[]");
-        if(!fav.find(e=>e.url===url))fav.push({url,label:lab});
-        localStorage.setItem("sitiPreferiti",JSON.stringify(fav));
-        urlIn.value=labelIn.value="";
-        urlIn.style.display=labelIn.style.display="none";
+    btnAdd.onclick = () => {
+      urlIn.style.display = labelIn.style.display = "inline-block";
+      urlIn.focus();
+    };
+
+    function addFav() {
+      let url = urlIn.value.trim();
+      let lab = labelIn.value.trim() || url;
+
+      if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+      if (url) {
+        const fav = JSON.parse(localStorage.getItem("sitiPreferiti") || "[]");
+        if (!fav.find(e => e.url === url)) fav.push({url, label: lab});
+        localStorage.setItem("sitiPreferiti", JSON.stringify(fav));
+
+        urlIn.value = labelIn.value = "";
+        urlIn.style.display = labelIn.style.display = "none";
         loadFav();
       }
     }
-    urlIn.addEventListener("keypress",e=>e.key==="Enter"&&addFav());
-    labelIn.addEventListener("keypress",e=>e.key==="Enter"&&addFav());
 
-    function loadFav(){
-      listFav.innerHTML="";
-      const fav=JSON.parse(localStorage.getItem("sitiPreferiti")||"[]");
-      fav.forEach((f,i)=>{
-        const li=document.createElement("li");
-        li.innerHTML=`<a href="${f.url}" target="_blank">${f.label}</a>`;
-        if(edit){
-          const rm=document.createElement("button");
-          rm.textContent="✕";rm.className="rimuovi-link";
-          rm.onclick=()=>{fav.splice(i,1);localStorage.setItem("sitiPreferiti",JSON.stringify(fav));loadFav()};
+    urlIn.addEventListener("keypress", e => e.key === "Enter" && addFav());
+    labelIn.addEventListener("keypress", e => e.key === "Enter" && addFav());
+
+    function loadFav() {
+      listFav.innerHTML = "";
+      const fav = JSON.parse(localStorage.getItem("sitiPreferiti") || "[]");
+
+      fav.forEach((f, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${f.url}" target="_blank">${f.label}</a>`;
+
+        if (edit) {
+          const rm = document.createElement("button");
+          rm.textContent = "✕";
+          rm.className = "rimuovi-link";
+          rm.onclick = () => {
+            fav.splice(i, 1);
+            localStorage.setItem("sitiPreferiti", JSON.stringify(fav));
+            loadFav();
+          };
           li.appendChild(rm);
         }
+
         listFav.appendChild(li);
       });
     }
+
     loadFav();
   </script>
 </body>
