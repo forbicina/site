@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Marcoppe">
@@ -20,11 +20,23 @@
             overflow: hidden;
         }
 
+        #bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-color: #000;
+            background-image: url('nutino.jpg');
+            background-size: auto 100vh;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
         #mainContainer {
             width: 100vw;
             height: 100vh;
             overflow: hidden;
             position: relative;
+            z-index: 1;
         }
 
         .page {
@@ -82,48 +94,52 @@
         }
 
         .toggle-btn {
-            background: linear-gradient(135deg, #1a5fb4 0%, #3584e4 100%);
-            color: white;
+            background: linear-gradient(150deg, #1e1a11 0%, #0e0b07 100%);
+            color: #f2e4c8;
             padding: 0;
-            border: none;
-            border-radius: 30%;
-            width: 50px;
-            height: 50px;
+            border: 1px solid rgba(165, 135, 70, 0.55);
+            border-radius: 3px;
+            width: 52px;
+            height: 52px;
             cursor: pointer;
-            font-size: 22px;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(26, 95, 180, 0.3);
+            font-family: 'PTSerif', Georgia, serif;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            /* targa in rilievo: ombra esterna + highlight + profondità interna */
+            box-shadow:
+                3px 3px 8px rgba(0,0,0,0.7),
+                -1px -1px 3px rgba(75,60,28,0.25),
+                inset 1px 1px 2px rgba(85,68,28,0.2),
+                inset -1px -1px 3px rgba(0,0,0,0.5);
+            transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
         }
 
         .toggle-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 30%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s;
-        }
-
-        .toggle-btn:hover::before {
-            width: 100%;
-            height: 100%;
+            content: none;
         }
 
         .toggle-btn:hover {
-            box-shadow: 0 6px 20px rgba(26, 95, 180, 0.5);
+            color: #fff8ee;
+            box-shadow:
+                4px 4px 10px rgba(0,0,0,0.75),
+                -1px -1px 4px rgba(80,64,28,0.3),
+                inset 1px 1px 2px rgba(90,72,30,0.22),
+                inset -1px -1px 3px rgba(0,0,0,0.55);
         }
 
+        /* stato premuto: la targa si abbassa */
         .toggle-btn.active {
-            background: linear-gradient(135deg, #3584e4 0%, #62a0ea 100%);
-            box-shadow: 0 0 0 4px rgba(26, 95, 180, 0.2);
-            transform: scale(1.05);
+            background: linear-gradient(150deg, #0e0b07 0%, #1a1610 100%);
+            color: #fff8ee;
+            box-shadow:
+                1px 1px 3px rgba(0,0,0,0.8),
+                inset 3px 3px 7px rgba(0,0,0,0.7),
+                inset -1px -1px 2px rgba(75,60,25,0.18);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
         }
 
         .toggle-btn span {
@@ -133,11 +149,17 @@
 
         .train-btn {
             width: auto;
-            height: 25px;
-            padding: 0 10px;
-            font-size: 15px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, #c01c28 0%, #e01b24 100%);
+            height: 30px;
+            padding: 0 18px;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            border-radius: 2px;
+            background: linear-gradient(150deg, #1e1a11 0%, #0e0b07 100%);
+            border-color: rgba(165, 135, 70, 0.55);
+        }
+
+        .train-btn:hover {
+            color: #d8b87a;
         }
 
         .widget-wrapper {
@@ -167,9 +189,115 @@
             display: flex;
             gap: 10px;
         }
+
+        /* CRT effect — dentro #bg-layer, non tocca il contenuto */
+        #crt-noise {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.35;
+            image-rendering: pixelated;
+        }
+
+        #crt {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            /* Vignette */
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.50) 100%);
+            animation: crt-flicker 9s infinite;
+        }
+
+        /* Scanline animate: scorrono come il beam CRT */
+        #crt::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0,0,0,0.18) 0px,
+                rgba(0,0,0,0.18) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            animation: scanlines-drift 0.1s steps(2) infinite;
+        }
+
+        /* Banda luminosa che scorre */
+        #crt::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(255,255,255,0.03) 50%,
+                transparent 100%
+            );
+            background-size: 100% 180px;
+            animation: band-roll 7s linear infinite;
+        }
+
+        @keyframes scanlines-drift {
+            0%   { background-position: 0 0px; }
+            50%  { background-position: 0 1px; }
+            100% { background-position: 0 0px; }
+        }
+
+        @keyframes crt-flicker {
+            0%, 90%, 92%, 95%, 100% { opacity: 1; }
+            91%  { opacity: 0.83; }
+            93%  { opacity: 0.94; }
+            96%  { opacity: 0.87; }
+            97%  { opacity: 1; }
+        }
+
+        @keyframes band-roll {
+            from { background-position: 0 -180px; }
+            to   { background-position: 0 100vh; }
+        }
+
+        #audio-btn {
+            position: fixed;
+            top: calc(18px + env(safe-area-inset-top));
+            right: calc(18px + env(safe-area-inset-right));
+            z-index: 1000;
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(150deg, #1e1a11 0%, #0e0b07 100%);
+            border: 1px solid rgba(165, 135, 70, 0.55);
+            border-radius: 3px;
+            color: #f2e4c8;
+            font-size: 17px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                3px 3px 8px rgba(0,0,0,0.7),
+                -1px -1px 3px rgba(75,60,28,0.25),
+                inset 1px 1px 2px rgba(85,68,28,0.2),
+                inset -1px -1px 3px rgba(0,0,0,0.5);
+            transition: all 0.2s ease;
+        }
+
+        #audio-btn:active {
+            box-shadow:
+                1px 1px 3px rgba(0,0,0,0.8),
+                inset 3px 3px 7px rgba(0,0,0,0.7),
+                inset -1px -1px 2px rgba(75,60,25,0.18);
+        }
     </style>
 </head>
 <body>
+    <audio id="audio" src="pupps.mp3" loop></audio>
+    <button id="audio-btn" title="Musica">🔇</button>
+    <div id="bg-layer">
+        <canvas id="crt-noise"></canvas>
+        <div id="crt"></div>
+    </div>
     <div id="mainContainer">
         <!-- Pagina 1: Meteo e Treni -->
         <div class="page screen-1" id="page1">
@@ -228,6 +356,49 @@
     </div>
 
     <script>
+        // Audio toggle
+        const audio = document.getElementById('audio');
+        const audioBtn = document.getElementById('audio-btn');
+        audioBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play().catch(() => {});
+                audioBtn.textContent = '🔊';
+            } else {
+                audio.pause();
+                audioBtn.textContent = '🔇';
+            }
+        });
+
+        // CRT noise
+        (function () {
+            const canvas = document.getElementById('crt-noise');
+            const ctx = canvas.getContext('2d');
+            // Canvas piccolo per performance: 1/4 risoluzione, CSS lo scala
+            const SCALE = 4;
+
+            function resize() {
+                canvas.width  = Math.floor(window.innerWidth  / SCALE);
+                canvas.height = Math.floor(window.innerHeight / SCALE);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            function drawNoise() {
+                const w = canvas.width, h = canvas.height;
+                const img = ctx.createImageData(w, h);
+                const d = img.data;
+                for (let i = 0; i < d.length; i += 4) {
+                    const v = (Math.random() * 255) | 0;
+                    d[i] = d[i+1] = d[i+2] = v;
+                    d[i+3] = 30; // molto sottile
+                }
+                ctx.putImageData(img, 0, 0);
+            }
+
+            drawNoise();
+            setInterval(drawNoise, 80); // ~12fps, leggero su mobile
+        })();
+
         // Registra Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/marcoppe/sw.js')

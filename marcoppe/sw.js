@@ -1,9 +1,11 @@
-const CACHE_NAME = 'marcoppe-v0';
+const CACHE_NAME = 'marcoppe-v1';
 const urlsToCache = [
     '/marcoppe/index.html',
     '/marcoppe/manifest.json',
     '/marcoppe/icon-192.png',
     '/marcoppe/icon-512.png',
+    '/marcoppe/nutino.jpg',
+    '/marcoppe/pupps.mp3',
     '/css/ciessesse.css',
     '/assets/ico.ico'
     ];
