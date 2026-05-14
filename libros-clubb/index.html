@@ -161,8 +161,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: visible;
       padding: 8px 16px;
+      position: relative;
     }
 
     #carosello-card {
@@ -216,29 +217,29 @@
       padding: 8px 16px 0;
     }
 
-    #carosello-nav { display: flex; align-items: center; gap: 20px; }
-
     .btn-nav {
-      width: 52px;
-      height: 52px;
-      background: linear-gradient(135deg, #2a1808, #180e04);
-      border: 1px solid #6a4a20;
-      color: #d4af37;
-      font-size: 1.4em;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 60px;
+      background: rgba(140,140,140,0.38);
+      border: 1px solid rgba(200,200,200,0.18);
+      color: rgba(210,185,140,0.9);
+      font-size: 0.9em;
       cursor: pointer;
       border-radius: 3px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.5);
       transition: all 0.15s;
       touch-action: manipulation;
+      z-index: 2;
     }
-    .btn-nav:hover { background: linear-gradient(135deg, #381e0a, #241208); }
-    .btn-nav:active { transform: scale(0.93); }
-    .btn-nav:disabled { background: #1a1208; border-color: #2e2014; color: #3a2c18; cursor: not-allowed; box-shadow: none; }
-
-    #carosello-counter { font-family: 'Faustina', serif; font-size: 1.05em; color: #7a5a34; min-width: 60px; text-align: center; }
+    #carosello-prev { left: 0; }
+    #carosello-next { right: 0; }
+    .btn-nav:active { background: rgba(140,140,140,0.6); transform: translateY(-50%) scale(0.94); }
+    .btn-nav:disabled { background: rgba(80,80,80,0.1); color: rgba(150,130,100,0.18); cursor: not-allowed; }
 
     #carosello-inizia {
       padding: 14px 32px;
@@ -509,7 +510,7 @@
       .benvenuto-testo { font-size: 0.95em; }
       #carosello-titolo { font-size: 1.25em; }
       #carosello-cover { max-height: 400px; }
-      .btn-nav { width: 48px; height: 48px; font-size: 1.3em; }
+      .btn-nav { width: 24px; height: 52px; font-size: 0.8em; }
       #swipe-hint { display: block; }
     }
 
@@ -552,6 +553,7 @@
   <div id="carosello-overlay" class="overlay nascosto">
 
     <div id="carosello-card-wrapper">
+      <button class="btn-nav" id="carosello-prev" disabled>←</button>
       <div id="carosello-card">
         <div id="carosello-cover-wrap" class="nascosto">
           <img id="carosello-cover" src="" alt="Copertina">
@@ -561,15 +563,11 @@
         <div id="carosello-autore"></div>
         <div id="carosello-descrizione" class="nascosto"></div>
       </div>
+      <button class="btn-nav" id="carosello-next">→</button>
     </div>
 
     <div id="carosello-bottombar">
       <span id="swipe-hint">← scorri per navigare →</span>
-      <div id="carosello-nav">
-        <button class="btn-nav" id="carosello-prev" disabled>←</button>
-        <span id="carosello-counter"></span>
-        <button class="btn-nav" id="carosello-next">→</button>
-      </div>
       <button id="carosello-inizia" class="nascosto">✦ Inizia il Sondaggio ✦</button>
     </div>
   </div>
@@ -689,7 +687,7 @@
         titolo: '"Chi ti credi di essere"',
         autore: 'Alice Munro',
         cover: 'covers/chiti.jpg',
-        descrizione: 'Undici racconti che seguono Rose, una donna di umili origini canadesi, dall\'infanzia fino alla mezza età. Munro osserva le sue figure con una precisione quasi chirurgica, senza mai giudicarle. Premio Nobel 2013 per la letteratura — probabilmente il miglior punto d\'ingresso nella sua opera.'
+        descrizione: 'Undici racconti che seguono Rose, una donna di umili origini canadesi, dall\'infanzia fino alla mezza età. Munro osserva le sue figure con una precisione quasi chirurgica, senza mai giudicarle. Premio Nobel 2013 per la letteratura, probabilmente il miglior punto d\'ingresso nella sua opera.'
       },
       {
         id: 5,
@@ -703,14 +701,14 @@
         titolo: '"Domani nella battaglia pensa a me"',
         autore: 'Javier Marías',
         cover: 'covers/domani.jpg',
-        descrizione: 'Una sera, una donna muore improvvisamente tra le braccia di un uomo che la conosce appena. Il bambino che era in casa rimane solo. Da questo momento inizia un romanzo ossessivo sulla colpa, il caso e la memoria — uno dei più grandi romanzi spagnoli del Novecento.'
+        descrizione: 'Una sera, una donna muore improvvisamente tra le braccia di un uomo che la conosce appena. Il bambino che era in casa rimane solo. Da questo momento inizia un romanzo ossessivo sulla colpa, il caso e la memoria, uno dei più grandi romanzi spagnoli del Novecento.'
       },
       {
         id: 7,
         titolo: '"Espiazione"',
         autore: 'Ian McEwan',
         cover: 'covers/espiazione.jpg',
-        descrizione: 'Nel 1935, una bambina di tredici anni fraintende quello che vede e accusa un uomo innocente. Il gesto distrugge vite, compresa la sua. McEwan costruisce un romanzo sulla possibilità di riparare — e sulla letteratura come unico strumento per farlo. Bellissimo e crudele in egual misura.'
+        descrizione: 'Nel 1935, una bambina di tredici anni fraintende quello che vede e accusa un uomo innocente. Il gesto distrugge vite, compresa la sua. McEwan costruisce un romanzo sulla possibilità di riparare, e sulla letteratura come unico strumento per farlo. Bellissimo e crudele in egual misura.'
       },
       // ★ BJÖRK — seconda apparizione ★
       {
@@ -740,14 +738,14 @@
         titolo: '"Ubik"',
         autore: 'P.K. Dick',
         cover: 'covers/dick.jpg',
-        descrizione: 'Un gruppo di persone con poteri paranormali lavora per un\'agenzia di intelligence. Poi qualcosa va storto, e la realtà comincia a sgretolarsi. Dick costruisce un incubo paranoico in cui non si riesce a capire cosa sia vero e cosa no — e questa incertezza diventa quasi insopportabile, nel senso migliore.'
+        descrizione: 'Un gruppo di persone con poteri paranormali lavora per un\'agenzia di intelligence. Poi qualcosa va storto, e la realtà comincia a sgretolarsi. Dick costruisce un incubo paranoico in cui non si riesce a capire cosa sia vero e cosa no, e questa incertezza diventa quasi insopportabile, nel senso migliore.'
       },
       {
         id: 12,
         titolo: '"Mattatoio n. 5"',
         autore: 'Kurt Vonnegut',
         cover: 'covers/matta.jpg',
-        descrizione: 'Billy Pilgrim è "sganciato nel tempo": salta tra momenti diversi della sua vita, incluso il bombardamento di Dresda del 1945, a cui Vonnegut stesso sopravvisse. Un romanzo anti-guerra scritto come fantascienza, perché — dice Vonnegut — su certi orrori non si può scrivere in nessun altro modo.'
+        descrizione: 'Billy Pilgrim è "sganciato nel tempo": salta tra momenti diversi della sua vita, incluso il bombardamento di Dresda del 1945, a cui Vonnegut stesso sopravvisse. Un romanzo anti-guerra scritto come fantascienza, perché, dice Vonnegut, su certi orrori non si può scrivere in nessun altro modo.'
       },
       {
         id: 13,
@@ -761,7 +759,7 @@
         titolo: '"Volpe 8"',
         autore: 'George Saunders',
         cover: 'covers/volpe.jpg',
-        descrizione: 'Una volpe impara a parlare frequentando un uomo che le racconta storie. Poi l\'uomo costruisce qualcosa che minaccia il bosco. Una favola breve e tagliente sull\'amicizia, la fiducia e il tradimento — Saunders in forma di parabola, che è Saunders al suo meglio.'
+        descrizione: 'Una volpe impara a parlare frequentando un uomo che le racconta storie. Poi l\'uomo costruisce qualcosa che minaccia il bosco. Una favola breve e tagliente sull\'amicizia, la fiducia e il tradimento, Saunders in forma di parabola, che è Saunders al suo meglio.'
       },
       // ★ BJÖRK — terza e ultima apparizione ★
       {
@@ -892,7 +890,6 @@
     const descEl      = document.getElementById('carosello-descrizione');
     const btnPrev     = document.getElementById('carosello-prev');
     const btnNext     = document.getElementById('carosello-next');
-    const counterEl   = document.getElementById('carosello-counter');
     const btnInizia   = document.getElementById('carosello-inizia');
 
 
@@ -914,7 +911,6 @@
         coverWrap.classList.add('nascosto');
       }
 
-      numeroEl.textContent = `${slideCorrente + 1} / ${totSlide}`;
       titoloEl.textContent = libro.titolo;
       autoreEl.textContent = `— ${libro.autore} —`;
 
