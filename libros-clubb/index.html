@@ -120,7 +120,6 @@
       width: 100%;
       font-size: 1em;
       color: #9a7a56;
-      font-style: italic;
       padding: 14px 20px;
       background: rgba(255,255,255,0.04);
       border: 1px solid #4a3418;
@@ -143,6 +142,7 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       transition: all 0.2s;
       min-height: 56px;
+      border-radius: 20px;
     }
     #btn-vai-libri:hover { background: linear-gradient(to bottom, #800000, #500000); transform: translateY(-2px); }
     #btn-vai-libri:active { transform: translateY(0); }
@@ -170,6 +170,7 @@
       width: 100%;
       max-height: 100%;
       overflow-y: auto;
+      overflow-x: hidden;
       background: rgba(22,14,6,0.98);
       border: 2px solid #4a3418;
       border-radius: 4px;
@@ -255,6 +256,7 @@
       transition: all 0.2s;
       min-height: 52px;
       touch-action: manipulation;
+      border-radius: 20px;
     }
     #carosello-inizia:hover { background: linear-gradient(to bottom, #800000, #500000); }
     #carosello-inizia.nascosto { display: none; }
@@ -299,15 +301,14 @@
     }
 
     .sottotitolo { text-align: center; font-style: italic; color: #7a5a34; margin: 15px 0 5px; font-size: 1.15em; }
-    .motto { text-align: center; font-size: 0.95em; color: #6a4a22; margin-bottom: 10px; }
-    .mega-ornamento { text-align: center; font-size: 1.8em; color: #8a6428; margin: 20px 0 30px; }
+    .motto { text-align: center; font-size: 0.95em; color: #ffd700; }
+    .mega-ornamento { text-align: center; font-size: 1.8em; color: #ffd700; margin: 0 0 30px; }
 
     .istruzioni {
       text-align: center;
-      color: #9a7a54;
+      color: #9b8142;
       margin-bottom: 25px;
       font-size: 1.05em;
-      font-style: italic;
       padding: 14px;
       border-top: 1px solid #3a2810;
       border-bottom: 1px solid #3a2810;
@@ -390,6 +391,99 @@
     }
     #popup-chiudi:hover { color: #d4af37; }
 
+    /* ── POPUP CONFERMA ── */
+    #conferma-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1800;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    #conferma-overlay.nascosto { display: none; }
+    #conferma-card {
+      position: relative;
+      background: linear-gradient(135deg, #1e1408, #150f06);
+      border: 2px solid #5a3c18;
+      max-width: 420px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 34px 28px 28px;
+      box-shadow: 0 12px 50px rgba(0,0,0,0.7);
+    }
+    #conferma-chiudi {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 1.1em;
+      cursor: pointer;
+      color: #6a4a22;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+    #conferma-chiudi:hover { color: #d4af37; }
+    #conferma-titolo {
+      font-family: 'Faustina', Georgia, serif;
+      font-size: 1.2em;
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 10px;
+      letter-spacing: 0.08em;
+    }
+    #conferma-sottotitolo {
+      font-style: italic;
+      color: #7a5a34;
+      font-size: 0.9em;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    #conferma-lista {
+      padding-left: 0;
+      list-style: none;
+      margin-bottom: 22px;
+    }
+    #conferma-lista li {
+      padding: 7px 10px;
+      margin-bottom: 5px;
+      border-left: 3px solid #3a2810;
+      font-size: 0.88em;
+      color: #b09060;
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+    }
+    #conferma-lista li.conferma-bjork {
+      border-left-color: #d4af37;
+      color: #dfc99a;
+      font-weight: 700;
+    }
+    #conferma-lista li.conferma-escluso {
+      opacity: 0.4;
+      text-decoration: line-through;
+      border-left-color: #2a2016;
+    }
+    .conferma-pos { color: #6a4a22; font-size: 0.8em; flex-shrink: 0; width: 18px; text-align: right; }
+    #conferma-btn-vota {
+      width: 100%;
+      padding: 16px;
+      font-family: 'Faustina', Georgia, serif;
+      font-size: 1.1em;
+      font-weight: 700;
+      background: linear-gradient(to bottom, #6a0000, #3e0000);
+      color: #d4af37;
+      border: 2px solid #8b6020;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      transition: all 0.2s;
+    }
+    #conferma-btn-vota:hover { background: linear-gradient(to bottom, #800000, #500000); }
+    #conferma-btn-vota:disabled { background: linear-gradient(to bottom, #2a2a2a, #1a1a1a); border-color: #3a3a3a; color: #4a4a4a; cursor: not-allowed; }
+
     .posizione {
       background: linear-gradient(135deg, #3a2208 0%, #1e1004 100%);
       color: #d4af37;
@@ -433,7 +527,7 @@
     #btn-vota:hover { background: linear-gradient(to bottom, #800000, #500000); transform: translateY(-2px); }
     #btn-vota:disabled { background: linear-gradient(to bottom, #2a2a2a, #1a1a1a); border-color: #3a3a3a; color: #4a4a4a; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    #messaggio { margin-top: 22px; padding: 22px; text-align: center; display: none; border: 2px solid; font-style: italic; font-size: 1.05em; }
+    #messaggio { margin-top: 22px; padding: 22px; text-align: center; display: none; border: 2px solid; font-size: 1.05em; }
     #messaggio.successo { background: linear-gradient(135deg, #0a1e08, #081408); color: #6aaa40; border-color: #2a5010; display: block; }
     #messaggio.successo::before { content: "🏆"; display: block; font-size: 2.2em; margin-bottom: 10px; animation: floatCrown 2s ease-in-out infinite; }
     #messaggio.errore { background: #180606; color: #cc5050; border-color: #6a1010; display: block; }
@@ -443,8 +537,8 @@
 
     .classifica-header { text-align: center; padding: 18px; margin-bottom: 22px; border-top: 1px solid #3a2810; border-bottom: 1px solid #3a2810; }
     #classifica h2 { font-family: 'Faustina', serif; font-size: 2em; color: #d4af37; margin-bottom: 4px; }
-    .classifica-sub { font-style: italic; color: #6a4a28; font-size: 0.95em; }
-    #totale-voti { text-align: center; font-style: italic; color: #8a6a42; margin-bottom: 22px; font-size: 1.05em; padding: 10px; background: rgba(212,175,55,0.06); }
+    .classifica-sub {  color: #6a4a28; font-size: 0.95em; }
+    #totale-voti { text-align: center; color: #8a6a42; margin-bottom: 22px; font-size: 1.05em; padding: 10px; background: rgba(212,175,55,0.06); }
 
     #classifica-lista { list-style: none; padding: 0; }
     #classifica-lista li {
@@ -540,10 +634,11 @@
     </p>
     <!-- Modifica il testo di questi due paragrafi a piacere -->
     <p class="benvenuto-testo">
-      Benvenuti alla seconda sessione di voto del Libros Club.<br>
+      Benvenuti alla terza sessione di voto del Libros Club.<br>
     </p>
     <p class="benvenuto-testo">
-      Premete il bottone in alto a destra, mettetevi comodi, sfogliate il catalogo, rinfrescatevi la memoria e poi esprimete il vostro voto.
+      <b>Prima di cominciare, rifletti:</b><br>
+      Se n'immondo esistesse un po' di bene, e ognun si onsiderasse suo fratello, ci sarebbe meno pensieri e meno pene, e il mondo ne sarebbe assai più bello.
     </p>
 
     <button id="btn-vai-libri">Vai ai libri →</button>
@@ -572,6 +667,17 @@
     </div>
   </div>
 
+  <!-- ══ POPUP CONFERMA VOTO ══ -->
+  <div id="conferma-overlay" class="nascosto">
+    <div id="conferma-card">
+      <button id="conferma-chiudi">✕</button>
+      <h3 id="conferma-titolo">✦ Un ultimo check ✦</h3>
+      <p id="conferma-sottotitolo">Stai per sottometterti la seguente preferenza:</p>
+      <ol id="conferma-lista"></ol>
+      <button id="conferma-btn-vota">Sì, vota</button>
+    </div>
+  </div>
+
   <!-- ══ POPUP ISTRUZIONI (prima visita al sondaggio) ══ -->
   <div id="popup-overlay" class="nascosto">
     <div id="popup-card">
@@ -591,17 +697,16 @@
 
       <div class="header-decoration">✦ ❖ ✦</div>
       <h1>LIBROS CLUB</h1>
-      <p class="sottotitolo">~ Un club degli Amici di Midori ~</p>
-      <p class="motto">「 ケツを食ベる 」</p>
+      <p class="motto"><b>「 ケツを食ベる 」</b></p>
       <div class="mega-ornamento">༺ ❦ ༻</div>
 
       <div id="sezione-voto">
         <p class="istruzioni">
-          ✧ Trascinate i volumi secondo il Vostro giudizio ✧<br>
+          ✧ Trascinate i volumi ✧<br>
           <small>Dal prediletto (in alto) al meno gradito (in basso)</small>
         </p>
         <ul id="lista-libri"></ul>
-        <button id="btn-vota">🔏 Sigilla il Tuo Verdetto 🔏</button>
+        <button id="btn-vota"> Sigilla il tuo voto </button>
       </div>
 
       <div id="messaggio"></div>
@@ -627,9 +732,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
   <script>
     const WORKER_URL    = 'https://libros-club.stompet.workers.dev';
-    const STORAGE_KEY   = 'libros_club_votato';
-    const CAROUSEL_KEY  = 'libros_clubb_carousel_done';
-    const POPUP_KEY     = 'libros_clubb_popup_visto';
+    const SESSION_ID    = 'v4';
+    const STORAGE_KEY   = `libros_club_votato_${SESSION_ID}`;
+    const CAROUSEL_KEY  = `libros_clubb_carousel_done_${SESSION_ID}`;
+    const POPUP_KEY     = `libros_clubb_popup_visto_${SESSION_ID}`;
 
     // ── LIBRI PER IL SONDAGGIO (uno per id) ──
     const libri = [
@@ -647,6 +753,8 @@
       { id: 12, titolo: '"Mattatoio n. 5"',                    autore: 'Kurt Vonnegut' },
       { id: 13, titolo: '"L\'incanto del lotto 49"',           autore: 'Thomas Pynchon' },
       { id: 14, titolo: '"Volpe 8"',                           autore: 'George Saunders' },
+      { id: 15, titolo: '"Tao Te Ching"',                      autore: 'Lao Tzu' },
+      { id: 16, titolo: '"I dannati della terra"',             autore: 'Frantz Fanon' },
     ];
 
     // ── LIBRI PER IL CAROSELLO (Björk appare 3 volte) ──
@@ -665,6 +773,13 @@
         autore: 'Marge Piercy',
         cover: 'covers/edge.jpg',
         descrizione: 'Connie, una donna povera internata in un ospedale psichiatrico, comincia a viaggiare verso due possibili futuri: uno utopico, l\'altro distopico. Un romanzo di fantascienza femminista che, a cinquant\'anni dalla pubblicazione, non ha perso un grammo di urgenza.'
+      },
+      {
+        id: 16,
+        titolo: '"I dannati della terra"',
+        autore: 'Frantz Fanon',
+        cover: 'covers/dannati.jpg',
+        descrizione: 'Pubblicato nel 1961 con una prefazione di Sartre, è uno dei testi fondativi del pensiero postcoloniale. Fanon, psichiatra della Martinica che combatté con il FLN algerino, analizza la violenza coloniale e quella della decolonizzazione, la psicologia del colonizzato, la costruzione di una nuova identità nazionale. Impossibile da ignorare, e difficile da dimenticare.'
       },
       {
         id: 3,
@@ -717,7 +832,7 @@
         autore: 'Mark Pytlik',
         cover: 'covers/bjork.jpg',
         bjorkLevel: 2,
-        descrizione: 'Ti sembra di aver già visto questo libro? Non è un errore. È un suggerimento.'
+        descrizione: 'BJORK BJORK BJORK'
       },
       {
         id: 8,
@@ -761,6 +876,13 @@
         cover: 'covers/volpe.jpg',
         descrizione: 'Una volpe impara a parlare frequentando un uomo che le racconta storie. Poi l\'uomo costruisce qualcosa che minaccia il bosco. Una favola breve e tagliente sull\'amicizia, la fiducia e il tradimento, Saunders in forma di parabola, che è Saunders al suo meglio.'
       },
+      {
+        id: 15,
+        titolo: '"Tao Te Ching"',
+        autore: 'Lao Tzu',
+        cover: 'covers/tao.jpg',
+        descrizione: 'Ottantuno brevissimi capitoli scritti attorno al VI secolo a.C. (o forse mai scritti da nessuno, dato che Lao Tzu potrebbe essere leggendario). Il testo fondamentale del taoismo parla del Tao (la Via), del wu wei (il non-agire), della natura degli opposti. Uno dei libri più tradotti nella storia dell\'umanità, e anche uno dei pochi che si può rileggere ogni anno e trovare ogni volta diverso.'
+      },
       // ★ BJÖRK — terza e ultima apparizione ★
       {
         id: 11,
@@ -768,7 +890,7 @@
         autore: 'Mark Pytlik',
         cover: 'covers/bjork.jpg',
         bjorkLevel: 3,
-        descrizione: 'Questa è l\'unica scelta giusta e il mio impegno verso di voi è che lo sappiate.'
+        descrizione: 'BJORK BJORK BJORK BJORK BJORK BJORK BJORK BJORK BJORK JORK BJORK BJORK'
       },
     ];
 
@@ -836,7 +958,7 @@
         _sparkCanvas = cv;
 
         const ctx   = cv.getContext('2d');
-        const count = level === 3 ? 30 : 14;
+        const count = level === 3 ? 220 : 14;
 
         function newP() {
           return {
@@ -905,7 +1027,7 @@
         coverWrap.classList.remove('nascosto');
         if (libro.bjorkLevel) {
           coverImg.classList.add(`bjork-glow-${libro.bjorkLevel}`);
-          if (libro.bjorkLevel >= 2) startSparkle(libro.bjorkLevel);
+          if (libro.bjorkLevel === 3) startSparkle(libro.bjorkLevel);
         }
       } else {
         coverWrap.classList.add('nascosto');
@@ -1146,9 +1268,55 @@
       });
     }
 
-    btnVota.addEventListener('click', async () => {
+    // ── POPUP CONFERMA ──
+    const confermaOverlay  = document.getElementById('conferma-overlay');
+    const confermaLista    = document.getElementById('conferma-lista');
+    const confermaBtnVota  = document.getElementById('conferma-btn-vota');
+    const BJORK_ID         = 11;
+
+    document.getElementById('conferma-chiudi').addEventListener('click', () => {
+      confermaOverlay.classList.add('nascosto');
+      btnVota.disabled = false;
+      btnVota.innerHTML = 'Sigilla il tuo voto';
+    });
+
+    function apriConferma() {
+      // Costruisce la lista display: Björk sempre prima, poi gli attivi, poi gli esclusi
+      const attivi   = libri.filter(l => !l.disabilitato);
+      const esclusi  = libri.filter(l =>  l.disabilitato);
+      const bjork    = attivi.find(l => l.id === BJORK_ID);
+      const altriAttivi = attivi.filter(l => l.id !== BJORK_ID);
+      const displayOrder = bjork
+        ? [bjork, ...altriAttivi, ...esclusi]
+        : [...attivi, ...esclusi];
+
+      confermaLista.innerHTML = '';
+      let posAttiva = 1;
+      displayOrder.forEach(libro => {
+        const li = document.createElement('li');
+        const dis = !!libro.disabilitato;
+        if (dis) {
+          li.classList.add('conferma-escluso');
+          li.innerHTML = `<span class="conferma-pos">—</span><span>${libro.titolo}</span>`;
+        } else {
+          if (libro.id === BJORK_ID) li.classList.add('conferma-bjork');
+          li.innerHTML = `<span class="conferma-pos">${posAttiva}.</span><span>${libro.titolo}</span>`;
+          posAttiva++;
+        }
+        confermaLista.appendChild(li);
+      });
+
+      confermaOverlay.classList.remove('nascosto');
+    }
+
+    btnVota.addEventListener('click', () => {
       btnVota.disabled = true;
-      btnVota.textContent = '🔏 Sigillando...';
+      apriConferma();
+    });
+
+    confermaBtnVota.addEventListener('click', async () => {
+      confermaOverlay.classList.add('nascosto');
+      confermaBtnVota.disabled = true;
       messaggioEl.className = '';
       messaggioEl.style.display = 'none';
 
@@ -1176,7 +1344,8 @@
         messaggioEl.textContent = '⚠️ Errore: ' + err.message;
         messaggioEl.className = 'errore';
         btnVota.disabled = false;
-        btnVota.innerHTML = '🔏 Sigilla il Tuo Verdetto 🔏';
+        btnVota.innerHTML = ' Sigilla il tuo voto';
+        confermaBtnVota.disabled = false;
       }
     });
 
@@ -1185,7 +1354,7 @@
       const listaClassifica = document.getElementById('classifica-lista');
       const totaleEl        = document.getElementById('totale-voti');
 
-      totaleEl.innerHTML = `📊 <strong>Suffragi raccolti:</strong> ${totaleVoti}`;
+      totaleEl.innerHTML = `<strong>Suffragi raccolti:</strong> ${totaleVoti}`;
       listaClassifica.innerHTML = '';
       classifica.forEach((item, index) => {
         const li    = document.createElement('li');
@@ -1209,7 +1378,7 @@
     // ── INIT ──
     if (haGiaVotato()) {
       sezioneVoto.classList.add('nascosto');
-      messaggioEl.innerHTML = '📜 Avete già espresso il Vostro voto insindacabile.<br>Contemplate ora l\'Albo d\'Oro! 📜';
+      messaggioEl.innerHTML = 'Mi risulta che tu abbia già votato.<br>Controlla l\'Albo d\'Oro! ';
       messaggioEl.className = 'successo';
       caricaClassifica();
     } else {
