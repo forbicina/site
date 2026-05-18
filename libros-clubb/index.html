@@ -301,8 +301,8 @@
     }
 
     .sottotitolo { text-align: center; font-style: italic; color: #7a5a34; margin: 15px 0 5px; font-size: 1.15em; }
-    .motto { text-align: center; font-size: 0.95em; color: #ffd700; }
-    .mega-ornamento { text-align: center; font-size: 1.8em; color: #ffd700; margin: 0 0 30px; }
+    .motto { text-align: center; font-size: 0.95em; color: #d4af37; }
+    .mega-ornamento { text-align: center; font-size: 1.8em; color: #d4af37; margin: -10px 0 20px; }
 
     .istruzioni {
       text-align: center;
@@ -1199,9 +1199,10 @@
 
     function renderLista() {
       listaEl.innerHTML = '';
+      const numAttivi = libri.filter(l => !l.disabilitato).length;
       libri.forEach((libro, index) => {
         const dis = !!libro.disabilitato;
-        const pts = dis ? 0 : numLibri - index;
+        const pts = dis ? 0 : numAttivi - index;
         const li  = document.createElement('li');
         li.dataset.id = libro.id;
         if (dis) li.classList.add('disabilitato');
@@ -1225,10 +1226,12 @@
     }
 
     function aggiornaNumeri() {
-      listaEl.querySelectorAll('li').forEach((li, index) => {
+      const items = listaEl.querySelectorAll('li');
+      const numAttivi = [...items].filter(li => !li.classList.contains('disabilitato')).length;
+      items.forEach((li, index) => {
         const dis = li.classList.contains('disabilitato');
         li.querySelector('.posizione').textContent = dis ? '—' : index + 1;
-        li.querySelector('.punti').textContent = dis ? 'escluso' : `${numLibri - index} pt`;
+        li.querySelector('.punti').textContent = dis ? 'escluso' : `${numAttivi - index} pt`;
       });
     }
 
