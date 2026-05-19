@@ -277,7 +277,7 @@
       font-size: 1.85em; font-weight: 700;
       color: #d8d8dc; margin-bottom: 4px;
     }
-    .app-libro { font-style: italic; color: #686870; font-size: 0.92em; }
+    .app-libro { font-style: italic; color: #c1c1c9;; font-size: 0.92em; }
 
     /* ── UPDATE FORM ── */
     .sezione-aggiornamento {
@@ -389,10 +389,9 @@
       <option>Andrea</option>
       <option>Antonio</option>
       <option>Carlo</option>
-      <option>Fabrizio</option>
-      <option>Gaia</option>
+      <option>Daniele</option>
+      <option>Giulia</option>
       <option>Leonardo</option>
-      <option>Paola</option>
       <option>Saverio</option>
     </select>
     <p id="errore-nome" class="nascosto"></p>
@@ -451,9 +450,9 @@
     </div>
 
     <div class="car-footer">
-      <span id="swipe-hint">← scorri →</span>
       <button id="btn-scegli" class="btn-primario">Scegli questo</button>
       <p id="errore-carosello" class="nascosto"></p>
+      <span id="swipe-hint">← scorri →</span>
     </div>
   </div>
 
@@ -493,7 +492,7 @@
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
     const API        = 'https://libros-club.stompet.workers.dev';
-    const SESSION_ID = 'e';
+    const SESSION_ID = 'f';
     const LS_NOME    = `race_nome_${SESSION_ID}`;
 
     const ALBUM_DATA = [
@@ -837,8 +836,8 @@ const carTitolo        = document.getElementById('car-titolo');
         if (data.ok) {
           inputPagina.value = '';
           inputPagina.placeholder = `${data.lettore.paginaCorrente}`;
-          msgAgg.textContent = `✓ ${data.lettore.percentuale.toFixed(1)}%`;
-          msgAgg.className = 'ok';
+          msgAgg.textContent = '';
+          msgAgg.className = '';
           refreshDashboard();
         } else {
           msgAgg.textContent = data.error || 'Errore.';
