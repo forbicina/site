@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0f1520">
+  <meta name="theme-color" content="#080808">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Libros Club">
   <link rel="manifest" href="libros.json">
-  <link rel="apple-touch-icon" href="icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-512.png">
   <title>Libros Club</title>
   <style>
     @font-face { font-family: 'Faustina'; src: url('../fonts/static/Faustina-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
@@ -53,7 +53,7 @@
       width: 100px; height: 100px;
       border-radius: 18px;
       box-shadow: 0 6px 24px rgba(0,0,0,0.6);
-      margin-bottom: 16px;
+      margin-bottom: 5px;
     }
     .nome-titolo {
       font-family: 'Faustina', Georgia, serif;
@@ -94,18 +94,14 @@
       width: 110px; height: 110px;
       border-radius: 20px;
       box-shadow: 0 6px 24px rgba(0,0,0,0.6);
-      margin-bottom: 18px;
+      margin-bottom: 5px;
     }
     .benvenuto-titolo {
       font-family: 'Faustina', Georgia, serif;
       font-size: 2em; font-weight: 700;
       color: #d8d8dc; margin-bottom: 4px;
     }
-    .benvenuto-libro {
-      font-style: italic; color: #686870;
-      font-size: 1em; margin-bottom: 24px;
-    }
-    .benvenuto-testo {
+.benvenuto-testo {
       max-width: 420px; width: 100%;
       font-size: 0.97em; color: #787880;
       padding: 14px 20px;
@@ -182,8 +178,7 @@
       padding: 4px 10px; border-radius: 2px;
       font-style: italic; border: 1px solid #202028;
     }
-    .car-numero { font-size: 0.65em; color: #525260; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
-    .car-titolo { font-family: 'Faustina', Georgia, serif; font-size: 1.35em; font-weight: 700; color: #d0d0d8; margin-bottom: 3px; }
+.car-titolo { font-family: 'Faustina', Georgia, serif; font-size: 1.35em; font-weight: 700; color: #d0d0d8; margin-bottom: 3px; }
     .car-anno { font-size: 0.85em; color: #686870; margin-bottom: 12px; }
     .car-desc { font-size: 0.88em; color: #787880; line-height: 1.62; text-align: left; border-top: 1px solid #202028; padding-top: 12px; }
 
@@ -201,7 +196,7 @@
     #car-prev { left: 0; }
     #car-next { right: 0; }
     .btn-car:active { background: rgba(120,120,140,0.5); }
-    .btn-car:disabled { opacity: 0.2; cursor: not-allowed; }
+
 
     .car-footer {
       flex-shrink: 0; width: 100%; max-width: 500px;
@@ -217,7 +212,7 @@
       border: 2px solid #3a3a44;
       cursor: pointer; letter-spacing: 0.1em;
       transition: all 0.2s; min-height: 52px;
-      touch-action: manipulation; border-radius: 20px;
+      touch-action: manipulation; border-radius: 15px;
     }
     .btn-primario:hover { background: linear-gradient(to bottom, #2e2e36, #1e1e26); }
     .btn-primario:disabled {
@@ -229,7 +224,7 @@
     #errore-carosello { color: #d06040; font-size: 0.85em; }
 
     /* ── MAIN DASHBOARD ── */
-    .page-wrap { padding: 20px 14px 50px; }
+    .page-wrap { padding: 20px 14px 50px; padding-top: calc(20px + env(safe-area-inset-top)); }
     .container {
       max-width: 680px; margin: 0 auto;
       background: #f4f4f6;
@@ -335,7 +330,7 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 480px) {
       body { font-size: 16px; }
-      .page-wrap { padding: 0 0 50px; }
+      .page-wrap { padding: 0 0 50px; padding-top: env(safe-area-inset-top); }
       .container { padding: 20px 14px; border-radius: 0; border-left: none; border-right: none; }
       .app-header h1 { font-size: 1.6em; }
       #car-card { max-height: calc(100vh - 190px); }
@@ -495,8 +490,7 @@
     const carCover         = document.getElementById('car-cover');
     const carPresoBadge    = document.getElementById('car-preso-badge');
     const carPresoNome     = document.getElementById('car-preso-nome');
-    const carNumero        = document.getElementById('car-numero');
-    const carTitolo        = document.getElementById('car-titolo');
+const carTitolo        = document.getElementById('car-titolo');
     const carAnno          = document.getElementById('car-anno');
     const carDesc          = document.getElementById('car-desc');
     const carHeaderNome    = document.getElementById('car-header-nome');
@@ -580,7 +574,6 @@
         carPresoBadge.classList.add('nascosto');
       }
 
-      carNumero.textContent = `${slideCorrente + 1} / ${ALBUM_DATA.length}`;
       carTitolo.textContent = album.nome;
       carAnno.textContent   = album.anno;
       carDesc.textContent   = album.desc;
