@@ -61,7 +61,7 @@
       color: #d8d8dc;
     }
     .nome-libro {
-      color: #686870;
+      color: #c8c8d0;
       font-size: 1em; margin-bottom: 26px;
     }
     .nome-label {
@@ -126,6 +126,40 @@
     }
     #btn-procedi:hover { background: linear-gradient(to bottom, #2e2e36, #1e1e26); transform: translateY(-2px); }
     #btn-procedi:active { transform: translateY(0); }
+
+    /* ── OVERLAY PAGINE ── */
+    #input-pagine-totali {
+      font-family: 'PTSerif', Georgia, serif;
+      font-size: 1.5em; padding: 12px 16px;
+      width: 160px; text-align: center;
+      background: #0c0c10; color: #c8c8d0;
+      border: 2px solid #2a2a32; border-radius: 4px;
+      -moz-appearance: textfield; margin-top: 8px;
+    }
+    #input-pagine-totali::-webkit-inner-spin-button,
+    #input-pagine-totali::-webkit-outer-spin-button { -webkit-appearance: none; }
+    #input-pagine-totali:focus { outline: none; border-color: #c8c8d0; }
+    #btn-pagine-procedi {
+      margin-top: 24px; padding: 16px 40px;
+      font-family: 'Faustina', Georgia, serif;
+      font-size: 1.2em; font-weight: 700;
+      background: linear-gradient(to bottom, #222228, #14141a);
+      color: #c8c8d0; border: 2px solid #3a3a44;
+      cursor: pointer; letter-spacing: 0.1em;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: all 0.2s; min-height: 56px; border-radius: 20px;
+    }
+    #btn-pagine-procedi:hover { background: linear-gradient(to bottom, #2e2e36, #1e1e26); transform: translateY(-2px); }
+    #btn-pagine-procedi:active { transform: translateY(0); }
+    #btn-pagine-procedi:disabled { background: linear-gradient(to bottom, #1e1e1e, #141414); border-color: #2a2a2a; color: #444; cursor: not-allowed; transform: none; }
+    #errore-pagine {
+      margin-top: 12px; max-width: 340px; width: 100%;
+      color: #d06040; font-size: 0.88em;
+      padding: 10px 14px;
+      background: rgba(180,80,50,0.12);
+      border: 1px solid rgba(180,80,50,0.3);
+      border-radius: 4px;
+    }
 
     /* ── OVERLAY CAROSELLO ── */
     #overlay-carosello {
@@ -381,6 +415,20 @@
     <button id="btn-procedi">Procedi →</button>
   </div>
 
+  <!-- ══ OVERLAY: PAGINE TOTALI ══ -->
+  <div id="overlay-pagine" class="overlay nascosto">
+    <img class="nome-logo" src="icon-512.png" alt="Libros Club">
+    <div class="nome-titolo">Libros Club</div>
+    <p style="margin-bottom: 20px; color: #fff;">
+    <b>「 ケツを食ベる 」</b>
+    </p>
+    <div class="nome-libro">I reietti dell'altro pianeta<br>Ursula K. Le Guin</div>
+    <div class="nome-label" style="margin-bottom: 10px;">Quante pagine ha la tua edizione?</div>
+    <input type="number" id="input-pagine-totali" min="1" max="9999" placeholder="es. 312">
+    <p id="errore-pagine" class="nascosto"></p>
+    <button id="btn-pagine-procedi">Procedi →</button>
+  </div>
+
   <!-- ══ OVERLAY: CAROSELLO ALBUM ══ -->
   <div id="overlay-carosello" class="overlay nascosto">
     <div class="car-header">
@@ -482,6 +530,7 @@
 
     const overlayNome      = document.getElementById('overlay-nome');
     const overlayBenvenuto = document.getElementById('overlay-benvenuto');
+    const overlayPagine    = document.getElementById('overlay-pagine');
     const overlayCarosello = document.getElementById('overlay-carosello');
     const mainEl           = document.getElementById('main');
     const selectNome       = document.getElementById('select-nome');
@@ -506,7 +555,7 @@ const carTitolo        = document.getElementById('car-titolo');
     const footerNome       = document.getElementById('footer-nome');
 
     function mostra(el) {
-      [overlayNome, overlayBenvenuto, overlayCarosello, mainEl].forEach(e => e.classList.add('nascosto'));
+      [overlayNome, overlayBenvenuto, overlayPagine, overlayCarosello, mainEl].forEach(e => e.classList.add('nascosto'));
       el.classList.remove('nascosto');
     }
 
@@ -521,20 +570,15 @@ const carTitolo        = document.getElementById('car-titolo');
         const data = await fetch(`${API}/progressioni`).then(r => r.json());
         const lettore = (data.lettori || []).find(l => l.nome === nome);
 
-        if (!lettore) {
-          erroreNome.textContent = 'Profilo non trovato — contatta Leonardo.';
-          erroreNome.classList.remove('nascosto');
-          selectNome.disabled = false;
-          return;
-        }
-
         nomeCorrente = nome;
         localStorage.setItem(LS_NOME, nome);
 
-        if (lettore.album) {
+        if (!lettore) {
+          mostra(overlayBenvenuto);
+        } else if (lettore.album) {
           avviaDashboard();
         } else {
-          mostra(overlayBenvenuto);
+          await caricaEMostraCarosello();
         }
       } catch {
         erroreNome.textContent = 'Errore di connessione. Riprova.';
@@ -544,7 +588,50 @@ const carTitolo        = document.getElementById('car-titolo');
     });
 
     // ── BENVENUTO ──
-    document.getElementById('btn-procedi').addEventListener('click', async () => {
+    document.getElementById('btn-procedi').addEventListener('click', () => {
+      mostra(overlayPagine);
+    });
+
+    // ── PAGINE TOTALI ──
+    document.getElementById('btn-pagine-procedi').addEventListener('click', async () => {
+      const pag = parseInt(document.getElementById('input-pagine-totali').value);
+      const errPagine = document.getElementById('errore-pagine');
+      const btn = document.getElementById('btn-pagine-procedi');
+
+      if (!pag || pag < 1 || pag > 9999) {
+        errPagine.textContent = 'Inserisci un numero valido (1–9999).';
+        errPagine.classList.remove('nascosto');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '...';
+      errPagine.classList.add('nascosto');
+
+      try {
+        const data = await fetch(`${API}/inizializza-lettore`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome: nomeCorrente, pagineTotali: pag })
+        }).then(r => r.json());
+
+        if (data.ok) {
+          await caricaEMostraCarosello();
+        } else {
+          errPagine.textContent = data.error || 'Errore sconosciuto.';
+          errPagine.classList.remove('nascosto');
+          btn.disabled = false;
+          btn.textContent = 'Procedi →';
+        }
+      } catch {
+        errPagine.textContent = 'Errore di connessione. Riprova.';
+        errPagine.classList.remove('nascosto');
+        btn.disabled = false;
+        btn.textContent = 'Procedi →';
+      }
+    });
+
+    async function caricaEMostraCarosello() {
       mostra(overlayCarosello);
       carHeaderNome.textContent = `Ciao, ${nomeCorrente}!`;
       slideCorrente = 0;
@@ -556,7 +643,7 @@ const carTitolo        = document.getElementById('car-titolo');
         erroreCarosello.textContent = 'Errore nel caricare gli album. Riprova.';
         erroreCarosello.classList.remove('nascosto');
       }
-    });
+    }
 
     // ── CAROSELLO ──
     function aggiornaSlide() {
@@ -795,17 +882,14 @@ const carTitolo        = document.getElementById('car-titolo');
         const lettore = (data.lettori || []).find(l => l.nome === salvato);
 
         if (!lettore) {
-          mostra(overlayNome);
-          erroreNome.textContent = `Profilo di ${salvato} non trovato — contatta Leonardo.`;
-          erroreNome.classList.remove('nascosto');
-          selectNome.value = salvato;
+          mostra(overlayBenvenuto);
           return;
         }
 
         if (lettore.album) {
           avviaDashboard();
         } else {
-          mostra(overlayBenvenuto);
+          await caricaEMostraCarosello();
         }
       } catch {
         avviaDashboard();
