@@ -308,9 +308,6 @@
     }
     #btn-aggiorna:hover { background: linear-gradient(to bottom, #3e3e48, #282830); }
     #btn-aggiorna:disabled { background: #222; color: #444; cursor: not-allowed; }
-    #msg-aggiornamento { margin-top: 8px; font-size: 0.83em; min-height: 1.1em; }
-    #msg-aggiornamento.ok  { color: #6abf6a; }
-    #msg-aggiornamento.err { color: #d06040; }
 
     /* ── PROGRESS BARS ── */
     #loading-prog { text-align: center; color: #525260; padding: 20px; font-style: italic; font-size: 0.9em; }
@@ -473,7 +470,6 @@
           <input type="number" id="input-pagina" min="0">
           <button id="btn-aggiorna">Aggiorna</button>
         </div>
-        <p id="msg-aggiornamento"></p>
       </section>
 
       <section class="sezione-progressioni">
@@ -548,7 +544,6 @@ const carTitolo        = document.getElementById('car-titolo');
     const erroreCarosello  = document.getElementById('errore-carosello');
     const inputPagina      = document.getElementById('input-pagina');
     const btnAggiorna      = document.getElementById('btn-aggiorna');
-    const msgAgg           = document.getElementById('msg-aggiornamento');
     const loadingProg      = document.getElementById('loading-prog');
     const progContainer    = document.getElementById('prog-container');
     const footerNome       = document.getElementById('footer-nome');
@@ -815,16 +810,10 @@ const carTitolo        = document.getElementById('car-titolo');
     // ── AGGIORNA PROGRESSO ──
     btnAggiorna.addEventListener('click', async () => {
       const pag = parseInt(inputPagina.value);
-      if (isNaN(pag) || pag < 0) {
-        msgAgg.textContent = 'Inserisci un numero valido.';
-        msgAgg.className = 'err';
-        return;
-      }
+      if (isNaN(pag) || pag < 0) return;
 
       btnAggiorna.disabled = true;
       btnAggiorna.textContent = '...';
-      msgAgg.textContent = '';
-      msgAgg.className = '';
 
       try {
         const data = await fetch(`${API}/aggiorna-progresso`, {
@@ -836,17 +825,10 @@ const carTitolo        = document.getElementById('car-titolo');
         if (data.ok) {
           inputPagina.value = '';
           inputPagina.placeholder = `${data.lettore.paginaCorrente}`;
-          msgAgg.textContent = '';
-          msgAgg.className = '';
           refreshDashboard();
-        } else {
-          msgAgg.textContent = data.error || 'Errore.';
-          msgAgg.className = 'err';
         }
-      } catch {
-        msgAgg.textContent = 'Errore di connessione.';
-        msgAgg.className = 'err';
-      } finally {
+      } catch { /* silent */ }
+      finally {
         btnAggiorna.disabled = false;
         btnAggiorna.textContent = 'Aggiorna';
       }
