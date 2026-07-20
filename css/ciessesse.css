@@ -13,8 +13,6 @@ body {
     padding-right: 10px;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.4;
-    /* Evita l'auto-inflazione del testo sui browser mobili, così le
-       dimensioni restano coerenti tra homepage e pagina del singolo post */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
@@ -137,6 +135,22 @@ font-weight: 500;
 .blogpost h4,h5 {
     font-family: 'Helvetica Neue', serif;
     font-weight: 500;
+}
+
+/* Regola generale e assoluta per le foto dei post del blog: centrate,
+   90% su desktop e 95% su mobile. Le eccezioni sono locali al singolo
+   post (classe dedicata + !important); es. .piani-berserk-img in
+   texts/vita-berserk.html. */
+.blogpost img {
+    max-width: 90%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+@media (max-width: 767px) {
+    .blogpost img {
+        max-width: 95%;
+    }
 }
 .fancytitle a,
 .fancytitle a:visited {
