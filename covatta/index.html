@@ -7,11 +7,29 @@
   <link rel="icon" type="image/x-icon" href="../assets/ico.ico">
   <link rel="stylesheet" href="../css/ciessesse.css">
   <style>
+    :root {
+      --crema: #f9f7d7;
+      --carta: #fffdf3;
+      --inchiostro: #2b2a1f;
+      --oro: #a89968;
+      --bordo: #e5dfae;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      margin: 0 20px 50px;
-      font-family: sans-serif;
-      background: #f9f7d7;
-      color: #121212;
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--crema);
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.5), transparent 45%),
+        radial-gradient(circle at 80% 85%, rgba(168,153,104,.10), transparent 50%);
+      color: var(--inchiostro);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 50px;
     }
 
     #etichetta-covatta {
@@ -21,225 +39,147 @@
       font-family: 'Helvetica Neue', serif;
       font-size: .8rem;
       letter-spacing: .06em;
-      color: #a89968;
+      color: var(--oro);
       text-transform: lowercase;
     }
 
-    /* Barra preferiti */
-    #barra-preferiti {
+    .dashboard {
+      width: 100%;
+      max-width: 760px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding: 20px;
-      position: relative;
+      align-items: center;
+      gap: 32px;
+      animation: comparsa .6s ease-out;
     }
 
-    #riga-superiore {
+    @keyframes comparsa {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Saluto + orologio */
+    #saluto {
+      text-align: center;
+    }
+
+    #saluto .testo {
+      font-family: 'Helvetica Neue', serif;
+      font-size: 1.15rem;
+      color: var(--oro);
+      margin-bottom: 4px;
+    }
+
+    #orologio {
+      font-family: 'Helvetica Neue', serif;
+      font-size: 3.4rem;
+      font-weight: 300;
+      letter-spacing: .02em;
+      line-height: 1;
+    }
+
+    #data {
+      font-size: .95rem;
+      color: #6b6650;
+      margin-top: 6px;
+      text-transform: capitalize;
+    }
+
+    /* Bottoni piattaforme */
+    #piattaforme {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .bottone-piattaforma {
       display: flex;
       align-items: center;
       gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    #riga-inferiore {
-      position: absolute;
-      top: 52px;
-      left: 20px;
-      right: 20px;
-      background: #fff;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,.15);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    #bottone-impostazioni,
-    #bottone-aggiungi {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
+      padding: 12px 22px;
+      border-radius: 999px;
+      background: var(--carta);
+      border: 1px solid var(--bordo);
+      color: var(--inchiostro);
+      text-decoration: none;
+      font-size: .95rem;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(80,70,30,.05);
+      transition: transform .15s ease, box-shadow .15s ease;
       cursor: pointer;
-      background: #fff;
-      color: #000;
-      font-size: 20px;
-      line-height: 1;
-      transition: .2s;
+    }
+
+    .bottone-piattaforma:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(80,70,30,.12);
+    }
+
+    .bottone-piattaforma .pallino {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 700;
       flex-shrink: 0;
     }
 
-    #bottone-impostazioni:hover,
-    #bottone-aggiungi:hover {
-      background: #efe9c2;
-    }
+    .linkedin .pallino  { background: #0a66c2; }
+    .indeed .pallino    { background: #2164f3; }
+    .wellfound .pallino { background: #0b0b0b; }
+    .glassdoor .pallino { background: #0caa41; }
 
-    #url-input,
-    #label-input {
-      height: 20px;
-      padding: 6px 10px;
-      font-size: 14px;
-      border: 1px solid #e5dfae;
-      border-radius: 6px;
-      line-height: 1;
-      flex: 1;
-      min-width: 120px;
-    }
-
-    #lista-preferiti {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    #lista-preferiti li {
-      background: #fff;
-      color: #000;
-      padding: 6px 10px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    #lista-preferiti a {
-      text-decoration: none;
-      color: #333;
-    }
-
-    #lista-preferiti .rimuovi-link {
-      background: none;
-      border: none;
-      color: #999;
-      cursor: pointer;
-      margin-left: 8px;
-    }
-
-    #lista-preferiti .rimuovi-link:hover {
-      color: #f00;
-    }
-
-    /* DuckDuckGo */
-    .google-bar-container {
-      margin: 16vh auto 0;
-      max-width: 600px;
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    .google-bar-container img {
-      max-width: 390px;
-      height: auto;
-      margin-bottom: 30px;
-    }
-
-    #wp-searchbox {
+    /* Card generica */
+    .card {
       width: 100%;
-      height: 44px;
-      padding: 0 16px;
-      font-size: 16px;
-      border: 1px solid #dfe1e5;
-      border-radius: 24px;
-      box-sizing: border-box;
+      background: var(--carta);
+      border: 1px solid var(--bordo);
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 18px rgba(80, 70, 30, .06);
     }
 
-    /* Citazione */
-    #ciao {
-      margin: 60px auto 0;
-      max-width: 645px;
-      text-align: left;
-      padding: 0 20px;
-    }
-
+    /* Citazione — dimensioni/spaziatura originali */
     .blogpost {
       font-family: 'Helvetica Neue', serif;
       font-size: 1.1rem;
     }
 
-    /* Responsive */
+    #citazione-marco {
+      margin: 0;
+      padding-left: 20px;
+      border-left: 2px solid #000;
+    }
+
+    /* Countdown concerto */
+    #countdown-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    #countdown-card .etichetta {
+      font-family: 'Helvetica Neue', serif;
+      font-size: .95rem;
+      color: #6b6650;
+    }
+
+    #countdown-card .numero {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--oro);
+    }
+
     @media (max-width: 600px) {
-      body {
-        margin-left: 12px !important;
-        margin-right: 12px !important;
-      }
-      #barra-preferiti {
-        padding: 12px;
-      }
-      #riga-inferiore {
-        left: 12px;
-        right: 12px;
-        top: 48px;
-        padding: 8px;
-      }
-      .google-bar-container {
-        margin-top: 10vh;
-        padding: 0 12px;
-      }
-      .google-bar-container img {
-        max-width: 95%;
-        margin-bottom: 20px;
-      }
-      #wp-searchbox {
-        height: 40px;
-        font-size: 15px;
-      }
-      #ciao {
-        margin: 40px auto 0;
-        padding: 0 12px;
-      }
-      .blogpost {
-        font-size: 1rem;
-      }
-    }
-
-    @media (max-width: 400px) {
-      body {
-        margin-left: 8px !important;
-        margin-right: 8px !important;
-      }
-      #barra-preferiti {
-        padding: 8px;
-        gap: 8px;
-      }
-      #riga-superiore {
-        gap: 8px;
-      }
-      #riga-inferiore {
-        left: 8px;
-        right: 8px;
-        top: 44px;
-        padding: 6px;
-        gap: 8px;
-      }
-      #bottone-impostazioni,
-      #bottone-aggiungi {
-        width: 32px;
-        height: 32px;
-        font-size: 18px;
-      }
-      .google-bar-container {
-        padding: 0 8px;
-      }
-      #ciao {
-        padding: 0 8px;
-      }
-      .blogpost {
-        font-size: .95rem;
-      }
-      #lista-preferiti li {
-        font-size: 13px;
-        padding: 5px 8px;
-      }
-    }
-
-    @media (min-width: 1200px) {
-      .container {
-        max-width: 900px;
-      }
+      #orologio { font-size: 2.4rem; }
+      .card { padding: 18px 20px; }
+      .dashboard { gap: 24px; }
     }
   </style>
 </head>
@@ -247,30 +187,40 @@
 <body>
   <div id="etichetta-covatta">covatta</div>
 
-  <!-- Barra preferiti -->
-  <div id="barra-preferiti">
-    <div id="riga-superiore">
-      <button id="bottone-impostazioni">☰</button>
-      <ul id="lista-preferiti"></ul>
-    </div>
-    <div id="riga-inferiore" style="display:none">
-      <button id="bottone-aggiungi">+</button>
-      <input id="url-input" type="text" placeholder="https://example.com" style="display:none">
-      <input id="label-input" type="text" placeholder="Etichetta" style="display:none">
-    </div>
-  </div>
+  <div class="dashboard">
 
-  <!-- DuckDuckGo search -->
-  <div class="google-bar-container">
-    <img src="../newtab/assets/GoMgle.png" alt="GoMgle">
-    <form action="https://duckduckgo.com/" method="GET">
-      <input id="wp-searchbox" name="q" autocomplete="off" placeholder="Cerca con DuckDuckGo">
-    </form>
-  </div>
+    <div id="saluto">
+      <div class="testo" id="testo-saluto"></div>
+      <div id="orologio"></div>
+      <div id="data"></div>
+    </div>
 
-  <!-- Citazione del giorno -->
-  <div id="ciao" class="blogpost" style="max-width:800px; text-align:center">
-    <blockquote id="citazione-marco" style="margin:0; padding-left:20px; border-left:2px solid #000; display:inline-block; text-align:left"></blockquote>
+    <div id="piattaforme">
+      <a href="#" class="bottone-piattaforma linkedin" target="_blank" rel="noopener">
+        <span class="pallino">in</span> LinkedIn
+      </a>
+      <a href="#" class="bottone-piattaforma indeed" target="_blank" rel="noopener">
+        <span class="pallino">✓</span> Indeed
+      </a>
+      <a href="#" class="bottone-piattaforma wellfound" target="_blank" rel="noopener">
+        <span class="pallino">W</span> Wellfound
+      </a>
+      <a href="#" class="bottone-piattaforma glassdoor" target="_blank" rel="noopener">
+        <span class="pallino">G</span> Glassdoor
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="blogpost">
+        <blockquote id="citazione-marco"></blockquote>
+      </div>
+    </div>
+
+    <div class="card" id="countdown-card">
+      <div class="etichetta">Yoko Kanno · Piano Me · Milano</div>
+      <div class="numero" id="countdown-numero"></div>
+    </div>
+
   </div>
 
   <script src="../newtab/js/citazioni.js"></script>
@@ -280,71 +230,30 @@
     const giornoAnno = Math.floor((oggi - new Date(oggi.getFullYear(), 0, 0)) / 86400000);
     document.getElementById("citazione-marco").innerText = citazioni[giornoAnno % citazioni.length];
 
-    // Preferiti con LocalStorage (jar separato da newtab: chiave dedicata)
-    let edit = false;
-    const btnImp = document.getElementById("bottone-impostazioni");
-    const btnAdd = document.getElementById("bottone-aggiungi");
-    const urlIn = document.getElementById("url-input");
-    const labelIn = document.getElementById("label-input");
-    const listFav = document.getElementById("lista-preferiti");
-    const rowDown = document.getElementById("riga-inferiore");
+    // Saluto + orologio
+    const testoSaluto = document.getElementById("testo-saluto");
+    const orologio = document.getElementById("orologio");
+    const dataEl = document.getElementById("data");
 
-    btnImp.onclick = () => {
-      edit = !edit;
-      rowDown.style.display = edit ? "flex" : "none";
-      loadFav();
-    };
+    function aggiornaOrologio() {
+      const now = new Date();
+      const h = now.getHours();
+      let saluto = "Buonanotte";
+      if (h >= 5 && h < 12) saluto = "Buongiorno";
+      else if (h >= 12 && h < 18) saluto = "Buon pomeriggio";
+      else if (h >= 18 && h < 23) saluto = "Buonasera";
+      testoSaluto.textContent = saluto;
 
-    btnAdd.onclick = () => {
-      urlIn.style.display = labelIn.style.display = "inline-block";
-      urlIn.focus();
-    };
-
-    function addFav() {
-      let url = urlIn.value.trim();
-      let lab = labelIn.value.trim() || url;
-
-      if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-
-      if (url) {
-        const fav = JSON.parse(localStorage.getItem("sitiPreferitiCovatta") || "[]");
-        if (!fav.find(e => e.url === url)) fav.push({url, label: lab});
-        localStorage.setItem("sitiPreferitiCovatta", JSON.stringify(fav));
-
-        urlIn.value = labelIn.value = "";
-        urlIn.style.display = labelIn.style.display = "none";
-        loadFav();
-      }
+      orologio.textContent = now.toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit", second: "2-digit"});
+      dataEl.textContent = now.toLocaleDateString("it-IT", {weekday: "long", day: "numeric", month: "long"});
     }
+    aggiornaOrologio();
+    setInterval(aggiornaOrologio, 1000);
 
-    urlIn.addEventListener("keypress", e => e.key === "Enter" && addFav());
-    labelIn.addEventListener("keypress", e => e.key === "Enter" && addFav());
-
-    function loadFav() {
-      listFav.innerHTML = "";
-      const fav = JSON.parse(localStorage.getItem("sitiPreferitiCovatta") || "[]");
-
-      fav.forEach((f, i) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="${f.url}" target="_blank">${f.label}</a>`;
-
-        if (edit) {
-          const rm = document.createElement("button");
-          rm.textContent = "✕";
-          rm.className = "rimuovi-link";
-          rm.onclick = () => {
-            fav.splice(i, 1);
-            localStorage.setItem("sitiPreferitiCovatta", JSON.stringify(fav));
-            loadFav();
-          };
-          li.appendChild(rm);
-        }
-
-        listFav.appendChild(li);
-      });
-    }
-
-    loadFav();
+    // Countdown concerto Yoko Kanno (3 nov 2026, Milano)
+    const dataConcerto = new Date("2026-11-03T00:00:00");
+    const giorniMancanti = Math.ceil((dataConcerto - new Date()) / 86400000);
+    document.getElementById("countdown-numero").textContent = giorniMancanti > 0 ? giorniMancanti + " giorni" : "È oggi!";
   </script>
 </body>
 </html>
