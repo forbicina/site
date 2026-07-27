@@ -399,10 +399,40 @@
     /* Timer pomodoro */
     #pomodoro-card {
       position: relative;   /* contiene la nevicata di brillantini */
+      overflow: hidden;     /* ritaglia la barra lungo il bordo arrotondato */
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 14px;
+    }
+
+    /* Barra di avanzamento: un filo appoggiato al bordo superiore della card.
+       La barra è un rettangolo pieno che parte davvero da zero e arriva davvero
+       a fondo: a nasconderne le estremità è l'overflow della card, che ritaglia
+       lungo il proprio bordo arrotondato. L'angolo tondo si comporta così da
+       finestra sopra una forma rettangolare che continua sotto di esso. */
+    #pomodoro-barra {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      z-index: 4;
+      overflow: hidden;
+      pointer-events: none;
+      background: rgba(255, 255, 255, .6);   /* traccia: appena percettibile */
+      --colore-barra: #8a9a5b;               /* lavoro — verde dei fili d'erba */
+    }
+
+    #pomodoro-barra.pausa {
+      --colore-barra: #f5b400;               /* pausa — giallo dei brillantini */
+    }
+
+    #pomodoro-riempimento {
+      width: 0;
+      height: 100%;
+      background: var(--colore-barra);
+      transition: width .25s linear, background .3s ease;
     }
 
     /* Brillantini: strato in sovrimpressione, trasparente ai click */
@@ -683,6 +713,7 @@
       <div class="colonna" id="colonna-destra">
 
         <div class="card" id="pomodoro-card">
+          <div id="pomodoro-barra" aria-hidden="true"><div id="pomodoro-riempimento"></div></div>
           <div id="pomodoro-neve" aria-hidden="true"></div>
 
           <div id="pomodoro-modi">
@@ -907,24 +938,47 @@
       return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
     }
 
+    const barra = document.getElementById("pomodoro-barra");
+    const riempimento = document.getElementById("pomodoro-riempimento");
+
     function disegnaTimer() {
       display.textContent = formattaTempo(rimanenti);
       document.title = fine ? formattaTempo(rimanenti) + " · Covatta" : "Covatta";
+
+      // Quota di tempo già trascorso: 0 all'avvio, 1 allo scadere
+      const totale = DURATE[modo];
+      const trascorso = totale > 0 ? (totale - Math.max(0, rimanenti)) / totale : 0;
+      riempimento.style.width = (trascorso * 100).toFixed(2) + "%";
+      barra.classList.toggle("pausa", modo === "pausa");
     }
+
+    // Due rintocchi della stessa nota, sfalsati: la coda del primo suona ancora
+    // quando parte il secondo, come una campana battuta due volte.
+    const NOTA_CAMPANELLA = 660;   // Hz
+    const DISTANZA_RINTOCCHI = .55;  // secondi tra un rintocco e l'altro
+    const VOLUME_CAMPANELLA = .24;
 
     function suonaCampanella() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator(), volume = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.value = 660;
-        osc.connect(volume);
-        volume.connect(ctx.destination);
-        volume.gain.setValueAtTime(0.0001, ctx.currentTime);
-        volume.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 0.02);
-        volume.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.4);
-        osc.start();
-        osc.stop(ctx.currentTime + 1.45);
+
+        function rintocco(ritardo) {
+          const inizio = ctx.currentTime + ritardo;
+          const osc = ctx.createOscillator(), volume = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.value = NOTA_CAMPANELLA;
+          osc.connect(volume);
+          volume.connect(ctx.destination);
+          // La rampa esponenziale non può partire da zero: si parte da un filo
+          volume.gain.setValueAtTime(0.0001, inizio);
+          volume.gain.exponentialRampToValueAtTime(VOLUME_CAMPANELLA, inizio + 0.02);
+          volume.gain.exponentialRampToValueAtTime(0.0001, inizio + 1.3);
+          osc.start(inizio);
+          osc.stop(inizio + 1.35);
+        }
+
+        rintocco(0);
+        rintocco(DISTANZA_RINTOCCHI);
       } catch (e) { /* audio non disponibile: pazienza, resta il lampeggio */ }
     }
 
@@ -1014,6 +1068,28 @@
 
     // Si conta sul timestamp di fine, non decrementando: così resta esatto
     // anche quando Firefox rallenta la scheda in secondo piano
+    // Selezione della modalità: un posto solo, usato sia dai bottoni sia dal
+    // ribaltamento automatico di fine tempo.
+    function selezionaModo(nuovo) {
+      modo = nuovo;
+      bottoniModo.forEach(b => b.classList.toggle("attivo", b.dataset.modo === nuovo));
+      rimanenti = DURATE[modo];
+      disegnaTimer();
+    }
+
+    // A fine tempo la modalità si ribalta da sola: finito il lavoro trovi la
+    // pausa già pronta, basta premere Avvia. Il cambio arriva con un ritardo
+    // pari allo scroscio, così prima vedi lo zero e senti la campanella.
+    const RITARDO_RIBALTAMENTO = 1800;
+
+    function ribaltaModalita() {
+      // Se nel frattempo hai già agito — avviato, azzerato, cambiato modalità —
+      // l'automatismo si fa da parte e non ti sovrascrive la scelta.
+      if (fine || rimanenti > 0) return;
+      display.classList.remove("finito");
+      selezionaModo(modo === "lavoro" ? "pausa" : "lavoro");
+    }
+
     function battito() {
       rimanenti = Math.round((fine - Date.now()) / 1000);
       if (rimanenti <= 0) {
@@ -1022,6 +1098,7 @@
         display.classList.add("finito");
         suonaCampanella();
         scrosciaFinale();
+        setTimeout(ribaltaModalita, RITARDO_RIBALTAMENTO);
       }
       disegnaTimer();
     }
@@ -1046,12 +1123,9 @@
 
     bottoniModo.forEach(bottone => {
       bottone.addEventListener("click", () => {
-        modo = bottone.dataset.modo;
-        bottoniModo.forEach(b => b.classList.toggle("attivo", b === bottone));
         fermaTimer();
         display.classList.remove("finito");
-        rimanenti = DURATE[modo];
-        disegnaTimer();
+        selezionaModo(bottone.dataset.modo);
       });
     });
 
