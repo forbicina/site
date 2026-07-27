@@ -29,7 +29,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 60px 20px 50px;
+      padding: 30px 20px 50px;
     }
 
     #etichetta-covatta {
@@ -45,11 +45,11 @@
 
     .dashboard {
       width: 100%;
-      max-width: 760px;
+      max-width: 1400px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 32px;
+      gap: 20px;
       animation: comparsa .6s ease-out;
     }
 
@@ -67,7 +67,6 @@
       font-family: 'Helvetica Neue', serif;
       font-size: 1.15rem;
       color: var(--oro);
-      margin-bottom: 4px;
     }
 
     #orologio {
@@ -81,7 +80,6 @@
     #data {
       font-size: .95rem;
       color: #6b6650;
-      margin-top: 6px;
       text-transform: capitalize;
     }
 
@@ -155,6 +153,262 @@
       border-left: 2px solid #000;
     }
 
+    /* Due colonne: sinistra contemplativa, destra operativa */
+    #colonne {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+      align-items: start;
+    }
+
+    .colonna {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    /* Blocco note */
+    #blocconote-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    #blocconote-testata {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    #blocconote-titolo {
+      font-family: 'Helvetica Neue', serif;
+      font-size: .95rem;
+      color: #6b6650;
+    }
+
+    #blocconote-stato {
+      font-size: .78rem;
+      color: var(--oro);
+      opacity: 0;
+      transition: opacity .4s ease;
+      white-space: nowrap;
+    }
+
+    #blocconote {
+      width: 100%;
+      min-height: 110px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--inchiostro);
+      font-family: inherit;
+      font-size: 1rem;
+      line-height: 1.55;
+      resize: none;
+      overflow: hidden;
+      outline: none;
+    }
+
+    #blocconote::placeholder {
+      color: #b8b294;
+    }
+
+    /* Lista checkbox — le voci si scrivono a mano nell'HTML qui sotto */
+    #lista-card {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    #lista-testata {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    #lista-titolo {
+      font-family: 'Helvetica Neue', serif;
+      font-size: .95rem;
+      color: #6b6650;
+    }
+
+    #lista-azzera {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: .78rem;
+      color: var(--oro);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    #lista-voci {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .voce {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 5px 0;
+      line-height: 1.45;
+      cursor: pointer;
+    }
+
+    .voce input {
+      width: 17px;
+      height: 17px;
+      margin: 2px 0 0;
+      flex-shrink: 0;
+      accent-color: var(--oro);
+      cursor: pointer;
+    }
+
+    .voce span {
+      transition: color .2s ease;
+    }
+
+    .voce input:checked + span {
+      color: #a8a28b;
+      text-decoration: line-through;
+    }
+
+    /* Timer pomodoro */
+    #pomodoro-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    #pomodoro-modi, #pomodoro-comandi {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* La riga occupa tutta la card: i due pill restano centrati,
+       "modifica" si stacca nell'angolo destro come l'"azzera" della lista */
+    #pomodoro-modi {
+      position: relative;
+      align-self: stretch;
+    }
+
+    .bottone-pomodoro {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--bordo);
+      background: var(--crema);
+      color: var(--inchiostro);
+      font-family: inherit;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+    }
+
+    .bottone-pomodoro:hover {
+      border-color: var(--oro);
+    }
+
+    .bottone-pomodoro.attivo {
+      background: var(--oro);
+      border-color: var(--oro);
+      color: #fff;
+    }
+
+    #pomodoro-display {
+      font-family: 'Helvetica Neue', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: .02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #pomodoro-display.finito {
+      color: var(--oro);
+      animation: pulsazione 1.1s ease-in-out infinite;
+    }
+
+    @keyframes pulsazione {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .35; }
+    }
+
+    #pomodoro-modifica {
+      position: absolute;
+      right: 0;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: .78rem;
+      color: var(--oro);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Popup durate — appeso sotto "modifica" */
+    #pomodoro-popup {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      z-index: 5;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      padding: 14px 16px;
+      background: var(--carta);
+      border: 1px solid var(--bordo);
+      border-radius: 12px;
+      box-shadow: 0 8px 26px rgba(80, 70, 30, .18);
+      font-size: .8rem;
+      color: #6b6650;
+    }
+
+    #pomodoro-popup.aperto {
+      display: flex;
+    }
+
+    #pomodoro-popup label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #pomodoro-popup input {
+      width: 58px;
+      padding: 4px 6px;
+      border: 1px solid var(--bordo);
+      border-radius: 8px;
+      background: var(--crema);
+      color: var(--inchiostro);
+      font-family: inherit;
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    #pomodoro-popup input:focus {
+      outline: none;
+      border-color: var(--oro);
+    }
+
     /* Countdown concerto */
     #countdown-card {
       display: flex;
@@ -174,6 +428,17 @@
       font-size: 2.2rem;
       font-weight: 600;
       color: var(--oro);
+    }
+
+    /* Schermi stretti: le colonne si incolonnano e tornano alla larghezza di prima,
+       con l'operativa sopra la contemplativa */
+    @media (max-width: 900px) {
+      #colonne {
+        grid-template-columns: 1fr;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      #colonna-destra { order: -1; }
     }
 
     @media (max-width: 600px) {
@@ -210,15 +475,71 @@
       </a>
     </div>
 
-    <div class="card">
-      <div class="blogpost">
-        <blockquote id="citazione-marco"></blockquote>
-      </div>
-    </div>
+    <div id="colonne">
 
-    <div class="card" id="countdown-card">
-      <div class="etichetta">Yoko Kanno · Piano Me · Milano</div>
-      <div class="numero" id="countdown-numero"></div>
+      <div class="colonna" id="colonna-sinistra">
+
+        <div class="card">
+          <div class="blogpost">
+            <blockquote id="citazione-marco"></blockquote>
+          </div>
+        </div>
+
+        <div class="card" id="countdown-card">
+          <div class="etichetta">Yoko Kanno · Piano Me · Milano</div>
+          <div class="numero" id="countdown-numero"></div>
+        </div>
+
+      </div>
+
+      <div class="colonna" id="colonna-destra">
+
+        <div class="card" id="pomodoro-card">
+          <div id="pomodoro-modi">
+            <button type="button" class="bottone-pomodoro attivo" data-modo="lavoro">Lavoro 25</button>
+            <button type="button" class="bottone-pomodoro" data-modo="pausa">Pausa 5</button>
+            <button type="button" id="pomodoro-modifica">modifica</button>
+
+            <!-- Durate modificabili al volo: valgono solo per questa sessione,
+                 al ricaricamento tornano ai valori di DURATE nello script. -->
+            <div id="pomodoro-popup">
+              <label>lavoro <input type="number" id="durata-lavoro" min="1" max="180" step="1"> min</label>
+              <label>pausa <input type="number" id="durata-pausa" min="1" max="180" step="1"> min</label>
+            </div>
+          </div>
+          <div id="pomodoro-display">25:00</div>
+          <div id="pomodoro-comandi">
+            <button type="button" class="bottone-pomodoro" id="pomodoro-avvia">Avvia</button>
+            <button type="button" class="bottone-pomodoro" id="pomodoro-azzera">Azzera</button>
+          </div>
+        </div>
+
+        <div class="card" id="lista-card">
+          <div id="lista-testata">
+            <span id="lista-titolo">Lista</span>
+            <button type="button" id="lista-azzera">azzera</button>
+          </div>
+          <!-- Aggiungi, togli o riscrivi le voci liberamente: basta copiare una riga <li>.
+               Lo stato spuntato è legato al TESTO della voce, quindi se cambi il testo
+               quella voce riparte da zero. -->
+          <ul id="lista-voci">
+            <li><label class="voce"><input type="checkbox"><span>1st absolute 🍅 of the day</span></label></li>
+            <li><label class="voce"><input type="checkbox"><span>Check aggiornamenti su TUTTE le piattaforme</span></label></li>
+            <li><label class="voce"><input type="checkbox"><span>Fare sessione su qualcosa pro-cv</span></label></li>
+            <li><label class="voce"><input type="checkbox"><span>Spingi sulla pubblicazione</span></label></li>
+          </ul>
+        </div>
+
+        <div class="card" id="blocconote-card">
+          <div id="blocconote-testata">
+            <span id="blocconote-titolo">Blocco note</span>
+            <span id="blocconote-stato"></span>
+          </div>
+          <textarea id="blocconote" placeholder="Appunti al volo — restano solo su questo browser."></textarea>
+        </div>
+
+      </div>
+
     </div>
 
   </div>
@@ -249,6 +570,245 @@
     }
     aggiornaOrologio();
     setInterval(aggiornaOrologio, 1000);
+
+    // Blocco note — salvataggio automatico su localStorage
+    const CHIAVE_NOTE = "covatta-blocconote";
+    const blocconote = document.getElementById("blocconote");
+    const statoNote = document.getElementById("blocconote-stato");
+    let timerSalvataggio, timerDissolvenza;
+
+    function adattaAltezza() {
+      blocconote.style.height = "auto";
+      blocconote.style.height = blocconote.scrollHeight + "px";
+    }
+
+    function salvaNote() {
+      localStorage.setItem(CHIAVE_NOTE, blocconote.value);
+      const ora = new Date().toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit"});
+      statoNote.textContent = "salvato · " + ora;
+      statoNote.style.opacity = "1";
+      clearTimeout(timerDissolvenza);
+      timerDissolvenza = setTimeout(() => { statoNote.style.opacity = "0"; }, 2500);
+    }
+
+    blocconote.value = localStorage.getItem(CHIAVE_NOTE) || "";
+    adattaAltezza();
+
+    blocconote.addEventListener("input", () => {
+      adattaAltezza();
+      clearTimeout(timerSalvataggio);
+      timerSalvataggio = setTimeout(salvaNote, 500);
+    });
+
+    // Rete di sicurezza: non perdere l'ultimo mezzo secondo di scrittura
+    blocconote.addEventListener("blur", salvaNote);
+    window.addEventListener("beforeunload", () => localStorage.setItem(CHIAVE_NOTE, blocconote.value));
+
+    // Lista checkbox — lo stato è legato al testo della voce, non alla posizione,
+    // e si azzera da solo a ogni cambio di giorno
+    const CHIAVE_LISTA = "covatta-lista";
+    const voci = document.querySelectorAll("#lista-voci .voce");
+
+    // Data locale in formato AAAA-MM-GG (non toISOString, che userebbe UTC
+    // e farebbe scattare l'azzeramento all'ora sbagliata)
+    function giornoCorrente() {
+      const d = new Date();
+      return d.getFullYear() + "-" +
+             String(d.getMonth() + 1).padStart(2, "0") + "-" +
+             String(d.getDate()).padStart(2, "0");
+    }
+
+    let archivioLista;
+    try { archivioLista = JSON.parse(localStorage.getItem(CHIAVE_LISTA)) || {}; }
+    catch (e) { archivioLista = {}; }
+
+    let giornoLista = giornoCorrente();
+    // Se l'ultimo salvataggio è di un altro giorno, si riparte puliti
+    let statoLista = (archivioLista.giorno === giornoLista && archivioLista.voci) ? archivioLista.voci : {};
+
+    function salvaLista() {
+      localStorage.setItem(CHIAVE_LISTA, JSON.stringify({ giorno: giornoLista, voci: statoLista }));
+    }
+
+    function azzeraLista() {
+      voci.forEach(voce => { voce.querySelector("input").checked = false; });
+      statoLista = {};
+      salvaLista();
+    }
+
+    voci.forEach(voce => {
+      const casella = voce.querySelector("input");
+      const chiave = voce.querySelector("span").textContent.trim();
+      casella.checked = statoLista[chiave] === true;
+      casella.addEventListener("change", () => {
+        statoLista[chiave] = casella.checked;
+        salvaLista();
+      });
+    });
+
+    document.getElementById("lista-azzera").addEventListener("click", azzeraLista);
+    salvaLista();
+
+    // Se la pagina resta aperta oltre la mezzanotte, azzera senza bisogno di ricaricare
+    setInterval(() => {
+      const adesso = giornoCorrente();
+      if (adesso !== giornoLista) {
+        giornoLista = adesso;
+        azzeraLista();
+      }
+    }, 30000);
+
+    // Timer pomodoro
+    const DURATE = { lavoro: 50 * 60, pausa: 10 * 60 };
+    const display = document.getElementById("pomodoro-display");
+    const bottoneAvvia = document.getElementById("pomodoro-avvia");
+    const bottoneAzzera = document.getElementById("pomodoro-azzera");
+    const bottoniModo = document.querySelectorAll("#pomodoro-modi .bottone-pomodoro");
+
+    let modo = "lavoro";
+    let rimanenti = DURATE[modo];
+    let fine = null;          // timestamp di fine mentre gira, null da fermo
+    let tickTimer = null;
+
+    function formattaTempo(secondi) {
+      secondi = Math.max(0, secondi);
+      const m = Math.floor(secondi / 60), s = secondi % 60;
+      return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    }
+
+    function disegnaTimer() {
+      display.textContent = formattaTempo(rimanenti);
+      document.title = fine ? formattaTempo(rimanenti) + " · Covatta" : "Covatta";
+    }
+
+    function suonaCampanella() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator(), volume = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = 660;
+        osc.connect(volume);
+        volume.connect(ctx.destination);
+        volume.gain.setValueAtTime(0.0001, ctx.currentTime);
+        volume.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 0.02);
+        volume.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.4);
+        osc.start();
+        osc.stop(ctx.currentTime + 1.45);
+      } catch (e) { /* audio non disponibile: pazienza, resta il lampeggio */ }
+    }
+
+    function fermaTimer() {
+      clearInterval(tickTimer);
+      tickTimer = null;
+      fine = null;
+      bottoneAvvia.textContent = "Avvia";
+    }
+
+    // Si conta sul timestamp di fine, non decrementando: così resta esatto
+    // anche quando Firefox rallenta la scheda in secondo piano
+    function battito() {
+      rimanenti = Math.round((fine - Date.now()) / 1000);
+      if (rimanenti <= 0) {
+        rimanenti = 0;
+        fermaTimer();
+        display.classList.add("finito");
+        suonaCampanella();
+      }
+      disegnaTimer();
+    }
+
+    bottoneAvvia.addEventListener("click", () => {
+      if (fine) { fermaTimer(); disegnaTimer(); return; }
+      display.classList.remove("finito");
+      if (rimanenti <= 0) rimanenti = DURATE[modo];
+      fine = Date.now() + rimanenti * 1000;
+      tickTimer = setInterval(battito, 250);
+      bottoneAvvia.textContent = "Pausa";
+      disegnaTimer();
+    });
+
+    bottoneAzzera.addEventListener("click", () => {
+      fermaTimer();
+      display.classList.remove("finito");
+      rimanenti = DURATE[modo];
+      disegnaTimer();
+    });
+
+    bottoniModo.forEach(bottone => {
+      bottone.addEventListener("click", () => {
+        modo = bottone.dataset.modo;
+        bottoniModo.forEach(b => b.classList.toggle("attivo", b === bottone));
+        fermaTimer();
+        display.classList.remove("finito");
+        rimanenti = DURATE[modo];
+        disegnaTimer();
+      });
+    });
+
+    // Durate modificabili dal browser — solo per la sessione in corso.
+    // I valori di partenza vengono letti da DURATE, che resta l'unica fonte:
+    // per cambiare lo standard basta modificare quella riga.
+    const inputLavoro = document.getElementById("durata-lavoro");
+    const inputPausa = document.getElementById("durata-pausa");
+
+    function aggiornaEtichetteModi() {
+      bottoniModo.forEach(bottone => {
+        const quale = bottone.dataset.modo;
+        const minuti = Math.round(DURATE[quale] / 60);
+        bottone.textContent = (quale === "lavoro" ? "Lavoro " : "Pausa ") + minuti;
+      });
+    }
+
+    function applicaDurata(input, quale) {
+      let minuti = parseInt(input.value, 10);
+      if (!Number.isFinite(minuti)) minuti = Math.round(DURATE[quale] / 60);
+      minuti = Math.min(180, Math.max(1, minuti));
+      input.value = minuti;
+      DURATE[quale] = minuti * 60;
+      aggiornaEtichetteModi();
+      // Se stai ritoccando la modalità in corso, il timer riparte pulito sulla nuova durata
+      if (quale === modo) {
+        fermaTimer();
+        display.classList.remove("finito");
+        rimanenti = DURATE[modo];
+      }
+      disegnaTimer();
+    }
+
+    inputLavoro.addEventListener("change", () => applicaDurata(inputLavoro, "lavoro"));
+    inputPausa.addEventListener("change", () => applicaDurata(inputPausa, "pausa"));
+
+    inputLavoro.value = Math.round(DURATE.lavoro / 60);
+    inputPausa.value = Math.round(DURATE.pausa / 60);
+    aggiornaEtichetteModi();
+    disegnaTimer();
+
+    // Popup delle durate: si apre da "modifica", si chiude ricliccando,
+    // premendo Esc, o cliccando fuori
+    const popupDurate = document.getElementById("pomodoro-popup");
+    const bottoneModifica = document.getElementById("pomodoro-modifica");
+
+    function chiudiPopup() {
+      popupDurate.classList.remove("aperto");
+    }
+
+    bottoneModifica.addEventListener("click", evento => {
+      evento.stopPropagation();
+      popupDurate.classList.toggle("aperto");
+      if (popupDurate.classList.contains("aperto")) inputLavoro.focus();
+    });
+
+    // I click dentro al popup non devono farlo richiudere
+    popupDurate.addEventListener("click", evento => evento.stopPropagation());
+
+    document.addEventListener("click", chiudiPopup);
+    document.addEventListener("keydown", evento => {
+      if (evento.key === "Escape") chiudiPopup();
+      if (evento.key === "Enter" && popupDurate.contains(evento.target)) {
+        evento.target.blur();   // conferma il valore, poi chiude
+        chiudiPopup();
+      }
+    });
 
     // Countdown concerto Yoko Kanno (3 nov 2026, Milano)
     const dataConcerto = new Date("2026-11-03T00:00:00");
