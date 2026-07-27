@@ -94,7 +94,7 @@
     #piattaforme {
       position: relative;   /* riferimento per il "+", che sta fuori dal flusso */
       display: flex;
-      gap: 14px;
+      gap: 7px;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -175,8 +175,8 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 22px;
-      border-radius: 999px;
+      padding: 10px 15px;
+      border-radius: 20px;
       background: var(--carta);
       border: 1px solid var(--bordo);
       color: var(--inchiostro);
@@ -201,13 +201,13 @@
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: .75rem;
+      font-size: .9rem;
       font-weight: 700;
       flex-shrink: 0;
     }
 
-    .linkedin .pallino  { background: #0a66c2; }
-    .indeed .pallino    { background: #2164f3; }
+    .linkedin .pallino  { background: #0a66c2; border-radius: 5px; }
+    .indeed .pallino    { background: #fff; border: 1px solid; color: #0043c2; }
     .wellfound .pallino { background: #0b0b0b; }
     .glassdoor .pallino { background: #0caa41; }
 
@@ -232,7 +232,7 @@
       height: 21px;
       align-items: flex-end;
       padding-bottom: 2px;
-      font-size: .6rem;
+      font-size: .66rem;
     }
 
     /* Card generica */
@@ -571,7 +571,7 @@
           <span class="pallino">in</span> LinkedIn
         </a>
         <a href="#" class="bottone-piattaforma indeed" target="_blank" rel="noopener">
-          <span class="pallino">✓</span> Indeed
+          <span class="pallino">i</span> Indeed
         </a>
         <a href="#" class="bottone-piattaforma joinrs" target="_blank" rel="noopener">
           <span class="pallino">J</span> Joinrs
