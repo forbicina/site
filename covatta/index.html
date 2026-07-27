@@ -782,6 +782,21 @@
       blocconote.style.height = blocconote.scrollHeight + "px";
     }
 
+    const CODA_NOTA = ", cojoncello.";
+
+    // Se la nota ha del testo, si chiude sempre con la coda. Idempotente:
+    // se c'è già non la raddoppia, altrimenti a ogni salvataggio se ne
+    // accumulerebbe una nuova. Il cursore resta dov'era, così si può
+    // continuare a scrivere mentre la coda se ne sta ferma in fondo.
+    function appendiCoda() {
+      const testo = blocconote.value.trimEnd();
+      if (testo === "" || testo.endsWith(CODA_NOTA)) return;
+      const cursore = blocconote.selectionStart;
+      blocconote.value = testo + CODA_NOTA;
+      blocconote.setSelectionRange(cursore, cursore);
+      adattaAltezza();
+    }
+
     function salvaNote() {
       localStorage.setItem(CHIAVE_NOTE, blocconote.value);
       const ora = new Date().toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit"});
@@ -800,9 +815,25 @@
       timerSalvataggio = setTimeout(salvaNote, 500);
     });
 
-    // Rete di sicurezza: non perdere l'ultimo mezzo secondo di scrittura
-    blocconote.addEventListener("blur", salvaNote);
-    window.addEventListener("beforeunload", () => localStorage.setItem(CHIAVE_NOTE, blocconote.value));
+    // La coda arriva solo quando hai finito di scrivere, cioè quando il campo
+    // perde il fuoco. Mentre digiti — soprattutto da telefono, a raffiche brevi
+    // e con pause lunghe — non deve mai comparire in mezzo alla frase.
+    function chiudiNota() {
+      appendiCoda();
+      salvaNote();
+    }
+
+    // Uscita dal campo: clic altrove, Tab, o tastiera chiusa sul telefono
+    blocconote.addEventListener("blur", chiudiNota);
+
+    // Cambio di scheda o passaggio a un'altra app: su mobile è questo l'evento
+    // affidabile, non beforeunload. Vale solo se stavi effettivamente scrivendo.
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden" && document.activeElement === blocconote) chiudiNota();
+    });
+
+    // Rete di sicurezza alla chiusura della pagina
+    window.addEventListener("beforeunload", chiudiNota);
 
     // Lista checkbox — lo stato è legato al testo della voce, non alla posizione,
     // e si azzera da solo a ogni cambio di giorno
