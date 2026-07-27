@@ -17,14 +17,25 @@
 
     * { box-sizing: border-box; }
 
-    body {
-      margin: 0;
+    /* Lo sfondo sta sull'html, non sul body: così uno zoom applicato al body
+       non rimpicciolisce l'area di posizionamento del gradiente, che
+       altrimenti verrebbe ripiastrellato lasciando uno stacco netto in fondo.
+       Il min-height serve proprio a questo — senza, la scatola dell'html si
+       adatterebbe al body e il problema tornerebbe identico. */
+    html {
       min-height: 100vh;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--crema);
       background-image:
         radial-gradient(circle at 20% 20%, rgba(255,255,255,.5), transparent 45%),
         radial-gradient(circle at 80% 85%, rgba(168,153,104,.10), transparent 50%);
+      background-repeat: no-repeat;
+    }
+
+    body {
+      zoom: .9;
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       color: var(--inchiostro);
       display: flex;
       flex-direction: column;
@@ -936,7 +947,7 @@
 
     // Ogni modalità ha la sua particella e il suo ritmo
     const INTERVALLO_NEVE = 50;    // pausa — brillantini
-    const INTERVALLO_ERBA = 30;   // lavoro — fili d'erba
+    const INTERVALLO_ERBA = 70;   // lavoro — fili d'erba
 
     function creaParticella(fretta) {
       if (modo === "lavoro") creaFuscello(fretta);
