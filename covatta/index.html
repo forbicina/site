@@ -387,10 +387,62 @@
 
     /* Timer pomodoro */
     #pomodoro-card {
+      position: relative;   /* contiene la nevicata di brillantini */
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 14px;
+    }
+
+    /* Brillantini: strato in sovrimpressione, trasparente ai click */
+    #pomodoro-neve {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      overflow: hidden;
+      border-radius: 16px;   /* uguale a quello della card, per non sbordare */
+      pointer-events: none;
+    }
+
+    .brillantino {
+      position: absolute;
+      top: -12px;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      opacity: 0;
+      animation: nevicata linear forwards;
+    }
+
+    @keyframes nevicata {
+      0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+      15%  { opacity: .95; }
+      80%  { opacity: .95; }
+      100% { transform: translate(var(--deriva), var(--caduta)) rotate(var(--giro)); opacity: 0; }
+    }
+
+    /* Fili d'erba portati dal vento — modalità lavoro.
+       Entrano da sinistra, attraversano, escono a destra. */
+    .fuscello {
+      position: absolute;
+      left: -30px;
+      border-radius: 999px;
+      opacity: 0;
+      animation: ventata linear forwards;
+    }
+
+    @keyframes ventata {
+      0%   { transform: translate(0, 0) rotate(var(--inclinazione)); opacity: 0; }
+      12%  { opacity: .8; }
+      /* a metà corsa il filo sale o scende: è questo che dà l'aria di raffica */
+      50%  { transform: translate(calc(var(--corsa) * .5), var(--onda))
+                        rotate(calc(var(--inclinazione) + 18deg)); }
+      82%  { opacity: .8; }
+      100% { transform: translate(var(--corsa), 0)
+                        rotate(calc(var(--inclinazione) + var(--giro))); opacity: 0; }
+    }
+
+    /* Chi ha chiesto meno animazioni al sistema non si ritrova i coriandoli */
+    @media (prefers-reduced-motion: reduce) {
+      #pomodoro-neve { display: none; }
     }
 
     #pomodoro-modi, #pomodoro-comandi {
@@ -410,7 +462,7 @@
 
     .bottone-pomodoro {
       padding: 7px 16px;
-      border-radius: 999px;
+      border-radius: 15px;
       border: 1px solid var(--bordo);
       background: var(--crema);
       color: var(--inchiostro);
@@ -620,6 +672,8 @@
       <div class="colonna" id="colonna-destra">
 
         <div class="card" id="pomodoro-card">
+          <div id="pomodoro-neve" aria-hidden="true"></div>
+
           <div id="pomodoro-modi">
             <button type="button" class="bottone-pomodoro attivo" data-modo="lavoro">Lavoro 25</button>
             <button type="button" class="bottone-pomodoro" data-modo="pausa">Pausa 5</button>
@@ -832,11 +886,88 @@
       } catch (e) { /* audio non disponibile: pazienza, resta il lampeggio */ }
     }
 
+    // ---- Brillantini ---------------------------------------------------
+    // Metti a false per spegnere tutto senza toccare altro.
+    const BRILLANTINI = true;
+    const COLORI_BRILLANTINI = ["#f5b400", "#a89968", "#ffffff", "#e8483f", "#0a66c2"];
+    const neve = document.getElementById("pomodoro-neve");
+    let generatoreNeve = null;
+
+    function creaBrillantino(fretta = 1) {
+      const s = document.createElement("span");
+      s.className = "brillantino";
+      const lato = 3 + Math.random() * 6;
+      s.style.width = lato + "px";
+      s.style.height = lato + "px";
+      s.style.left = (Math.random() * 100) + "%";
+      s.style.background = COLORI_BRILLANTINI[Math.floor(Math.random() * COLORI_BRILLANTINI.length)];
+      s.style.setProperty("--deriva", Math.round(Math.random() * 60 - 30) + "px");
+      s.style.setProperty("--caduta", (neve.offsetHeight + 24) + "px");
+      s.style.setProperty("--giro", Math.round(Math.random() * 900 - 450) + "deg");
+      s.style.animationDuration = ((2.6 + Math.random() * 2.6) / fretta).toFixed(2) + "s";
+      // Ogni brillantino si rimuove da solo: niente accumulo nel DOM
+      s.addEventListener("animationend", () => s.remove());
+      neve.appendChild(s);
+    }
+
+    // Vento: fili d'erba e semi che attraversano da sinistra a destra
+    const COLORI_ERBA = ["#8a9a5b", "#a89968", "#b9c489", "#6d7d4b", "#d9c98d"];
+
+    function creaFuscello(fretta = 1) {
+      const s = document.createElement("span");
+      s.className = "fuscello";
+      s.style.width = (20 + Math.random() * 40) + "px";     // lunghezza del filo
+      s.style.height = (1.5 + Math.random() * 2) + "px";   // spessore
+      s.style.top = (Math.random() * 100) + "%";
+      s.style.background = COLORI_ERBA[Math.floor(Math.random() * COLORI_ERBA.length)];
+      s.style.setProperty("--corsa", (neve.offsetWidth + 60) + "px");
+      // Modulo e verso separati: l'ampiezza resta sempre sensibile (20-60px),
+      // ma metà dei fili sale e metà scende. Con un solo intervallo non si può
+      // avere entrambe le cose: o attraversa lo zero, o pende da un lato solo.
+      const ampiezzaOnda = 20 + Math.random() * 40;
+      const versoOnda = Math.random() < .5 ? -1 : 1;
+      s.style.setProperty("--onda", Math.round(ampiezzaOnda * versoOnda) + "px");
+      s.style.setProperty("--inclinazione", Math.round(Math.random() * 44 - 90) + "deg");
+      s.style.setProperty("--giro", Math.round(Math.random() * 220 - 140) + "deg");
+      s.style.animationDuration = ((3 + Math.random() * 3) / fretta).toFixed(2) + "s";
+      s.addEventListener("animationend", () => s.remove());
+      neve.appendChild(s);
+    }
+
+    // Ogni modalità ha la sua particella e il suo ritmo
+    const INTERVALLO_NEVE = 50;    // pausa — brillantini
+    const INTERVALLO_ERBA = 30;   // lavoro — fili d'erba
+
+    function creaParticella(fretta) {
+      if (modo === "lavoro") creaFuscello(fretta);
+      else creaBrillantino(fretta);
+    }
+
+    function avviaEffetto() {
+      if (!BRILLANTINI || generatoreNeve) return;
+      const passo = modo === "lavoro" ? INTERVALLO_ERBA : INTERVALLO_NEVE;
+      generatoreNeve = setInterval(() => creaParticella(), passo);
+    }
+
+    function fermaEffetto() {
+      clearInterval(generatoreNeve);
+      generatoreNeve = null;
+    }
+
+    // Scroscio finale: più fitto e più veloce, con la particella della modalità
+    // che si è appena conclusa. Poi si esaurisce da solo.
+    function scrosciaFinale() {
+      if (!BRILLANTINI) return;
+      for (let i = 0; i < 90; i++) setTimeout(() => creaParticella(1.7), i * 20);
+    }
+    // ---------------------------------------------------------------------
+
     function fermaTimer() {
       clearInterval(tickTimer);
       tickTimer = null;
       fine = null;
       bottoneAvvia.textContent = "Avvia";
+      fermaEffetto();
     }
 
     // Si conta sul timestamp di fine, non decrementando: così resta esatto
@@ -848,6 +979,7 @@
         fermaTimer();
         display.classList.add("finito");
         suonaCampanella();
+        scrosciaFinale();
       }
       disegnaTimer();
     }
@@ -859,6 +991,7 @@
       fine = Date.now() + rimanenti * 1000;
       tickTimer = setInterval(battito, 250);
       bottoneAvvia.textContent = "Pausa";
+      avviaEffetto();
       disegnaTimer();
     });
 
