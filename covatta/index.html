@@ -84,11 +84,91 @@
     }
 
     /* Bottoni piattaforme */
+    #piattaforme-blocco {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
     #piattaforme {
+      position: relative;   /* riferimento per il "+", che sta fuori dal flusso */
       display: flex;
       gap: 14px;
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    /* Il "+" è in posizione assoluta appena oltre il bordo destro della riga:
+       non essendo nel flusso, non entra nel calcolo della centratura */
+    #piattaforme-piu {
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 14px;
+      padding: 0;
+      border: none;
+      background: none;
+      color: var(--oro);
+      font-family: inherit;
+      font-size: 1.35rem;
+      font-weight: 300;
+      line-height: 1;
+      opacity: .45;
+      cursor: pointer;
+      transition: opacity .2s ease, transform .25s ease;
+    }
+
+    #piattaforme-piu:hover {
+      opacity: 1;
+    }
+
+    #piattaforme-piu.aperto {
+      transform: translateY(-50%) rotate(45deg);   /* il + diventa una × */
+      opacity: .85;
+    }
+
+    /* Seconda riga: stessa famiglia, voce più bassa e ingombro minore */
+    #piattaforme-extra {
+      display: none;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: comparsa .25s ease-out;
+    }
+
+    #piattaforme-extra.aperta {
+      display: flex;
+    }
+
+    .bottone-secondario {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: transparent;
+      border: 1px solid var(--bordo);
+      color: #6b6650;
+      text-decoration: none;
+      font-size: .8rem;
+      font-weight: 500;
+      transition: color .15s ease, border-color .15s ease;
+    }
+
+    .bottone-secondario:hover {
+      color: var(--inchiostro);
+      border-color: var(--oro);
+    }
+
+    /* Pallino proprio: i secondari non ereditano da .bottone-piattaforma */
+    .bottone-secondario .pallino {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: var(--bordo);
+      flex-shrink: 0;
     }
 
     .bottone-piattaforma {
@@ -130,6 +210,30 @@
     .indeed .pallino    { background: #2164f3; }
     .wellfound .pallino { background: #0b0b0b; }
     .glassdoor .pallino { background: #0caa41; }
+
+    /* Joinrs — quadrato con angoli appena smussati */
+    .joinrs .pallino {
+      background: #e8483f;
+      border-radius: 5px;
+    }
+
+    /* AlmaLaurea — isoscele schiacciato con le punte smussate.
+       Non è un clip-path: quello taglierebbe netto. È un SVG di sfondo in cui
+       il triangolo ha un contorno dello stesso colore del riempimento e
+       stroke-linejoin='round' — è lo spessore del contorno a fare il raggio.
+       Per la proporzione basta cambiare 'height'. */
+    .almalaurea .pallino {
+      background-color: transparent;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 19'%3E%3Cpath d='M13 1.6 L24.4 17.4 L1.6 17.4 Z' fill='%23f5b400' stroke='%23f5b400' stroke-width='3.2' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      border-radius: 0;
+      width: 29px;
+      height: 21px;
+      align-items: flex-end;
+      padding-bottom: 2px;
+      font-size: .6rem;
+    }
 
     /* Card generica */
     .card {
@@ -460,19 +564,40 @@
       <div id="data"></div>
     </div>
 
-    <div id="piattaforme">
-      <a href="#" class="bottone-piattaforma linkedin" target="_blank" rel="noopener">
-        <span class="pallino">in</span> LinkedIn
-      </a>
-      <a href="#" class="bottone-piattaforma indeed" target="_blank" rel="noopener">
-        <span class="pallino">✓</span> Indeed
-      </a>
-      <a href="#" class="bottone-piattaforma wellfound" target="_blank" rel="noopener">
-        <span class="pallino">W</span> Wellfound
-      </a>
-      <a href="#" class="bottone-piattaforma glassdoor" target="_blank" rel="noopener">
-        <span class="pallino">G</span> Glassdoor
-      </a>
+    <div id="piattaforme-blocco">
+
+      <div id="piattaforme">
+        <a href="#" class="bottone-piattaforma linkedin" target="_blank" rel="noopener">
+          <span class="pallino">in</span> LinkedIn
+        </a>
+        <a href="#" class="bottone-piattaforma indeed" target="_blank" rel="noopener">
+          <span class="pallino">✓</span> Indeed
+        </a>
+        <a href="#" class="bottone-piattaforma joinrs" target="_blank" rel="noopener">
+          <span class="pallino">J</span> Joinrs
+        </a>
+        <a href="#" class="bottone-piattaforma almalaurea" target="_blank" rel="noopener">
+          <span class="pallino">A</span> AlmaLaurea
+        </a>
+        <a href="#" class="bottone-piattaforma wellfound" target="_blank" rel="noopener">
+          <span class="pallino">W</span> Wellfound
+        </a>
+        <a href="#" class="bottone-piattaforma glassdoor" target="_blank" rel="noopener">
+          <span class="pallino">G</span> Glassdoor
+        </a>
+        <button type="button" id="piattaforme-piu" aria-label="Mostra altre piattaforme" aria-expanded="false">+</button>
+      </div>
+
+      <!-- Seconda riga, nascosta finché non si preme il "+" -->
+      <div id="piattaforme-extra">
+        <a href="#" class="bottone-secondario" target="_blank" rel="noopener">
+          <span class="pallino"></span> Segnaposto 1
+        </a>
+        <a href="#" class="bottone-secondario" target="_blank" rel="noopener">
+          <span class="pallino"></span> Segnaposto 2
+        </a>
+      </div>
+
     </div>
 
     <div id="colonne">
@@ -550,6 +675,16 @@
     const oggi = new Date();
     const giornoAnno = Math.floor((oggi - new Date(oggi.getFullYear(), 0, 0)) / 86400000);
     document.getElementById("citazione-marco").innerText = citazioni[giornoAnno % citazioni.length];
+
+    // Seconda riga di piattaforme, aperta dal "+"
+    const bottonePiu = document.getElementById("piattaforme-piu");
+    const rigaExtra = document.getElementById("piattaforme-extra");
+
+    bottonePiu.addEventListener("click", () => {
+      const aperta = rigaExtra.classList.toggle("aperta");
+      bottonePiu.classList.toggle("aperto", aperta);
+      bottonePiu.setAttribute("aria-expanded", aperta ? "true" : "false");
+    });
 
     // Saluto + orologio
     const testoSaluto = document.getElementById("testo-saluto");
