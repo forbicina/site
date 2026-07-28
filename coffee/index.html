@@ -217,7 +217,7 @@
            fianchi tondi, dove lo spazio utile si stringe. */
         #pomodoro-cerchio {
             position: relative;
-            width: min(78vw, 58vh, 380px);
+            width: min(74vw, 55vh, 362px);
             aspect-ratio: 1;
             border-radius: 50%;
             background: var(--carta);
@@ -380,10 +380,11 @@
             50% { opacity: .35; }
         }
 
-        /* "modifica" vive fuori dal cerchio: piccolo e scolorito sul nero, senza
-           cornice. Il piede è solo il suo riferimento di posizione, perché il
-           popup si apra sotto e centrato. */
-        #pomodoro-piede {
+        /* "modifica" vive fuori dal cerchio, sopra: piccolo e scolorito sul nero,
+           senza cornice. La testata è solo il suo riferimento di posizione, per
+           il popup, che si apre verso l'alto e centrato — verso il basso
+           finirebbe addosso al cerchio. */
+        #pomodoro-testata {
             position: relative;
             display: flex;
             justify-content: center;
@@ -409,7 +410,7 @@
 
         #pomodoro-popup {
             position: absolute;
-            top: calc(100% + 10px);
+            bottom: calc(100% + 10px);
             left: 50%;
             transform: translateX(-50%);
             z-index: 5;
@@ -515,13 +516,23 @@
         <!-- Pagina 2: Timer pomodoro -->
         <div class="page screen-2" id="page2">
             <div id="pomodoro-blocco">
+                <!-- Durate modificabili al volo: valgono solo per questa sessione,
+                     al ricaricamento tornano ai valori di DURATE nello script. -->
+                <div id="pomodoro-testata">
+                    <button type="button" id="pomodoro-modifica">modifica</button>
+                    <div id="pomodoro-popup">
+                        <label>lavoro <input type="number" id="durata-lavoro" min="1" max="180" step="1"> min</label>
+                        <label>pausa <input type="number" id="durata-pausa" min="1" max="180" step="1"> min</label>
+                    </div>
+                </div>
+
                 <div id="pomodoro-cerchio">
                     <!-- Il raggio scritto qui è l'unica fonte: il JS ne ricava la
                          circonferenza per il tratteggio, quindi per spostare
                          l'anello basta cambiare r (e lo stesso r sulla traccia). -->
                     <svg id="pomodoro-anello" viewBox="0 0 100 100" aria-hidden="true">
-                        <circle class="traccia" cx="50" cy="50" r="47" stroke-width="2.5"></circle>
-                        <circle class="avanzamento" cx="50" cy="50" r="47" stroke-width="2.5"></circle>
+                        <circle class="traccia" cx="50" cy="50" r="48.5" stroke-width="1.9"></circle>
+                        <circle class="avanzamento" cx="50" cy="50" r="48.5" stroke-width="1.9"></circle>
                     </svg>
                     <div id="pomodoro-neve" aria-hidden="true"></div>
 
@@ -533,16 +544,6 @@
                     <div id="pomodoro-comandi">
                         <button type="button" class="bottone-pomodoro" id="pomodoro-avvia">Avvia</button>
                         <button type="button" class="bottone-pomodoro" id="pomodoro-azzera">Azzera</button>
-                    </div>
-                </div>
-
-                <!-- Durate modificabili al volo: valgono solo per questa sessione,
-                     al ricaricamento tornano ai valori di DURATE nello script. -->
-                <div id="pomodoro-piede">
-                    <button type="button" id="pomodoro-modifica">modifica</button>
-                    <div id="pomodoro-popup">
-                        <label>lavoro <input type="number" id="durata-lavoro" min="1" max="180" step="1"> min</label>
-                        <label>pausa <input type="number" id="durata-pausa" min="1" max="180" step="1"> min</label>
                     </div>
                 </div>
             </div>
