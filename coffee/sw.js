@@ -1,4 +1,4 @@
-const CACHE_NAME = 'coffee-v1.1';
+const CACHE_NAME = 'coffee-v1.2';
 const urlsToCache = [
     '/coffee/index.html',
     '/coffee/coffee.json',
