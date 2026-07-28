@@ -88,6 +88,33 @@
       line-height: 1;
     }
 
+    /* I secondi, due punti compresi, scendono a metà corpo e perdono contrasto:
+       l'ora resta la cosa che si legge, i secondi la cosa che si guarda solo se
+       serve. La misura è in em, quindi segue da sola il ridimensionamento
+       dell'orologio sugli schermi stretti.
+
+       Non entrano nella centratura: la loro scatola è larga zero e il testo le
+       trabocca a destra. La riga risulta quindi larga quanto le sole ore e
+       minuti, che sono ciò che finisce in mezzo, e i secondi restano agganciati
+       al loro fianco. Trattandosi di un inline-block, la linea di base resta
+       automaticamente quella delle cifre grandi, senza numeri da accordare.
+
+       Le due righe che sembrano di troppo non lo sono, ed è colpa della
+       larghezza zero: senza nowrap il testo tenterebbe di andare a capo dentro
+       una larghezza che non esiste, e senza text-align:left erediterebbe la
+       centratura dell'orologio, disponendosi a cavallo dello zero e finendo
+       sopra ai minuti. */
+    #orologio-secondi {
+      display: inline-block;
+      width: 0;
+      white-space: nowrap;
+      text-align: left;
+      text-indent: .12em;   /* lo stacco dai minuti, senza produrre larghezza */
+      font-size: .5em;
+      color: #6b6650;
+      letter-spacing: 0;
+    }
+
     #data {
       font-size: .95rem;
       color: #6b6650;
@@ -666,7 +693,10 @@
 
     <div id="saluto">
       <div class="testo" id="testo-saluto"></div>
-      <div id="orologio"></div>
+      <!-- Ore e secondi in due contenitori distinti: servono due corpi diversi,
+           e cambiare textContent su due span fissi evita di rifare il markup
+           dell'orologio una volta al secondo. -->
+      <div id="orologio"><span id="orologio-ore"></span><span id="orologio-secondi"></span></div>
       <div id="data"></div>
     </div>
 
@@ -797,7 +827,8 @@
 
     // Saluto + orologio
     const testoSaluto = document.getElementById("testo-saluto");
-    const orologio = document.getElementById("orologio");
+    const orologioOre = document.getElementById("orologio-ore");
+    const orologioSecondi = document.getElementById("orologio-secondi");
     const dataEl = document.getElementById("data");
 
     function aggiornaOrologio() {
@@ -809,7 +840,10 @@
       else if (h >= 18 && h < 23) saluto = "Buonasera";
       testoSaluto.textContent = saluto;
 
-      orologio.textContent = now.toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit", second: "2-digit"});
+      // I secondi si prendono a parte invece di spezzare la stringa già formattata:
+      // così non si dipende da dove la locale mette i separatori.
+      orologioOre.textContent = now.toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit"});
+      orologioSecondi.textContent = ":" + String(now.getSeconds()).padStart(2, "0");
       dataEl.textContent = now.toLocaleDateString("it-IT", {weekday: "long", day: "numeric", month: "long"});
     }
     aggiornaOrologio();
