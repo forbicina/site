@@ -203,11 +203,16 @@
            del timer, per non cambiare le misure di meteo e treni. */
         #pomodoro-blocco, #pomodoro-blocco * { box-sizing: border-box; }
 
+        /* Il blocco contiene un solo elemento nel flusso, il cerchio: "modifica"
+           ne è fuori. L'altezza del blocco è quindi quella del cerchio soltanto,
+           ed è il cerchio — non l'insieme dei due — a finire esattamente al
+           centro verticale della schermata. Il position:relative serve a fare da
+           riferimento a "modifica", che si aggancia al bordo di sopra. */
         #pomodoro-blocco {
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
             color: var(--inchiostro);
         }
@@ -381,11 +386,17 @@
         }
 
         /* "modifica" vive fuori dal cerchio, sopra: piccolo e scolorito sul nero,
-           senza cornice. La testata è solo il suo riferimento di posizione, per
-           il popup, che si apre verso l'alto e centrato — verso il basso
-           finirebbe addosso al cerchio. */
+           senza cornice. È anche fuori dal flusso, appeso al bordo superiore del
+           blocco, così non entra nel calcolo dell'altezza e non sposta il cerchio
+           dal centro: gli è solo ancorato sopra. Resta comunque il riferimento di
+           posizione del popup, che si apre verso l'alto — verso il basso
+           finirebbe addosso alla circonferenza. */
         #pomodoro-testata {
-            position: relative;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 14px;   /* lo stacco dal cerchio, senza produrre altezza */
             display: flex;
             justify-content: center;
         }
