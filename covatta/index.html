@@ -461,11 +461,24 @@
     }
 
     /* Fili d'erba portati dal vento — modalità lavoro.
-       Entrano da sinistra, attraversano, escono a destra. */
+       Entrano da sinistra, attraversano, escono a destra.
+       La curva è un arco di ellisse ottenuto per sottrazione: la scatola non ha
+       sfondo e porta un solo bordo, o quello sopra o quello sotto, così con
+       border-radius:50% ne resta visibile una metà soltanto. L'altezza della
+       scatola non è quindi lo spessore del filo — quello è la larghezza del
+       bordo — ma la profondità della curva, e quale dei due bordi si accende
+       decide da che parte pende. Entrambi vengono assegnati dal JS.
+       Il box-sizing torna a content-box perché altrimenti, con la regola
+       globale border-box, un bordo più spesso dell'altezza si mangerebbe la
+       curva riducendola a un segmento dritto. */
     .fuscello {
       position: absolute;
       left: -30px;
-      border-radius: 999px;
+      box-sizing: content-box;
+      background: none;
+      border-style: solid;
+      border-color: transparent;
+      border-radius: 50%;
       opacity: 0;
       animation: ventata linear forwards;
     }
@@ -1009,13 +1022,40 @@
     // Vento: fili d'erba e semi che attraversano da sinistra a destra
     const COLORI_ERBA = ["#8a9a5b", "#a89968", "#b9c489", "#6d7d4b", "#d9c98d"];
 
+    // Quanto pende il filo, in px di profondità della curva. Alzando il minimo
+    // si curvano tutti di più; portando il minimo a 0 tornano dei segmenti dritti.
+    const CURVATURA_MIN = 2;
+    const CURVATURA_MAX = 9;
+
+    // Lunghezza del filo e durata della traversata, che ora sono legate: i fili
+    // lunghi attraversano più in fretta, i corti indugiano. La durata non è più
+    // sorteggiata a sé — si ricava interpolando fra i due estremi, così il caso
+    // interviene una volta sola, sulla lunghezza, e la velocità ne discende.
+    // Non è una proporzionalità stretta: quella, sulla forbice 20-80px, vorrebbe
+    // durate fino a 12s, fuori dai limiti. Qui i limiti restano quelli e dentro
+    // di essi il legame è monotono.
+    const LUNGHEZZA_MIN = 20;
+    const LUNGHEZZA_MAX = 80;
+    const DURATA_CORTO = 6;    // secondi — il filo più corto, il più lento
+    const DURATA_LUNGO = 3;    // secondi — il filo più lungo, il più veloce
+
     function creaFuscello(fretta = 1) {
       const s = document.createElement("span");
       s.className = "fuscello";
-      s.style.width = (20 + Math.random() * 40) + "px";     // lunghezza del filo
-      s.style.height = (1.5 + Math.random() * 2) + "px";   // spessore
+      const spessore = 1.5 + Math.random() * 2;
+      const curvatura = CURVATURA_MIN + Math.random() * (CURVATURA_MAX - CURVATURA_MIN);
+      const lunghezza = LUNGHEZZA_MIN + Math.random() * (LUNGHEZZA_MAX - LUNGHEZZA_MIN);
+      const quota = (lunghezza - LUNGHEZZA_MIN) / (LUNGHEZZA_MAX - LUNGHEZZA_MIN);  // 0 corto, 1 lungo
+      const durata = DURATA_CORTO + quota * (DURATA_LUNGO - DURATA_CORTO);
+      s.style.width = lunghezza + "px";                     // lunghezza del filo
+      s.style.height = curvatura + "px";                    // profondità della curva
+      // Un solo bordo acceso: sotto il filo pende in giù, sopra pende in su.
+      // Metà e metà, così la ventata non piega tutti i fili dallo stesso lato.
+      s.style.borderWidth = Math.random() < .5
+        ? "0 0 " + spessore + "px"
+        : spessore + "px 0 0";
       s.style.top = (Math.random() * 100) + "%";
-      s.style.background = COLORI_ERBA[Math.floor(Math.random() * COLORI_ERBA.length)];
+      s.style.borderColor = COLORI_ERBA[Math.floor(Math.random() * COLORI_ERBA.length)];
       s.style.setProperty("--corsa", (neve.offsetWidth + 60) + "px");
       // Modulo e verso separati: l'ampiezza resta sempre sensibile (20-60px),
       // ma metà dei fili sale e metà scende. Con un solo intervallo non si può
@@ -1025,14 +1065,14 @@
       s.style.setProperty("--onda", Math.round(ampiezzaOnda * versoOnda) + "px");
       s.style.setProperty("--inclinazione", Math.round(Math.random() * 44 - 90) + "deg");
       s.style.setProperty("--giro", Math.round(Math.random() * 220 - 140) + "deg");
-      s.style.animationDuration = ((3 + Math.random() * 3) / fretta).toFixed(2) + "s";
+      s.style.animationDuration = (durata / fretta).toFixed(2) + "s";
       s.addEventListener("animationend", () => s.remove());
       neve.appendChild(s);
     }
 
     // Ogni modalità ha la sua particella e il suo ritmo
     const INTERVALLO_NEVE = 50;    // pausa — brillantini
-    const INTERVALLO_ERBA = 70;   // lavoro — fili d'erba
+    const INTERVALLO_ERBA = 40;   // lavoro — fili d'erba
 
     function creaParticella(fretta) {
       if (modo === "lavoro") creaFuscello(fretta);
