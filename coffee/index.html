@@ -480,29 +480,50 @@
            Un cerchio della stessa misura del timer, con dentro il video. Il
            video è muto per costruzione (non ha proprio la traccia audio): la
            canzone è un <audio> a parte, che gira per conto suo. */
+        /* Niente overflow:hidden qui: il ritaglio del genitore su un video non è
+           una promessa che i browser mantengano — vedi il commento dell'anello
+           qui sotto — e per giunta taglierebbe via proprio l'anello, che sporge.
+           A tenere il video dentro il tondo pensano #pesci-video e #pesci-anello. */
         #pesci-cerchio {
             position: relative;
             width: var(--diametro-cerchio);
             aspect-ratio: 1;
             border-radius: 50%;
-            overflow: hidden;
-            background: #000;
-            box-shadow: 0 4px 18px rgba(80, 70, 30, .06);
+            background: #000;   /* il tondo c'è già mentre il video si carica */
             cursor: pointer;
             /* il tap accende la musica: niente rettangolo grigio addosso */
             -webkit-tap-highlight-color: transparent;
         }
 
         /* Il video è quadrato quanto il cerchio, ma il cover regge anche un
-           domani in cui non lo fosse. Il border-radius è ripetuto qui sopra
-           perché su WebKit l'overflow:hidden del genitore, da solo, non
-           ritaglia il fotogramma mentre scorre. */
+           domani in cui non lo fosse. Il ritaglio è chiesto due volte, con due
+           proprietà diverse: il border-radius vale per chi disegna il video
+           insieme al resto della pagina, il clip-path per chi invece lo manda su
+           un piano suo — ed è il secondo caso quello che conta, perché lì il
+           border-radius (proprio come l'overflow del genitore) viene ignorato. */
         #pesci-video {
             display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
+            -webkit-clip-path: circle(50%);
+            clip-path: circle(50%);
+        }
+
+        /* Terza rete, e questa non dipende dalla buona volontà di nessuno:
+           un anello di nero pieno, disegnato sopra il video, che copre i quattro
+           angoli che sporgono dal tondo. Funziona perché il fondo della pagina è
+           nero: l'anello non "ritaglia", ricopre. L'ombra parte dal bordo del
+           cerchio e si allarga di un quarto del diametro — agli angoli, che
+           distano un 0,207 di diametro, arriva con margine. */
+        #pesci-anello {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            border-radius: 50%;
+            box-shadow: 0 0 0 calc(var(--diametro-cerchio) * .25) #000;
+            pointer-events: none;
         }
 
         /* L'<audio> non ha controlli e non deve occupare spazio nel flex */
@@ -515,6 +536,7 @@
            altro segnale. */
         #pesci-spia {
             position: absolute;
+            z-index: 3;   /* sopra il video anche quando il video vola alto */
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(.82);
@@ -634,6 +656,7 @@
                 <video id="pesci-video" src="pescibanco.mp4"
                        muted loop playsinline preload="metadata"
                        disablepictureinpicture></video>
+                <div id="pesci-anello" aria-hidden="true"></div>
                 <div id="pesci-spia" aria-hidden="true">🔇</div>
             </div>
             <audio id="pesci-audio" src="bancopesci.mp3" loop preload="none"></audio>
