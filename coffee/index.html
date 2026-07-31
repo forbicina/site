@@ -57,6 +57,11 @@
             opacity: 0;
         }
 
+        .page.screen-4 {
+            transform: translateY(300%);
+            opacity: 0;
+        }
+
         .blogpost {
             max-width: 800px;
             text-align: center;
@@ -196,6 +201,10 @@
             --inchiostro: #2b2a1f;
             --oro: #a89968;
             --bordo: #e5dfae;
+            /* Diametro dei cerchi a tutta schermata — il timer e il video dei
+               pesci. Sta qui perché i due devono restare della stessa misura:
+               si cambia in un posto solo. */
+            --diametro-cerchio: min(78vw, 58vh, 380px);
         }
 
         /* Su Covatta il box-sizing:border-box è globale e il pomodoro ci conta.
@@ -222,7 +231,7 @@
            fianchi tondi, dove lo spazio utile si stringe. */
         #pomodoro-cerchio {
             position: relative;
-            width: min(78vw, 58vh, 380px);
+            width: var(--diametro-cerchio);
             aspect-ratio: 1;
             border-radius: 50%;
             background: var(--carta);
@@ -466,6 +475,61 @@
             outline: none;
             border-color: var(--oro);
         }
+
+        /* ==== Pescibanco ===================================================
+           Un cerchio della stessa misura del timer, con dentro il video. Il
+           video è muto per costruzione (non ha proprio la traccia audio): la
+           canzone è un <audio> a parte, che gira per conto suo. */
+        #pesci-cerchio {
+            position: relative;
+            width: var(--diametro-cerchio);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 4px 18px rgba(80, 70, 30, .06);
+            cursor: pointer;
+            /* il tap accende la musica: niente rettangolo grigio addosso */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Il video è quadrato quanto il cerchio, ma il cover regge anche un
+           domani in cui non lo fosse. Il border-radius è ripetuto qui sopra
+           perché su WebKit l'overflow:hidden del genitore, da solo, non
+           ritaglia il fotogramma mentre scorre. */
+        #pesci-video {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* L'<audio> non ha controlli e non deve occupare spazio nel flex */
+        #pesci-audio {
+            display: none;
+        }
+
+        /* Spia dell'audio: compare al tocco e sfuma da sola. Serve solo a dire
+           che il tap è stato registrato — a video muto non ci sarebbe nessun
+           altro segnale. */
+        #pesci-spia {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(.82);
+            font-size: 2.6rem;
+            line-height: 1;
+            opacity: 0;
+            pointer-events: none;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, .6);
+            transition: opacity .45s ease, transform .45s ease;
+        }
+
+        #pesci-spia.lampo {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
     </style>
 </head>
 <body>
@@ -560,8 +624,23 @@
             </div>
         </div>
 
-        <!-- Pagina 3: Placeholder -->
+        <!-- Pagina 3: Pescibanco -->
         <div class="page screen-3" id="page3">
+            <div id="pesci-cerchio">
+                <!-- muted e playsinline non sono decorazioni: senza, la partenza
+                     automatica non è consentita e su iOS il video andrebbe a
+                     schermo intero. Il preload è metadata soltanto — il file
+                     pesa, e non ha senso scaricarlo a chi non arriva quaggiù. -->
+                <video id="pesci-video" src="pescibanco.mp4"
+                       muted loop playsinline preload="metadata"
+                       disablepictureinpicture></video>
+                <div id="pesci-spia" aria-hidden="true">🔇</div>
+            </div>
+            <audio id="pesci-audio" src="bancopesci.mp3" loop preload="none"></audio>
+        </div>
+
+        <!-- Pagina 4: Placeholder -->
+        <div class="page screen-4" id="page4">
             <div class="blogpost">
                 <div class="screen-two-content">
                     <h2>Schermata 2</h2>
@@ -593,13 +672,16 @@
         const pagine = [
             document.getElementById('page1'),
             document.getElementById('page2'),
-            document.getElementById('page3')
+            document.getElementById('page3'),
+            document.getElementById('page4')
         ];
         const container = document.getElementById('mainContainer');
 
         let indicePagina = 0;
         let startY = 0;
         let isDragging = false;
+        // Vero se il dito ha viaggiato: distingue lo sfoglio dal tap sul video
+        let ditoMosso = false;
         const SWIPE_THRESHOLD = 80;
         const RESISTANCE_FACTOR = 0.4;
 
@@ -624,6 +706,7 @@
 
         function vaiA(nuovoIndice) {
             indicePagina = nuovoIndice;
+            aggiornaPescibanco();   // il video vive solo mentre la sua pagina è in vista
             // 'exiting' accorcia la dissolvenza di chi esce: senza, la pagina
             // vecchia resta visibile troppo a lungo sopra quella nuova.
             pagine.forEach(p => p.classList.add('exiting'));
@@ -636,6 +719,7 @@
         container.addEventListener('touchstart', (e) => {
             startY = e.touches[0].clientY;
             isDragging = true;
+            ditoMosso = false;
         });
 
         container.addEventListener('touchmove', (e) => {
@@ -643,7 +727,7 @@
 
             const deltaY = e.touches[0].clientY - startY;
 
-            if (Math.abs(deltaY) > 10) e.preventDefault();
+            if (Math.abs(deltaY) > 10) { e.preventDefault(); ditoMosso = true; }
 
             // Ai due capi della fila non c'è niente da scoprire: il trascinamento
             // non risponde, invece di mostrare il vuoto oltre l'ultima pagina.
@@ -687,6 +771,107 @@
         }, { passive: false });
 
         posiziona();
+
+        // ==== Pescibanco ================================================
+        // Terza schermata: il video gira da solo finché la pagina è in vista,
+        // la canzone la si accende col dito. Sono due riproduzioni separate,
+        // ciascuna in loop per conto proprio: non vanno d'accordo e non devono.
+        const PAGINA_PESCI = 2;
+        const cerchioPesci = document.getElementById('pesci-cerchio');
+        const videoPesci = document.getElementById('pesci-video');
+        const audioPesci = document.getElementById('pesci-audio');
+        const spiaPesci = document.getElementById('pesci-spia');
+        let timerSpia = null;
+        let guardiaVideo = null;
+
+        function mostraSpia(simbolo) {
+            spiaPesci.textContent = simbolo;
+            spiaPesci.classList.add('lampo');
+            clearTimeout(timerSpia);
+            timerSpia = setTimeout(() => spiaPesci.classList.remove('lampo'), 750);
+        }
+
+        // Entrando: il video riparte da dove l'avevi lasciato — è un giro
+        // continuo, il punto d'attacco non conta. Uscendo: tutto in pausa, e la
+        // canzone torna a capo, così ogni visita la riprende dall'inizio e
+        // dall'inizio va riaccesa col dito.
+        function aggiornaPescibanco() {
+            clearInterval(guardiaVideo);
+            guardiaVideo = null;
+
+            if (indicePagina === PAGINA_PESCI) {
+                // È muto: la partenza automatica non ha bisogno di permessi
+                videoPesci.play().catch(() => {});
+                ultimoIstante = -1;   // la guardia riparte senza memoria di prima
+                guardiaVideo = setInterval(ricominciaVideo, 1000);
+                // La canzone si scarica appena si arriva qui, non al tocco:
+                // altrimenti fra il dito e il primo suono ci sarebbe l'attesa
+                // del download. Da lì in poi è già pronta in memoria.
+                if (audioPesci.preload === 'none') {
+                    audioPesci.preload = 'auto';
+                    audioPesci.load();
+                }
+            } else {
+                videoPesci.pause();
+                audioPesci.pause();
+                audioPesci.currentTime = 0;
+                spiaPesci.classList.remove('lampo');
+            }
+        }
+
+        // L'attributo loop resta la via maestra, ma non è affidabile ovunque:
+        // Firefox, arrivato in fondo, a volte si ferma invece di ricominciare —
+        // capita con i file che portano una edit list, com'è questo. Sotto ci
+        // sono quindi due reti, e quando loop fa il suo dovere non serve né
+        // l'una né l'altra: a giro riuscito 'ended' non scatta nemmeno.
+        //   1. 'ended' — riparte sul momento, se la fine viene dichiarata;
+        //   2. una guardia al secondo — per quando invece resta fermo in fondo
+        //      senza dire niente. Va solo mentre la pagina è in vista, e guarda
+        //      il solo video: la canzone in pausa è una scelta di chi guarda,
+        //      non un inceppo da rimediare.
+        let ultimoIstante = -1;
+
+        function ricominciaVideo() {
+            if (indicePagina !== PAGINA_PESCI) return;
+
+            const istante = videoPesci.currentTime;
+            const durata = videoPesci.duration;
+            // "Bloccato" è il caso muto: siamo a un soffio dalla fine e il tempo
+            // non avanza più da un controllo all'altro, ma nessuno ha dichiarato
+            // niente. Il vincolo sulla fine tiene fuori le pause di caricamento
+            // a metà filmato, che non sono affar nostro.
+            const inFondo = Number.isFinite(durata) && istante >= durata - 0.4;
+            const bloccato = inFondo && istante === ultimoIstante;
+            ultimoIstante = istante;
+
+            if (!videoPesci.paused && !bloccato) return;
+            if (bloccato || videoPesci.ended) videoPesci.currentTime = 0;
+            videoPesci.play().catch(() => {});
+        }
+
+        videoPesci.addEventListener('ended', ricominciaVideo);
+
+        audioPesci.addEventListener('ended', () => {
+            if (indicePagina !== PAGINA_PESCI) return;
+            audioPesci.currentTime = 0;
+            audioPesci.play().catch(() => {});
+        });
+
+        // Il tap accende e spegne la canzone, quante volte si vuole. Se il dito
+        // ha viaggiato non era un tap ma uno sfoglio: il click sintetico che
+        // qualche browser manda lo stesso va ignorato.
+        cerchioPesci.addEventListener('click', () => {
+            if (ditoMosso) return;
+            if (audioPesci.paused) {
+                audioPesci.play().catch(() => {});
+                mostraSpia('🔊');
+            } else {
+                audioPesci.pause();
+                mostraSpia('🔇');
+            }
+        });
+
+        aggiornaPescibanco();
 
         function toggleWidget(city) {
             const pisaWidget = document.getElementById('widgetPisa');
