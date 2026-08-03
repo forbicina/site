@@ -774,6 +774,14 @@
           </div>
         </div> -->
 
+        <div class="card" id="blocconote-card">
+          <div id="blocconote-testata">
+            <span id="blocconote-titolo">Blocco note</span>
+            <span id="blocconote-stato"></span>
+          </div>
+          <textarea id="blocconote" placeholder="Appunti al volo — restano solo su questo browser."></textarea>
+        </div>
+
         <div class="card" id="lista-card">
           <div id="lista-testata">
             <span id="lista-titolo">Lista</span>
@@ -788,14 +796,6 @@
             <li><label class="voce"><input type="checkbox"><span>Fare sessione su qualcosa pro-cv</span></label></li>
             <li><label class="voce"><input type="checkbox"><span>Spingi sulla pubblicazione</span></label></li>
           </ul>
-        </div>
-
-        <div class="card" id="blocconote-card">
-          <div id="blocconote-testata">
-            <span id="blocconote-titolo">Blocco note</span>
-            <span id="blocconote-stato"></span>
-          </div>
-          <textarea id="blocconote" placeholder="Appunti al volo — restano solo su questo browser."></textarea>
         </div>
 
       </div>
@@ -963,7 +963,12 @@
       }
     }, 30000);
 
-    // Timer pomodoro
+    // Timer pomodoro — disattivato insieme al suo markup (vedi il commento in
+    // #colonna-destra). Lasciato acceso senza markup, il primo addEventListener
+    // qui sotto trova null e fa fallire lo script, portandosi via tutto quello
+    // che segue — countdown compreso. Per riattivarlo: scommenta il markup e
+    // togli le due righe /* e */ che racchiudono questo blocco.
+    /*
     const DURATE = { lavoro: 50 * 60, pausa: 10 * 60 };
     const display = document.getElementById("pomodoro-display");
     const bottoneAvvia = document.getElementById("pomodoro-avvia");
@@ -1022,7 +1027,9 @@
 
         rintocco(0);
         rintocco(DISTANZA_RINTOCCHI);
-      } catch (e) { /* audio non disponibile: pazienza, resta il lampeggio */ }
+      } catch (e) {
+        // audio non disponibile: pazienza, resta il lampeggio
+      }
     }
 
     // ---- Brillantini ---------------------------------------------------
@@ -1263,6 +1270,8 @@
         chiudiPopup();
       }
     });
+    */
+    // ---- fine del pomodoro disattivato -------------------------------------
 
     // Countdown concerto Yoko Kanno (3 nov 2026, Milano)
     const dataConcerto = new Date("2026-11-03T00:00:00");
