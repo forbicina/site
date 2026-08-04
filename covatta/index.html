@@ -7,12 +7,77 @@
   <link rel="icon" type="image/x-icon" href="../assets/ico.ico">
   <link rel="stylesheet" href="../css/ciessesse.css">
   <style>
+    /* I temi si cambiano dal menù dell'etichetta in alto a destra, che scrive un
+       data-tema sull'html. Nessuno stato viene salvato: ricaricando si torna
+       sempre alla crema qui sotto, che resta il tema di casa.
+
+       Perché funzioni, ogni colore della pagina deve passare da una di queste
+       variabili — un valore scritto a mano in una regola più in basso resterebbe
+       identico in tutti e quattro i temi. */
     :root {
-      --crema: #f9f7d7;
-      --carta: #fffdf3;
-      --inchiostro: #2b2a1f;
-      --oro: #a89968;
+      --crema: #f9f7d7;        /* sfondo della pagina */
+      --carta: #fffdf3;        /* card e superfici in rilievo */
+      --inchiostro: #2b2a1f;   /* testo principale */
+      --oro: #a89968;          /* accento: etichetta, numeri, sottolineature */
       --bordo: #e5dfae;
+      --tenue: #6b6650;        /* testo secondario: date, titoletti, secondi */
+      --spento: #a8a28b;       /* voce di lista già spuntata */
+      --fantasma: #b8b294;     /* segnaposto del blocco note */
+      --filo: #000;            /* riga verticale della citazione */
+      --ombra: rgba(80, 70, 30, .06);
+      --ombra-forte: rgba(80, 70, 30, .12);
+      --velo-chiaro: rgba(255, 255, 255, .5);   /* alone in alto a sinistra */
+      --velo-caldo: rgba(168, 153, 104, .10);   /* alone in basso a destra */
+    }
+
+    html[data-tema="light"] {
+      --crema: #f2f2f3;
+      --carta: #ffffff;
+      --inchiostro: #1f2022;
+      --oro: #74797f;
+      --bordo: #e2e3e6;
+      --tenue: #5d6165;
+      --spento: #a6a9ae;
+      --fantasma: #b7babf;
+      --filo: #1f2022;
+      --ombra: rgba(20, 22, 26, .06);
+      --ombra-forte: rgba(20, 22, 26, .13);
+      --velo-chiaro: rgba(255, 255, 255, .65);
+      --velo-caldo: rgba(120, 130, 140, .08);
+    }
+
+    html[data-tema="blue"] {
+      --crema: #e1eeff;
+      --carta: #f4f9ff;
+      --inchiostro: #16283d;
+      --oro: #46719b;
+      --bordo: #c4d9f1;
+      --tenue: #4b6a8a;
+      --spento: #93a8bd;
+      --fantasma: #9db3ca;
+      --filo: #16283d;
+      --ombra: rgba(20, 50, 90, .07);
+      --ombra-forte: rgba(20, 50, 90, .15);
+      --velo-chiaro: rgba(255, 255, 255, .55);
+      --velo-caldo: rgba(70, 113, 155, .10);
+    }
+
+    /* Sul fondo scuro gli aloni non possono essere bianchi al 50%: sbiancherebbero
+       mezza pagina. Restano, ma appena accennati. */
+    html[data-tema="dark"] {
+      --crema: #232627;
+      --carta: #2c3032;
+      --inchiostro: #e9e7e3;
+      --oro: #bcae88;
+      --bordo: #3d4143;
+      --tenue: #a8acae;
+      --spento: #71767a;
+      --fantasma: #6b7073;
+      --filo: #e9e7e3;
+      --ombra: rgba(0, 0, 0, .3);
+      --ombra-forte: rgba(0, 0, 0, .5);
+      --velo-chiaro: rgba(255, 255, 255, .05);
+      --velo-caldo: rgba(255, 255, 255, .02);
     }
 
     * { box-sizing: border-box; }
@@ -26,9 +91,10 @@
       min-height: 100vh;
       background: var(--crema);
       background-image:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.5), transparent 45%),
-        radial-gradient(circle at 80% 85%, rgba(168,153,104,.10), transparent 50%);
+        radial-gradient(circle at 20% 20%, var(--velo-chiaro), transparent 45%),
+        radial-gradient(circle at 80% 85%, var(--velo-caldo), transparent 50%);
       background-repeat: no-repeat;
+      transition: background-color .3s ease;
     }
 
     body {
@@ -41,17 +107,66 @@
       flex-direction: column;
       align-items: center;
       padding: 30px 20px 50px;
+      transition: color .3s ease;
     }
 
+    /* L'etichetta è diventata il pulsante di un menù, ma deve restare la scritta
+       di prima: incolonnando a destra, la parola tiene il suo posto nell'angolo
+       e le tre voci le si aprono sotto, allineate allo stesso margine. */
     #etichetta-covatta {
       position: fixed;
       top: 14px;
       right: 18px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 7px;
       font-family: 'Helvetica Neue', serif;
       font-size: .8rem;
       letter-spacing: .06em;
       color: var(--oro);
       text-transform: lowercase;
+    }
+
+    /* Un button non eredita niente dal contenitore: font, corpo e colore vanno
+       ridichiarati, altrimenti la scritta cambierebbe aspetto. */
+    #covatta-nome, .voce-tema {
+      padding: 0;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      line-height: 1.15;
+      color: var(--oro);
+      cursor: pointer;
+    }
+
+    #temi-covatta {
+      display: none;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      animation: comparsa .2s ease-out;
+    }
+
+    #temi-covatta.aperto {
+      display: flex;
+    }
+
+    .voce-tema {
+      opacity: .6;
+      transition: opacity .15s ease, color .15s ease;
+    }
+
+    .voce-tema:hover {
+      opacity: 1;
+      color: var(--inchiostro);
     }
 
     .dashboard {
@@ -110,13 +225,13 @@
       white-space: nowrap;
       text-align: left;
       font-size: .5em;
-      color: #6b6650;
+      color: var(--tenue);
       letter-spacing: 0;
     }
 
     #data {
       font-size: .95rem;
-      color: #6b6650;
+      color: var(--tenue);
       text-transform: capitalize;
     }
 
@@ -182,7 +297,7 @@
       border-radius: 999px;
       background: transparent;
       border: 1px solid var(--bordo);
-      color: #6b6650;
+      color: var(--tenue);
       text-decoration: none;
       font-size: .8rem;
       font-weight: 500;
@@ -215,14 +330,15 @@
       text-decoration: none;
       font-size: .95rem;
       font-weight: 600;
-      box-shadow: 0 2px 10px rgba(80,70,30,.05);
-      transition: transform .15s ease, box-shadow .15s ease;
+      box-shadow: 0 2px 10px var(--ombra);
+      transition: transform .15s ease, box-shadow .15s ease,
+                  background .3s ease, border-color .3s ease, color .3s ease;
       cursor: pointer;
     }
 
     .bottone-piattaforma:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(80,70,30,.12);
+      box-shadow: 0 6px 16px var(--ombra-forte);
     }
 
     .bottone-piattaforma .pallino {
@@ -275,7 +391,8 @@
       border: 1px solid var(--bordo);
       border-radius: 16px;
       padding: 24px 28px;
-      box-shadow: 0 4px 18px rgba(80, 70, 30, .06);
+      box-shadow: 0 4px 18px var(--ombra);
+      transition: background .3s ease, border-color .3s ease;
     }
 
     /* Citazione — dimensioni/spaziatura originali */
@@ -287,7 +404,7 @@
     #citazione-marco {
       margin: 0;
       padding-left: 10px;
-      border-left: 2px solid #000;
+      border-left: 2px solid var(--filo);
     }
 
     /* Due colonne: sinistra contemplativa, destra operativa */
@@ -323,7 +440,7 @@
     #blocconote-titolo {
       font-family: 'Helvetica Neue', serif;
       font-size: .95rem;
-      color: #6b6650;
+      color: var(--tenue);
     }
 
     #blocconote-stato {
@@ -350,7 +467,7 @@
     }
 
     #blocconote::placeholder {
-      color: #b8b294;
+      color: var(--fantasma);
     }
 
     /* Lista checkbox — le voci si scrivono a mano nell'HTML qui sotto */
@@ -370,7 +487,7 @@
     #lista-titolo {
       font-family: 'Helvetica Neue', serif;
       font-size: .95rem;
-      color: #6b6650;
+      color: var(--tenue);
     }
 
     #lista-azzera {
@@ -414,7 +531,7 @@
     }
 
     .voce input:checked + span {
-      color: #a8a28b;
+      color: var(--spento);
       text-decoration: line-through;
     }
 
@@ -442,7 +559,7 @@
       z-index: 4;
       overflow: hidden;
       pointer-events: none;
-      background: rgba(255, 255, 255, .6);   /* traccia: appena percettibile */
+      background: var(--bordo);              /* traccia: appena percettibile */
       --colore-barra: #8a9a5b;               /* lavoro — verde dei fili d'erba */
     }
 
@@ -553,10 +670,12 @@
       border-color: var(--oro);
     }
 
+    /* Il testo del pill acceso prende il colore della carta, non un bianco fisso:
+       sul tema scuro l'accento è chiaro e il bianco ci si perderebbe sopra. */
     .bottone-pomodoro.attivo {
       background: var(--oro);
       border-color: var(--oro);
-      color: #fff;
+      color: var(--carta);
     }
 
     #pomodoro-display {
@@ -606,9 +725,9 @@
       background: var(--carta);
       border: 1px solid var(--bordo);
       border-radius: 12px;
-      box-shadow: 0 8px 26px rgba(80, 70, 30, .18);
+      box-shadow: 0 8px 26px var(--ombra-forte);
       font-size: .8rem;
-      color: #6b6650;
+      color: var(--tenue);
     }
 
     #pomodoro-popup.aperto {
@@ -653,7 +772,7 @@
     #countdown-card .etichetta {
       font-family: 'Helvetica Neue', serif;
       font-size: .95rem;
-      color: #6b6650;
+      color: var(--tenue);
     }
 
     #countdown-card .numero {
@@ -682,7 +801,14 @@
 </head>
 
 <body>
-  <div id="etichetta-covatta">covatta</div>
+  <div id="etichetta-covatta">
+    <button type="button" id="covatta-nome" aria-expanded="false" aria-controls="temi-covatta">covatta</button>
+    <ul id="temi-covatta">
+      <li><button type="button" class="voce-tema" data-tema="light">light</button></li>
+      <li><button type="button" class="voce-tema" data-tema="dark">dark</button></li>
+      <li><button type="button" class="voce-tema" data-tema="blue">blue</button></li>
+    </ul>
+  </div>
 
   <div class="dashboard">
 
@@ -819,6 +945,41 @@
       const aperta = rigaExtra.classList.toggle("aperta");
       bottonePiu.classList.toggle("aperto", aperta);
       bottonePiu.setAttribute("aria-expanded", aperta ? "true" : "false");
+    });
+
+    // Temi — il menù appeso all'etichetta "covatta".
+    // Cambiare tema vuol dire solo scrivere un data-tema sull'html: da lì in giù
+    // sono le variabili CSS a fare tutto. Di proposito non si salva niente, così
+    // a ogni ricarica si riparte dalla crema.
+    const etichetta = document.getElementById("etichetta-covatta");
+    const nomeCovatta = document.getElementById("covatta-nome");
+    const listaTemi = document.getElementById("temi-covatta");
+
+    function chiudiTemi() {
+      listaTemi.classList.remove("aperto");
+      nomeCovatta.setAttribute("aria-expanded", "false");
+    }
+
+    nomeCovatta.addEventListener("click", () => {
+      const aperto = listaTemi.classList.toggle("aperto");
+      nomeCovatta.setAttribute("aria-expanded", aperto ? "true" : "false");
+    });
+
+    listaTemi.querySelectorAll(".voce-tema").forEach(voce => {
+      voce.addEventListener("click", () => {
+        document.documentElement.dataset.tema = voce.dataset.tema;
+        chiudiTemi();
+      });
+    });
+
+    // Il click fuori chiude: quello sull'etichetta no, o richiuderebbe il menù
+    // nello stesso istante in cui il bottone lo apre.
+    document.addEventListener("click", evento => {
+      if (!etichetta.contains(evento.target)) chiudiTemi();
+    });
+
+    document.addEventListener("keydown", evento => {
+      if (evento.key === "Escape") chiudiTemi();
     });
 
     // Saluto + orologio
