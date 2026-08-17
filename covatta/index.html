@@ -15,19 +15,19 @@
        variabili — un valore scritto a mano in una regola più in basso resterebbe
        identico in tutti e quattro i temi. */
     :root {
-      --crema: #f9f7d7;        /* sfondo della pagina */
-      --carta: #fffdf3;        /* card e superfici in rilievo */
-      --inchiostro: #2b2a1f;   /* testo principale */
-      --oro: #a89968;          /* accento: etichetta, numeri, sottolineature */
-      --bordo: #e5dfae;
-      --tenue: #6b6650;        /* testo secondario: date, titoletti, secondi */
-      --spento: #a8a28b;       /* voce di lista già spuntata */
-      --fantasma: #b8b294;     /* segnaposto del blocco note */
-      --filo: #000;            /* riga verticale della citazione */
-      --ombra: rgba(80, 70, 30, .06);
-      --ombra-forte: rgba(80, 70, 30, .12);
-      --velo-chiaro: rgba(255, 255, 255, .5);   /* alone in alto a sinistra */
-      --velo-caldo: rgba(168, 153, 104, .10);   /* alone in basso a destra */
+      --crema: #0f0f0f;
+      --carta: #20201f;
+      --inchiostro: #e9e7e3;
+      --oro: #bcae88;
+      --bordo: #3d4143;
+      --tenue: #a8acae;
+      --spento: #71767a;
+      --fantasma: #6b7073;
+      --filo: #e9e7e3;
+      --ombra: rgba(0, 0, 0, .3);
+      --ombra-forte: rgba(0, 0, 0, .5);
+      --velo-chiaro: rgba(255, 255, 255, .05);
+      --velo-caldo: rgba(255, 255, 255, .02);
     }
 
     html[data-tema="light"] {
@@ -84,19 +84,19 @@
     /* Sul fondo scuro gli aloni non possono essere bianchi al 50%: sbiancherebbero
        mezza pagina. Restano, ma appena accennati. */
     html[data-tema="dark"] {
-      --crema: #0f0f0f;
-      --carta: #2c3032;
-      --inchiostro: #e9e7e3;
-      --oro: #bcae88;
-      --bordo: #3d4143;
-      --tenue: #a8acae;
-      --spento: #71767a;
-      --fantasma: #6b7073;
-      --filo: #e9e7e3;
-      --ombra: rgba(0, 0, 0, .3);
-      --ombra-forte: rgba(0, 0, 0, .5);
-      --velo-chiaro: rgba(255, 255, 255, .05);
-      --velo-caldo: rgba(255, 255, 255, .02);
+      --crema: #f9f7d7;        /* sfondo della pagina */
+      --carta: #fffdf3;        /* card e superfici in rilievo */
+      --inchiostro: #2b2a1f;   /* testo principale */
+      --oro: #a89968;          /* accento: etichetta, numeri, sottolineature */
+      --bordo: #e5dfae;
+      --tenue: #6b6650;        /* testo secondario: date, titoletti, secondi */
+      --spento: #a8a28b;       /* voce di lista già spuntata */
+      --fantasma: #b8b294;     /* segnaposto del blocco note */
+      --filo: #000;            /* riga verticale della citazione */
+      --ombra: rgba(80, 70, 30, .06);
+      --ombra-forte: rgba(80, 70, 30, .12);
+      --velo-chiaro: rgba(255, 255, 255, .5);   /* alone in alto a sinistra */
+      --velo-caldo: rgba(168, 153, 104, .10);   /* alone in basso a destra */
     }
 
     * { box-sizing: border-box; }
