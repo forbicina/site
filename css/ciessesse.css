@@ -34,6 +34,15 @@ font-weight: 500;
 
 /* ===================== */
 
+.robin {
+    position: absolute;
+    top: 11px;
+    right: 1%;
+    width: 57px;
+    height: auto;
+    z-index: 100;
+}
+
 .ciao {
     display: grid;
     grid-template-columns: 4fr 1fr;
