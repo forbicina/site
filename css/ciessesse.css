@@ -147,7 +147,7 @@ font-weight: 500;
     font-family: 'Faustina', serif;
 }
 .blogpost {
-    font-family: 'Helvetica Neue', serif;
+    font-family: 'Helvetica Neue', Arial, sans;
     font-size: 1.05rem;
 }
 .blogpost h4,h5 {
