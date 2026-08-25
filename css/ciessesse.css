@@ -34,6 +34,13 @@ font-weight: 500;
 
 /* ===================== */
 
+.ciao {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
 .due-col {
     display: grid;
     grid-template-columns: 4fr 1fr;
@@ -87,6 +94,9 @@ font-weight: 500;
     }
 }
 @media (min-width: 1200px) {
+    .container.container-post {
+        max-width: 950px;
+    }
     .container {
         max-width: 1100px;
     }
