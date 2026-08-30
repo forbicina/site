@@ -131,6 +131,18 @@ font-weight: 500;
     font-style: normal;
 }
 @font-face {
+    font-family: 'Noto Serif';
+    src: url('../fonts/static/NotoSerif-450.ttf') format('truetype');
+    font-weight: 450;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Noto Serif';
+    src: url('../fonts/static/NotoSerif-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+@font-face {
     font-family: 'Helvetica Neue';
     src: url('../fonts/static/HelveticaNeue-Light.otf') format('opentype');
     font-weight: 400;
@@ -166,9 +178,16 @@ font-weight: 500;
     font-family: 'Helvetica Neue', Arial, sans;
     font-size: 1.05rem;
 }
+.blogpost h2 {
+    font-family: 'Noto Serif', serif;
+    font-weight: 600;
+}
 .blogpost h4,h5 {
-    font-family: 'Helvetica Neue', serif;
-    font-weight: 500;
+    font-family: 'Noto Serif', serif;
+    font-weight: 450;
+}
+.blogpost h4 {
+    font-weight: 600;
 }
 
 /* Regola generale e assoluta per le foto dei post del blog: centrate,
