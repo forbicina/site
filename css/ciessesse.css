@@ -177,6 +177,7 @@ font-weight: 500;
 .blogpost {
     font-family: 'Helvetica Neue', Arial, sans;
     font-size: 1.05rem;
+    letter-spacing: -0.005em;
 }
 .blogpost h2 {
     font-family: 'Noto Serif', serif;
