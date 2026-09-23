@@ -47,10 +47,10 @@
             opacity: 1;
         }
 
-        /* .page.screen-2 {
+        .page.screen-2 {
             transform: translateY(100%);
             opacity: 0;
-        } */
+        }
 
         .blogpost {
             max-width: 800px;
@@ -148,9 +148,52 @@
             max-height: 600px;
         }
 
-        /* .screen-two-content {
-            color: white;
-        } */
+        #conto {
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #conto-cifre {
+            display: flex;
+            justify-content: center;
+            gap: 22px;
+        }
+
+        .unita {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Le cifre cambiano ogni secondo: senza larghezza fissa per carattere
+               la riga si allargherebbe e restringerebbe di continuo. */
+            font-variant-numeric: tabular-nums;
+        }
+
+        .numero {
+            font-family: 'Faustina', serif;
+            font-size: clamp(2.6rem, 13vw, 5rem);
+            line-height: 1.05;
+        }
+
+        .etichetta {
+            font-size: clamp(0.65rem, 2.6vw, 0.8rem);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #888;
+            margin-top: 6px;
+        }
+
+        #conto-finito {
+            font-family: 'Faustina', serif;
+            font-size: clamp(1.8rem, 8vw, 3rem);
+            margin: 0;
+        }
+
+        @media (max-width: 420px) {
+            #conto-cifre {
+                gap: 12px;
+            }
+        }
 
         .train-section {
             display: flex;
@@ -220,23 +263,18 @@
             </div>
         </div>
 
-        <!-- Pagina 2: Placeholder (DISABILITATA) -->
-        <!-- <div class="page screen-2" id="page2">
-            <div class="blogpost">
-                <div class="screen-two-content">
-                    <h2>Schermata 2</h2>
-                    <p>Qui ci metti quello che vuoi</p>
-                    <div class="buttons-container" style="margin-top: 30px;">
-                        <button class="toggle-btn">
-                            <span>A</span>
-                        </button>
-                        <button class="toggle-btn">
-                            <span>B</span>
-                        </button>
-                    </div>
+        <!-- Pagina 2: Conto alla rovescia -->
+        <div class="page screen-2" id="page2">
+            <div id="conto">
+                <div id="conto-cifre">
+                    <div class="unita"><span class="numero" id="cd-giorni">--</span><span class="etichetta">giorni</span></div>
+                    <div class="unita"><span class="numero" id="cd-ore">--</span><span class="etichetta">ore</span></div>
+                    <div class="unita"><span class="numero" id="cd-minuti">--</span><span class="etichetta">minuti</span></div>
+                    <div class="unita"><span class="numero" id="cd-secondi">--</span><span class="etichetta">secondi</span></div>
                 </div>
+                <p id="conto-finito" hidden>È arrivato il momento.</p>
             </div>
-        </div> -->
+        </div>
     </div>
 
     <script>
@@ -246,55 +284,45 @@
                 .catch(err => console.log('SW registration failed:', err));
         }
 
-        // let currentPage = 1;
-        // let startY = 0;
-        // let isDragging = false;
-        // const SWIPE_THRESHOLD = 80;
-        // const RESISTANCE_FACTOR = 0.4;
-
-        const page1 = document.getElementById('page1');
-        // const page2 = document.getElementById('page2');
+        const pagine = [
+            document.getElementById('page1'),
+            document.getElementById('page2')
+        ];
         const container = document.getElementById('mainContainer');
 
-        /*
-        // FUNZIONI DI NAVIGAZIONE TRA PAGINE (DISABILITATE)
-        function transitionPages(toPage) {
-            page1.classList.add('exiting');
-            page2.classList.add('exiting');
-            setTimeout(() => {
-                page1.classList.remove('exiting');
-                page2.classList.remove('exiting');
-            }, 400);
+        let indicePagina = 0;
+        let startY = 0;
+        let isDragging = false;
+        const SWIPE_THRESHOLD = 80;
+        const RESISTANCE_FACTOR = 0.4;
 
-            if (toPage === 2) {
-                page1.style.transform = 'translateY(-100%)';
-                page1.style.opacity = '0';
-                page2.style.transform = 'translateY(0)';
-                page2.style.opacity = '1';
-                page2.style.visibility = 'visible';
-                setTimeout(() => currentPage === 2 && (page1.style.visibility = 'hidden'), 400);
-            } else {
-                page1.style.transform = 'translateY(0)';
-                page1.style.opacity = '1';
-                page2.style.transform = 'translateY(100%)';
-                page2.style.opacity = '0';
-                page1.style.visibility = 'visible';
-                setTimeout(() => currentPage === 1 && (page2.style.visibility = 'hidden'), 400);
-            }
+        // scostamento: il trascinamento in corso, in px. A riposo vale 0.
+        function posiziona(scostamento = 0) {
+            const quota = scostamento / window.innerHeight;   // in unità di schermo
+            pagine.forEach((pagina, i) => {
+                const distanza = (i - indicePagina) + quota;  // 0 = perfettamente in vista
+                pagina.style.transform = `translateY(${distanza * 100}%)`;
+                pagina.style.opacity = Math.max(0, 1 - Math.abs(distanza));
+                // Le pagine fuori vista sono trasparenti ma resterebbero cliccabili:
+                // senza questa riga si premerebbero al buio i bottoni del meteo.
+                pagina.style.pointerEvents = i === indicePagina ? 'auto' : 'none';
+            });
         }
 
-        function resetPagePosition() {
-            if (currentPage === 1) {
-                page1.style.transform = 'translateY(0)';
-                page1.style.opacity = '1';
-                page2.style.transform = 'translateY(100%)';
-                page2.style.opacity = '0';
-            } else {
-                page1.style.transform = 'translateY(-100%)';
-                page1.style.opacity = '0';
-                page2.style.transform = 'translateY(0)';
-                page2.style.opacity = '1';
-            }
+        // Durante il trascinamento le pagine devono seguire il dito senza
+        // interpolazione, altrimenti arrivano in ritardo di 0,4s.
+        function conAnimazione(attiva) {
+            pagine.forEach(p => { p.style.transition = attiva ? '' : 'none'; });
+        }
+
+        function vaiA(nuovoIndice) {
+            indicePagina = nuovoIndice;
+            // 'exiting' accorcia la dissolvenza di chi esce: senza, la pagina
+            // vecchia resta visibile troppo a lungo sopra quella nuova.
+            pagine.forEach(p => p.classList.add('exiting'));
+            conAnimazione(true);
+            posiziona();
+            setTimeout(() => pagine.forEach(p => p.classList.remove('exiting')), 400);
         }
 
         // Touch events
@@ -310,39 +338,29 @@
 
             if (Math.abs(deltaY) > 10) e.preventDefault();
 
-            const resistedDelta = deltaY * RESISTANCE_FACTOR;
-            const progress = Math.min(Math.abs(resistedDelta) / 100, 1);
+            // Ai due capi della fila non c'è niente da scoprire: il trascinamento
+            // non risponde, invece di mostrare il vuoto oltre l'ultima pagina.
+            const primaInAlto = indicePagina === 0 && deltaY > 0;
+            const ultimaInBasso = indicePagina === pagine.length - 1 && deltaY < 0;
+            if (primaInAlto || ultimaInBasso) return;
 
-            page1.style.transition = 'none';
-            page2.style.transition = 'none';
-
-            if (currentPage === 1 && deltaY < 0) {
-                page1.style.transform = `translateY(${resistedDelta}px)`;
-                page1.style.opacity = 1 - progress;
-                page2.style.transform = `translateY(${100 + (resistedDelta / window.innerHeight * 100)}%)`;
-                page2.style.opacity = progress;
-            } else if (currentPage === 2 && deltaY > 0) {
-                page2.style.transform = `translateY(${resistedDelta}px)`;
-                page2.style.opacity = 1 - progress;
-                page1.style.transform = `translateY(${-100 + (resistedDelta / window.innerHeight * 100)}%)`;
-                page1.style.opacity = progress;
-            }
-        });
+            conAnimazione(false);
+            posiziona(deltaY * RESISTANCE_FACTOR);
+        }, { passive: false });
 
         container.addEventListener('touchend', (e) => {
             if (!isDragging) return;
             isDragging = false;
 
             const deltaY = e.changedTouches[0].clientY - startY;
+            conAnimazione(true);
 
-            if (currentPage === 1 && deltaY < -SWIPE_THRESHOLD) {
-                currentPage = 2;
-                transitionPages(2);
-            } else if (currentPage === 2 && deltaY > SWIPE_THRESHOLD) {
-                currentPage = 1;
-                transitionPages(1);
+            if (deltaY < -SWIPE_THRESHOLD && indicePagina < pagine.length - 1) {
+                vaiA(indicePagina + 1);
+            } else if (deltaY > SWIPE_THRESHOLD && indicePagina > 0) {
+                vaiA(indicePagina - 1);
             } else {
-                resetPagePosition();
+                posiziona();
             }
         });
 
@@ -353,16 +371,51 @@
 
             clearTimeout(wheelTimeout);
             wheelTimeout = setTimeout(() => {
-                if (e.deltaY > 50 && currentPage === 1) {
-                    currentPage = 2;
-                    transitionPages(2);
-                } else if (e.deltaY < -50 && currentPage === 2) {
-                    currentPage = 1;
-                    transitionPages(1);
+                if (e.deltaY > 50 && indicePagina < pagine.length - 1) {
+                    vaiA(indicePagina + 1);
+                } else if (e.deltaY < -50 && indicePagina > 0) {
+                    vaiA(indicePagina - 1);
                 }
             }, 50);
         }, { passive: false });
-        */
+
+        posiziona();
+
+        // ==== Conto alla rovescia =======================================
+        // Il traguardo si porta dietro il fuso (+02:00, l'ora legale in vigore
+        // il 30 settembre 2026): scritto senza, ogni dispositivo lo leggerebbe
+        // nel proprio, e il conto finirebbe a ore diverse a seconda di dove ci
+        // si trova. Così le 9 sono le 9 italiane per tutti.
+        const TRAGUARDO = new Date('2026-09-30T09:00:00+02:00');
+
+        const cifre = {
+            giorni: document.getElementById('cd-giorni'),
+            ore: document.getElementById('cd-ore'),
+            minuti: document.getElementById('cd-minuti'),
+            secondi: document.getElementById('cd-secondi')
+        };
+        const grigliaConto = document.getElementById('conto-cifre');
+        const messaggioFinale = document.getElementById('conto-finito');
+
+        function aggiornaConto() {
+            const mancante = TRAGUARDO - new Date();
+
+            if (mancante <= 0) {
+                grigliaConto.hidden = true;
+                messaggioFinale.hidden = false;
+                clearInterval(battito);
+                return;
+            }
+
+            const totale = Math.floor(mancante / 1000);
+            cifre.giorni.textContent = Math.floor(totale / 86400);
+            cifre.ore.textContent = String(Math.floor(totale / 3600) % 24).padStart(2, '0');
+            cifre.minuti.textContent = String(Math.floor(totale / 60) % 60).padStart(2, '0');
+            cifre.secondi.textContent = String(totale % 60).padStart(2, '0');
+        }
+
+        const battito = setInterval(aggiornaConto, 1000);
+        aggiornaConto();
 
         function toggleWidget(city) {
             const widgets = {
