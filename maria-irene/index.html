@@ -482,7 +482,10 @@
     <script>
         // Registra Service Worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
+            // Percorso relativo: il file sta qui dentro, non nella radice del
+            // sito. Scritto '/sw.js' la registrazione falliva in silenzio e
+            // il service worker non è mai entrato in servizio.
+            navigator.serviceWorker.register('./sw.js')
                 .catch(err => console.log('SW registration failed:', err));
         }
 
