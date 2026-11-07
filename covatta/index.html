@@ -800,6 +800,7 @@
       font-size: 2.2rem;
       font-weight: 600;
       color: var(--oro);
+      font-variant-numeric: tabular-nums;
     }
 
     /* Schermi stretti: le colonne si incolonnano e tornano alla larghezza di prima,
@@ -1460,10 +1461,21 @@
     */
     // ---- fine del pomodoro disattivato -------------------------------------
 
-    // Countdown concerto Yoko Kanno (3 nov 2026, Milano)
-    const dataConcerto = new Date("2026-11-03T00:00:00");
-    const giorniMancanti = Math.ceil((dataConcerto - new Date()) / 86400000);
-    document.getElementById("countdown-numero").textContent = giorniMancanti > 0 ? giorniMancanti + " giorni" : "È oggi!";
+    // Timer Yoko Kanno (concerto 3 nov 2026, Milano): conta in positivo
+    // il tempo trascorso dalla mezzanotte del 4 novembre 2026
+    const inizioConteggio = new Date("2026-11-04T00:00:00");
+    const numeroConcerto = document.getElementById("countdown-numero");
+    function aggiornaConteggio() {
+      const totale = Math.max(0, Math.floor((new Date() - inizioConteggio) / 1000));
+      const giorni = Math.floor(totale / 86400);
+      const ore = Math.floor(totale % 86400 / 3600);
+      const minuti = Math.floor(totale % 3600 / 60);
+      const secondi = totale % 60;
+      const due = n => String(n).padStart(2, "0");
+      numeroConcerto.textContent = `${giorni}g ${due(ore)}h ${due(minuti)}m ${due(secondi)}s`;
+    }
+    aggiornaConteggio();
+    setInterval(aggiornaConteggio, 1000);
   </script>
 </body>
 </html>
