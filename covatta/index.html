@@ -797,7 +797,7 @@
     }
 
     #countdown-card .numero {
-      font-size: 2.2rem;
+      font-size: 1.9rem;
       font-weight: 600;
       color: var(--oro);
       font-variant-numeric: tabular-nums;
@@ -1472,7 +1472,7 @@
       const minuti = Math.floor(totale % 3600 / 60);
       const secondi = totale % 60;
       const due = n => String(n).padStart(2, "0");
-      numeroConcerto.textContent = `${giorni}g ${due(ore)}h ${due(minuti)}m ${due(secondi)}s`;
+      numeroConcerto.textContent = `${giorni}:${due(ore)}:${due(minuti)}:${due(secondi)}`;
     }
     aggiornaConteggio();
     setInterval(aggiornaConteggio, 1000);
