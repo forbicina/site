@@ -1461,9 +1461,7 @@
     */
     // ---- fine del pomodoro disattivato -------------------------------------
 
-    // Timer Yoko Kanno (concerto 3 nov 2026, Milano): conta in positivo
-    // il tempo trascorso dalla mezzanotte del 4 novembre 2026
-    const inizioConteggio = new Date("2026-11-04T00:00:00");
+    const inizioConteggio = new Date("2026-11-04T00:00:20");
     const numeroConcerto = document.getElementById("countdown-numero");
     function aggiornaConteggio() {
       const totale = Math.max(0, Math.floor((new Date() - inizioConteggio) / 1000));
